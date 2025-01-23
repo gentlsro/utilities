@@ -165,7 +165,7 @@ export const defaultUtilitiesConfig = {
      */
     errorHandler: undefined,
   },
-} satisfies IUtilitiesConfig
+} as IUtilitiesConfig
 
 export function extendUtilitiesConfig<T extends Partial<IUtilitiesConfig> & IItem>(config: T): T {
   return config

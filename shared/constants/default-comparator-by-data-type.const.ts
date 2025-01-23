@@ -7,13 +7,13 @@ export function getDefaultComparatorByDataType(dataType?: ExtendedDataType) {
     return ComparatorEnum.EQUAL
   }
 
-  let defaultComparator = utilsConfig.dataTypeExtend.defaultComparatorByDataType[dataType]
-  const comparators = utilsConfig.dataTypeExtend.comparatorsByDataType[dataType]
+  let defaultComparator = utilsConfig.dataTypeExtend.defaultComparatorByDataType?.[dataType]
+  const comparators = utilsConfig.dataTypeExtend.comparatorsByDataType?.[dataType]
 
   if (!defaultComparator) {
     const dt = dataType?.replace('Simple', '') as ExtendedDataType
 
-    defaultComparator = utilsConfig.dataTypeExtend.defaultComparatorByDataType[dt]
+    defaultComparator = utilsConfig.dataTypeExtend.defaultComparatorByDataType?.[dt]
   }
 
   if (defaultComparator) {
