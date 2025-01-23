@@ -78,6 +78,7 @@ type DataType =
 
 export type IUtilitiesConfig = {
   general: {
+    domain?: string
     transliterate: boolean
   }
 
@@ -125,7 +126,8 @@ export type IUtilitiesConfig = {
 export const defaultUtilitiesConfig = {
   general: {
     transliterate: false,
-  } as const,
+    domain: undefined,
+  },
 
   // Data types
   /**

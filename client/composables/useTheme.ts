@@ -1,8 +1,10 @@
+import utilsConfig from '../../.nuxt/generated/utils'
+
 export function useTheme() {
   const prefersDark = usePreferredDark()
   const themeCookie = useCookie('theme', {
     default: getColor,
-    domain: undefined,
+    domain: utilsConfig.general.domain,
   })
 
   const isDark = computed(() => {
