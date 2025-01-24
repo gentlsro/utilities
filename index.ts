@@ -1,4 +1,5 @@
 export { cleanObject } from './client/functions/clean-object'
+export { handleDownloadFile } from './client/functions/download-file'
 export { getElementSize } from './client/functions/get-element-size'
 export { moveItem } from './client/functions/move-item'
 export type { IZodValidationItem, IZodValidationOutput } from './client/types/zod'
