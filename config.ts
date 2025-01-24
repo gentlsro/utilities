@@ -119,7 +119,7 @@ export type IUtilitiesConfig = {
     /**
      *
      */
-    errorHandler: ((error: any, t: any) => string[]) | undefined
+    errorHandler: ((error: any, t: any) => any[]) | undefined
   }
 }
 
