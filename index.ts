@@ -8,6 +8,7 @@ export { useFiltering } from './shared/composables/useFiltering'
 export { useGrouping } from './shared/composables/useGrouping'
 export { useSearching } from './shared/composables/useSearching'
 export { useSorting } from './shared/composables/useSorting'
+export { useText } from './shared/composables/useText'
 export {
   BOOLEANISH_COMPARATORS,
   NON_VALUE_COMPARATORS,
