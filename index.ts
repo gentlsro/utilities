@@ -1,7 +1,7 @@
 export { cleanObject } from './client/functions/clean-object'
 export { getElementSize } from './client/functions/get-element-size'
 export { moveItem } from './client/functions/move-item'
-export type { IZodValidationItem } from './client/types/zod'
+export type { IZodValidationItem, IZodValidationOutput } from './client/types/zod'
 export { useFiltering } from './shared/composables/useFiltering'
 export { useGrouping } from './shared/composables/useGrouping'
 export { useSearching } from './shared/composables/useSearching'
