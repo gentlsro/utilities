@@ -1,9 +1,9 @@
-import type dayjs from 'dayjs'
+import type { Dayjs } from 'dayjs'
 import type { ExtendedDataType } from '$dataType'
 
-export type Datetime = dayjs.Dayjs | number | string | Date | null | undefined
+export type Datetime = Dayjs | number | string | Date | null | undefined
 
-export type DatetimeStrict = dayjs.Dayjs | number | string | Date
+export type DatetimeStrict = Dayjs | number | string | Date
 
 export const DATE_TYPES: ExtendedDataType[] = [
   'date',

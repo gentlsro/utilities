@@ -1,4 +1,4 @@
-import type dayjs from 'dayjs'
+import type { Dayjs } from 'dayjs'
 
 // Types
 import type { Period } from '../types/period.type'
@@ -11,7 +11,7 @@ export class Day {
   isWeekend: boolean
   isNotCurrent: boolean
   daysInMonth: number
-  dateObj: dayjs.Dayjs;
+  dateObj: Dayjs;
 
   [key: string]: unknown
 
@@ -21,8 +21,8 @@ export class Day {
       = now.year() * 31556926 + now.month() * 2629743 + now.date() * 86400
     const dateTime
       = this.dateObj.year() * 31556926
-      + this.dateObj.month() * 2629743
-      + this.dateObj.date() * 86400
+        + this.dateObj.month() * 2629743
+        + this.dateObj.date() * 86400
 
     return nowTime === dateTime
   }

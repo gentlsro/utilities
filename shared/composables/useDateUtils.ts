@@ -1,4 +1,4 @@
-import type dayjs from 'dayjs'
+import type { ManipulateType, OpUnitType } from 'dayjs'
 
 // Types
 import type { Period } from '../types/period.type'
@@ -11,7 +11,7 @@ import { DayEnum } from '../enums/day.enum'
 import { datetimeFormats } from '../i18n'
 
 export type IExtendedPeriodOptions = {
-  unit?: dayjs.OpUnitType | dayjs.ManipulateType | 'isoWeek'
+  unit?: OpUnitType | ManipulateType | 'isoWeek'
   firstDayOfWeek?: DayEnum
   minCountOfWeeks?: number
   periodRef?: MaybeRefOrGetter<Period>
@@ -126,9 +126,10 @@ export function useDateUtils(localeIso: string) {
     dateRef: MaybeRefOrGetter<Datetime>,
     options?: IDateOptions,
   ) => {
-    const { locales } = useI18n()
+    const { $i18n } = tryUseNuxtApp() ?? {}
+    const locales = toValue($i18n?.locales) ?? []
     const usedLocaleIso = options?.localeIso ?? localeIso
-    const usedLocale = locales.value.find(locale => locale.code === usedLocaleIso)
+    const usedLocale = locales.find(locale => locale.code === usedLocaleIso)
 
     return options?.isLocalString
       ? $date(toValue(dateRef), usedLocale?.dateFormat)
@@ -139,7 +140,7 @@ export function useDateUtils(localeIso: string) {
     dateRef = undefined,
     periodRef = undefined,
     firstDayOfWeek = DayEnum.MONDAY,
-    unit = 'isoWeek' as dayjs.ManipulateType,
+    unit = 'isoWeek' as ManipulateType,
   }: IExtendedPeriodOptions = {}): Period => {
     const period = toValue(periodRef)
     let periodStart = toValue(period?.periodStart || dateRef)
@@ -153,7 +154,7 @@ export function useDateUtils(localeIso: string) {
 
     return {
       periodStart,
-      periodEnd: periodStart.add(1, unit as dayjs.ManipulateType).subtract(1),
+      periodEnd: periodStart.add(1, unit as ManipulateType).subtract(1),
     }
   }
 

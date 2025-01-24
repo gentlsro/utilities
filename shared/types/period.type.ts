@@ -1,6 +1,6 @@
-import type dayjs from 'dayjs'
+import type { Dayjs } from 'dayjs'
 
 export type Period = {
-  periodStart: dayjs.Dayjs
-  periodEnd: dayjs.Dayjs
+  periodStart: Dayjs
+  periodEnd: Dayjs
 }

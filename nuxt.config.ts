@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
     'nuxt-lodash',
+    'dayjs-nuxt',
   ],
 
   // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
@@ -118,6 +119,24 @@ export default defineNuxtConfig({
 
   // Typescript https://nuxt.com/docs/api/configuration/nuxt-config#typescript
   typescript: {},
+
+  // Dayjs
+  dayjs: {
+    defaultLocale: 'en-gb',
+    locales: ['en-gb', 'sr', 'cs'],
+    plugins: [
+      'duration',
+      'customParseFormat',
+      'isBetween',
+      'isSameOrAfter',
+      'isSameOrBefore',
+      'isoWeek',
+      'dayOfYear',
+      'utc',
+      'timezone',
+      'quarterOfYear',
+    ],
+  },
 
   i18n: {
     langDir: '../i18n',
