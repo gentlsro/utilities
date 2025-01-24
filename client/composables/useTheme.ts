@@ -1,4 +1,4 @@
-import utilsConfig from '../../.nuxt/generated/utils'
+import { utilsConfig } from '$utilsConfig'
 
 export function useTheme() {
   const prefersDark = usePreferredDark()
