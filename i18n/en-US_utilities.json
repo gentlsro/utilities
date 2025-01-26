@@ -71,7 +71,9 @@
     "uploadFile": "Upload file | Upload files",
     "noValue": "No value",
     "preview": "Preview",
-    "selection": "Selection"
+    "selection": "Selection",
+    "errorOccured": "An error occurred",
+    "submittedSuccessfully": "Submitted successfully"
   },
   "zod": {
     "errors": {

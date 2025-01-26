@@ -71,7 +71,9 @@
     "uploadFile": "Nahrát soubor | Nahrát soubory",
     "noValue": "Bez hodnoty",
     "preview": "Ukázka",
-    "selection": "Výběr"
+    "selection": "Výběr",
+    "errorOccured": "Došlo k chybě",
+    "submittedSuccessfully": "Úspěšně provedeno"
   },
   "zod": {
     "errors": {

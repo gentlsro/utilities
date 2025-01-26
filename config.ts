@@ -79,7 +79,7 @@ type DataType =
 export type IUtilitiesConfig = {
   general: {
     domain?: string
-    transliterate: boolean
+    transliterate?: boolean
   }
 
   /**
@@ -101,7 +101,7 @@ export type IUtilitiesConfig = {
    * Logging
    */
   logging: {
-    limit: number
+    limit?: number
   }
 
   // Request handling
@@ -109,17 +109,17 @@ export type IUtilitiesConfig = {
     /**
      * Key to get the payload from the response
      */
-    payloadKey: string
+    payloadKey?: string
 
     /**
      * Function to modify the response data
      */
-    modifyFnc: undefined | ((res: any) => any)
+    modifyFnc?: undefined | ((res: any) => any)
 
     /**
      *
      */
-    errorHandler: ((error: any, t: any) => any[]) | undefined
+    errorHandler?: ((error: any, t: any) => any[]) | undefined
   }
 }
 
@@ -165,7 +165,7 @@ export const defaultUtilitiesConfig = {
      */
     errorHandler: undefined,
   },
-} as IUtilitiesConfig
+} satisfies IUtilitiesConfig
 
 export function extendUtilitiesConfig<T extends Partial<IUtilitiesConfig> & IItem>(config: T): T {
   return config

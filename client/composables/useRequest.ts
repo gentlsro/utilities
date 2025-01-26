@@ -48,35 +48,6 @@ type UseRequestOptions = {
     modifyFnc?: (obj: any) => any
   }
 
-  // Operation logging
-  logging?: {
-    /**
-     * The operation name -> used in operation log table to identify the operation
-     */
-    operationName?: string
-
-    /**
-     * The entity name -> to eventually link the operation to some entity page (like user, product, etc.)
-     */
-    entityName?: string
-
-    /**
-     * The entity key -> some entities may have other unique identifiers than `id`
-     */
-    entityKey?: string
-
-    /**
-     * We can provide custom `entityId` to link the operation to some entity page (like user, product, etc.)
-     * in case the response does not not conform to the standard response format
-     */
-    entityId?: string | number
-
-    /**
-     * When true, the error will not be logged
-     */
-    noLog?: boolean | ((res: any) => boolean)
-  }
-
   /**
    * For custom error handling, we can inject our own function to handle the error
    * The function should return an array of strings of errors
