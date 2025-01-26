@@ -15,14 +15,15 @@ export {
   NUMBER_COMPARATORS,
   SELECTOR_COMPARATORS,
 } from './shared/constants/comparators-by-category.const'
-
 export { cleanValue } from './shared/functions/clean-value'
+
 export { formatValue } from './shared/functions/format-value'
 export { isBooleanish } from './shared/functions/is-booleanish'
 export { isNumeric } from './shared/functions/is-numeric'
 export { isValidDate } from './shared/functions/is-valid-date'
 export { parseValue } from './shared/functions/parse-value'
 export { transliterate } from './shared/functions/transliterate'
+export { traverseChildren } from './shared/functions/traverse-children'
 export { FileModel } from './shared/models/file.model'
 export { FilterItem } from './shared/models/filter-item'
 export { GroupItem } from './shared/models/group-item.model'

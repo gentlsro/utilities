@@ -75,10 +75,11 @@ export type HandlePathOption = {
 const defaultNs = 'zod'
 
 export const makeZodI18nMap: MakeZodI18nMap = option => (issue, ctx) => {
-  const { $i18n } = useNuxtApp()
+  const { $i18n } = tryUseNuxtApp() ?? {}
+  const $t = $i18n?.t ?? ((...args: any[]) => args[0])
 
   const { t, ns, handlePath, zodKeyPrefix } = {
-    t: option?.t ?? $i18n.t,
+    t: $t,
     ns: defaultNs,
     zodKeyPrefix: 'zod',
     ...option,
