@@ -107,7 +107,8 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
   const { loadingInitialState } = options ?? {}
 
   // Utils
-  const { t } = useI18n()
+  const { $i18n } = tryUseNuxtApp() ?? {}
+  const $t = $i18n?.t ?? ((...args: any[]) => args[0])
 
   // Layout
   const errors = ref<string[]>([])
@@ -219,9 +220,9 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
       if (Array.isArray(error.errors) && error.errors.length) {
         const errorsFlat = error.errors.flatMap((err: any) => err)
 
-        errors = errorsFlat.flatMap(errorHandler)
+        errors = errorsFlat.flatMap((err: any) => errorHandler(err, $t))
       } else {
-        errors = errorHandler(error, t)
+        errors = errorHandler(error, $t)
       }
 
       temporaryErrors = errors
@@ -247,7 +248,6 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
       }
 
       isLoading.value = false
-      // abortController.value = undefined
     }
   }
 
