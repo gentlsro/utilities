@@ -7,6 +7,7 @@ export type { IZodValidationItem, IZodValidationOutput } from './client/types/zo
 export { useFiltering } from './shared/composables/useFiltering'
 export { useGrouping } from './shared/composables/useGrouping'
 export { useSearching } from './shared/composables/useSearching'
+export { useSemiRandom } from './shared/composables/useSemiRandom'
 export { useSorting } from './shared/composables/useSorting'
 export { useText } from './shared/composables/useText'
 export {
