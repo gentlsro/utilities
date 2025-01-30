@@ -17,6 +17,7 @@ export {
   NUMBER_COMPARATORS,
   SELECTOR_COMPARATORS,
 } from './shared/constants/comparators-by-category.const'
+export { ZOD_VALIDATORS } from './shared/constants/zod-validators'
 export { cleanValue } from './shared/functions/clean-value'
 
 export { formatValue } from './shared/functions/format-value'
