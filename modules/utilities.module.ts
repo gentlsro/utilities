@@ -49,7 +49,7 @@ ${configPaths.map(({ path }, idx) => {
 }).join('\n')}
 
 export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
-export * from '${base?.cwd}'
+export * from '${base?.cwd}/index'
 
 export type IIUtilitiesConfig = typeof utilsConfig
 export default utilsConfig
