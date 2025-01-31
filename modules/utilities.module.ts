@@ -40,8 +40,6 @@ export default defineNuxtModule({
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
-    const base = configPaths.find(({ isBase }) => isBase)
-
     // Merge the utility configs
     const codeUtilityConfigs = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => {
@@ -49,13 +47,13 @@ ${configPaths.map(({ path }, idx) => {
 }).join('\n')}
 
 export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
-export * from '${base?.cwd}/index'
 
 export type IIUtilitiesConfig = typeof utilsConfig
+export default utilsConfig
 `
 
     addTemplate({
-      filename: 'generated/utils.ts',
+      filename: 'generated/utilsConfig.ts',
       write: true,
       getContents: () => codeUtilityConfigs,
     })
@@ -107,6 +105,16 @@ export type ExtendedDataType = DataType | SimpleDataType`
       getContents: () => dataTypes,
     })
 
+    const base = configPaths.find(({ isBase }) => isBase)
+
+    // Index
+    addTemplate({
+      filename: 'generated/utils.ts',
+      write: true,
+      getContents: () => `export * from '${base?.cwd}/index'
+`,
+    })
+
     nuxt.hook('vite:extendConfig', config => {
       if (!config.resolve) {
         config.resolve = {}
@@ -119,6 +127,7 @@ export type ExtendedDataType = DataType | SimpleDataType`
       config.resolve.alias = {
         ...config.resolve.alias,
         $utils: `${nuxt.options.buildDir}/generated/utils.ts`,
+        $utilsConfig: `${nuxt.options.buildDir}/generated/utilsConfig.ts`,
         $comparatorEnum: `${nuxt.options.buildDir}/generated/comparator-enum.ts`,
         $dataType: `${nuxt.options.buildDir}/generated/data-type.type.ts`,
       }

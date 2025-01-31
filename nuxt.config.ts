@@ -64,6 +64,7 @@ export default defineNuxtConfig({
   // Alias
   alias: {
     $utils: './generated/utils.ts',
+    $utilsConfig: './generated/utilsConfig.ts',
     $utilsLayer: resolve('.'),
     $comparatorEnum: './generated/comparator-enum.ts',
     $dataType: './generated/data-type.type.ts',
@@ -109,8 +110,8 @@ export default defineNuxtConfig({
     },
 
     alias: {
-      $utils: resolve('.'),
       $utils: join(process.cwd(), '.nuxt', 'generated', 'utils.ts'),
+      $utilsConfig: join(process.cwd(), '.nuxt', 'generated', 'utilsConfig.ts'),
       $comparatorEnum: join(process.cwd(), '.nuxt', 'generated', 'comparator-enum.ts'),
       $dataType: join(process.cwd(), '.nuxt', 'generated', 'data-type.type.ts'),
     },

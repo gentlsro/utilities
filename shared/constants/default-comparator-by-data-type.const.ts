@@ -1,4 +1,4 @@
-import { utilsConfig } from '$utils'
+import utilsConfig from '$utilsConfig'
 import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 

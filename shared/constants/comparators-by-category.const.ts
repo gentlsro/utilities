@@ -1,5 +1,5 @@
 import { ComparatorEnum } from '$comparatorEnum'
-import { utilsConfig } from '$utils'
+import utilsConfig from '$utilsConfig'
 
 export const NON_VALUE_COMPARATORS = [
   ComparatorEnum.IS_EMPTY,

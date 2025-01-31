@@ -1,6 +1,6 @@
 // @unocss-include
 import { get, uniq } from 'lodash-es'
-import { utilsConfig } from '$utils'
+import utilsConfig from '$utilsConfig'
 
 // Types
 import type { IZodValidationOutput } from '../types/zod'
