@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { utilsConfig } from '$utilsConfig'
+import { utilsConfig } from '$utils'
 import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 

@@ -1,4 +1,4 @@
-import { utilsConfig } from '$utilsConfig'
+import { utilsConfig } from '$utils'
 
 export function useTheme() {
   const prefersDark = usePreferredDark()

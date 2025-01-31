@@ -1,5 +1,5 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
-import { utilsConfig } from '$utilsConfig'
+import { utilsConfig } from '$utils'
 
 export function useLocale() {
   const localeCookie = useCookie('lang', { domain: utilsConfig.general.domain })

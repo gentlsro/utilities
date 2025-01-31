@@ -1,4 +1,4 @@
-import { utilsConfig } from '$utilsConfig'
+import { utilsConfig } from '$utils'
 
 // Types
 import type { ExtendedDataType } from '$dataType'
