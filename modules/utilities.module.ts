@@ -119,6 +119,7 @@ export type ExtendedDataType = DataType | SimpleDataType`
 
       config.resolve.alias = {
         ...config.resolve.alias,
+        $utils: `${nuxt.options.buildDir}/generated/utils.ts`,
         $utilsConfig: `${nuxt.options.buildDir}/generated/utils.ts`,
         $comparatorEnum: `${nuxt.options.buildDir}/generated/comparator-enum.ts`,
         $dataType: `${nuxt.options.buildDir}/generated/data-type.type.ts`,
