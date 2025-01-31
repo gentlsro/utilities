@@ -52,7 +52,6 @@ export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx
 export * from '${base?.cwd}/index'
 
 export type IIUtilitiesConfig = typeof utilsConfig
-export default utilsConfig
 `
 
     addTemplate({
@@ -120,7 +119,6 @@ export type ExtendedDataType = DataType | SimpleDataType`
       config.resolve.alias = {
         ...config.resolve.alias,
         $utils: `${nuxt.options.buildDir}/generated/utils.ts`,
-        $utilsConfig: `${nuxt.options.buildDir}/generated/utils.ts`,
         $comparatorEnum: `${nuxt.options.buildDir}/generated/comparator-enum.ts`,
         $dataType: `${nuxt.options.buildDir}/generated/data-type.type.ts`,
       }

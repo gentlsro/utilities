@@ -65,7 +65,6 @@ export default defineNuxtConfig({
   alias: {
     $utils: './generated/utils.ts',
     $utilsLayer: resolve('.'),
-    $utilsConfig: './generated/utils.ts',
     $comparatorEnum: './generated/comparator-enum.ts',
     $dataType: './generated/data-type.type.ts',
   },
