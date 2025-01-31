@@ -36,9 +36,11 @@ export default defineNuxtModule({
         const isBase = layer.cwd === currentDir
         const configPath = isBase ? 'config' : 'utilities-config'
 
-        return { path: resolve(layer.cwd, configPath) }
+        return { path: resolve(layer.cwd, configPath), isBase }
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
+
+    const base = configPaths.find(({ isBase }) => isBase)
 
     // Merge the utility configs
     const codeUtilityConfigs = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
@@ -47,6 +49,7 @@ ${configPaths.map(({ path }, idx) => {
 }).join('\n')}
 
 export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
+export * from '${base?.path}'
 
 export type IIUtilitiesConfig = typeof utilsConfig
 export default utilsConfig
@@ -116,7 +119,6 @@ export type ExtendedDataType = DataType | SimpleDataType`
 
       config.resolve.alias = {
         ...config.resolve.alias,
-        $utils: `${nuxt.options.rootDir}/index.ts`,
         $utilsConfig: `${nuxt.options.buildDir}/generated/utils.ts`,
         $comparatorEnum: `${nuxt.options.buildDir}/generated/comparator-enum.ts`,
         $dataType: `${nuxt.options.buildDir}/generated/data-type.type.ts`,
