@@ -36,7 +36,7 @@ export default defineNuxtModule({
         const isBase = layer.cwd === currentDir
         const configPath = isBase ? 'config' : 'utilities-config'
 
-        return { path: resolve(layer.cwd, configPath), isBase }
+        return { path: resolve(layer.cwd, configPath), isBase, cwd: layer.cwd }
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
@@ -49,7 +49,7 @@ ${configPaths.map(({ path }, idx) => {
 }).join('\n')}
 
 export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
-export * from '${base?.path}'
+export * from '${base?.cwd}'
 
 export type IIUtilitiesConfig = typeof utilsConfig
 export default utilsConfig
