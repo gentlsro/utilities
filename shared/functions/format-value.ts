@@ -33,7 +33,7 @@ export function formatValue(
   const customFormatFnc = options.dataType && utilsConfig.dataTypeExtend.formatFncByDataType[options.dataType]
 
   if (customFormatFnc) {
-    return customFormatFnc(value, row, options)
+    return customFormatFnc(value, row, { ...options, formatFnc: formatValue })
   }
 
   // When `value` is equal to the `emptyValue`, we just return it
