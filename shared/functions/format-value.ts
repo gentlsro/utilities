@@ -1,27 +1,13 @@
+import { utilsConfig } from '$utilsConfig'
+
 // Types
-import type { ComparatorEnum } from '$comparatorEnum'
-import type { ExtendedDataType } from '$dataType'
+import type { IFormatValueOptions } from '../types/format-value-options.type'
 
 // Functions
-import { predictDataType, type PredictDataTypeOptions } from './predict-data-type'
+import { predictDataType } from './predict-data-type'
 import { useDateUtils as useDateUtilsShared } from '../../shared/composables/useDateUtils'
 import { useNumber as useNumberShared } from '../../shared/composables/useNumber'
 import { useDuration as useDurationShared } from '../../shared/composables/useDuration'
-
-export type IFormatValueOptions = {
-  comparator?: ComparatorEnum
-  dataType?: ExtendedDataType
-  dateFormat?: string
-  emptyValue?: any
-  localeIso?: string
-  predictDataType?: PredictDataTypeOptions
-
-  format?: (
-    row: any,
-    value: any,
-    options?: Pick<IFormatValueOptions, 'dataType' | 'emptyValue' | 'comparator'>
-  ) => any
-}
 
 /**
  * Formats the value from given data type to string
@@ -42,6 +28,13 @@ export function formatValue(
   const { formatDate, formatTime } = useDateUtilsShared(localeIso)
   const { formatNumber } = useNumberShared(localeIso)
   const { getDuration } = useDurationShared(localeIso)
+
+  // In case we have a custom format function, we use that
+  const customFormatFnc = options.dataType && utilsConfig.dataTypeExtend.formatFncByDataType[options.dataType]
+
+  if (customFormatFnc) {
+    return customFormatFnc(value, row, options)
+  }
 
   // When `value` is equal to the `emptyValue`, we just return it
   if (isEqual(value, emptyValue)) {

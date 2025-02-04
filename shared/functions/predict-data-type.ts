@@ -1,16 +1,11 @@
 // Types
 import type { ExtendedDataType } from '$dataType'
+import type { PredictDataTypeOptions } from '../types/predict-data-type-options.type'
 
 // Functions
 import { isNumeric } from './is-numeric'
 import { isValidDate } from './is-valid-date'
 import { isBooleanish } from './is-booleanish'
-
-export type PredictDataTypeOptions<T extends IItem = IItem> = {
-  rows: T[]
-  field: string
-  useSimple?: boolean
-}
 
 export function predictDataType(
   options: PredictDataTypeOptions,

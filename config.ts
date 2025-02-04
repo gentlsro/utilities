@@ -2,6 +2,7 @@
 import type { ExtendedDataType } from '$dataType'
 
 import type { ComparatorEnum as MergedComparatorEnum } from '$comparatorEnum'
+import type { IFormatValueOptions } from './shared/types/format-value-options.type'
 
 type IComponent = {
   component: Component
@@ -90,6 +91,9 @@ export type IUtilitiesConfig = {
     comparatorsByDataType?: Partial<Record<ExtendedDataType, MergedComparatorEnum[]>>
     defaultComparatorByDataType?: Partial<Record<ExtendedDataType, ComparatorEnum>>
     inputByDataType?: Partial<Record<ExtendedDataType, IComponent | undefined>>
+    formatFncByDataType?: Partial<
+      Record<ExtendedDataType, ((value: any, row?: any, formatOptions?: IFormatValueOptions) => any)>
+    >
 
     // We can also extend some of the predefined categories of data types
     selectorComparators?: MergedComparatorEnum[]
@@ -141,6 +145,9 @@ export const defaultUtilitiesConfig = {
     selectorComparators: [] as MergedComparatorEnum[],
     nonValueComparators: [] as MergedComparatorEnum[],
     booleanishComparators: [] as MergedComparatorEnum[],
+    formatFncByDataType: {} as Partial<
+      Record<ExtendedDataType, ((value: any, row?: any, formatOptions?: IFormatValueOptions) => any)>
+    >,
   },
 
   // Logging
