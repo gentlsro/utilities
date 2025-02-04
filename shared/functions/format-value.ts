@@ -29,11 +29,8 @@ export function formatValue(
   const { formatNumber } = useNumberShared(localeIso)
   const { getDuration } = useDurationShared(localeIso)
 
-  console.log('formatValue', value, row, options)
-
   // In case we have a custom format function, we use that
   const customFormatFnc = options.dataType && utilsConfig.dataTypeExtend.formatFncByDataType[options.dataType]
-  console.log('Log ~ customFormatFnc:', customFormatFnc)
 
   if (customFormatFnc) {
     return customFormatFnc(value, row, { ...options, formatFnc: formatValue })
