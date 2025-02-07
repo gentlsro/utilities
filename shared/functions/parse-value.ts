@@ -1,8 +1,10 @@
-// Types
 import type { ExtendedDataType } from '$dataType'
 
+// Types
+import type { PredictDataTypeOptions } from '../types/predict-data-type-options.type'
+
 // Functions
-import { predictDataType, type PredictDataTypeOptions } from './predict-data-type'
+import { predictDataType } from './predict-data-type'
 
 /**
  * Will parse value from string to the given data type
