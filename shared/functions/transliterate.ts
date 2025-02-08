@@ -3,11 +3,16 @@
  */
 export function transliterate(
   word: string = '',
-  options?: { allowedCharsRegex?: RegExp, returnUnmatched?: boolean },
+  options?: {
+    allowedCharsRegex?: RegExp
+    returnUnmatched?: boolean
+    lowercase?: boolean
+  },
 ): string {
   const {
     allowedCharsRegex = /^[0-9a-z ]+$/i,
     returnUnmatched = false,
+    lowercase = false,
   } = options || {}
 
   const map = new Map<string, string>([
@@ -95,5 +100,6 @@ export function transliterate(
 
       return ''
     })
+    .map(char => lowercase ? char!.toLowerCase() : char)
     .join('')
 }
