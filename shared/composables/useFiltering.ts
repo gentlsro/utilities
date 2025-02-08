@@ -111,7 +111,9 @@ export function useFiltering() {
     // Transliteration
     if (dataType === 'string' || dataType === 'stringSimple') {
       formattedRowValue = textFnc(formattedRowValue ?? '') || undefined
+      console.log('Log ~ useFiltering ~ formattedRowValue:', formattedRowValue)
       formattedValue = textFnc(formattedValue ?? '') || undefined
+      console.log('Log ~ useFiltering ~ formattedValue:', formattedValue)
     }
 
     switch (comparator) {
