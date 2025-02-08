@@ -26,13 +26,15 @@ export function translateNestedKey(
     prefix?: string[]
   },
 ) {
+  const { $i18n } = tryUseNuxtApp() ?? {}
+  const { t = (...args: any[]) => args[0] } = $i18n ?? {}
+
   const {
     nestedKey = 'self',
     plural = 1,
     translateOptions,
     prefix,
   } = options ?? {}
-  const { t } = useI18n()
   const translated = t(key, +plural, translateOptions)
   const isSame = key === translated
 
