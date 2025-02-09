@@ -1,3 +1,4 @@
+import utilsConfig from '$utilsConfig'
 import Fuse, { type FuseResult } from 'fuse.js'
 import { klona } from 'klona/full'
 import type { Required } from 'utility-types'
@@ -5,7 +6,7 @@ import type { FuseOptions } from '@vueuse/integrations/useFuse'
 
 // Functions
 import { useText } from './useText'
-import type { ObjectKey } from '../types/object-key.type'
+import { transliterate } from '../functions/transliterate'
 
 export function removeDots(str: string) {
   return str.replace(/\./g, '')
@@ -57,11 +58,11 @@ export function useSearching() {
       _extra,
     } = payload
 
-    const normalizeFnc = payload.normalizeFnc ?? normalizeText
-    console.log('Log ~ useSearching ~ payload.normalizeFnc:', payload.normalizeFnc)
+    const normalizeFnc = utilsConfig.general.transliterate
+      ? transliterate
+      : normalizeText
 
     const search = normalizeFnc(toValue(searchRef) ?? '')
-    console.log('Log ~ useSearching ~ search:', search)
     const rows = toValue(rowsRef)
     const columns = toValue(columnsRef)
     const optionsClone = klona(fuseOptions)
@@ -105,7 +106,6 @@ export function useSearching() {
         return agg
       }, {})
     })
-    console.log('Log ~ useSearching ~ rowsRelevantData:', rowsRelevantData)
 
     // We need to remove dots from keys, because we've removed them above in the reducer
     // and fuse.js would do it again, so the search would not work properly
