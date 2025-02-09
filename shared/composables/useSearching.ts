@@ -58,8 +58,10 @@ export function useSearching() {
     } = payload
 
     const normalizeFnc = payload.normalizeFnc ?? normalizeText
+    console.log('Log ~ useSearching ~ payload.normalizeFnc:', payload.normalizeFnc)
 
     const search = normalizeFnc(toValue(searchRef) ?? '')
+    console.log('Log ~ useSearching ~ search:', search)
     const rows = toValue(rowsRef)
     const columns = toValue(columnsRef)
     const optionsClone = klona(fuseOptions)
@@ -103,6 +105,7 @@ export function useSearching() {
         return agg
       }, {})
     })
+    console.log('Log ~ useSearching ~ rowsRelevantData:', rowsRelevantData)
 
     // We need to remove dots from keys, because we've removed them above in the reducer
     // and fuse.js would do it again, so the search would not work properly
