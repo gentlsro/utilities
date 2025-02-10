@@ -8,8 +8,12 @@ import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import { useText } from './useText'
 import { transliterate } from '../functions/transliterate'
 
-export function removeDots(str: string) {
-  return str.replace(/\./g, '')
+export function removeDots(str: string | (() => string)) {
+  const _str = typeof str === 'function'
+    ? str()
+    : str
+
+  return _str.replace(/\./g, '')
 }
 
 export function removeCommas(str: string) {
@@ -95,8 +99,6 @@ export function useSearching() {
 
     const rowsRelevantData = rows.map<Record<string, any>>(row => {
       return columnsRelevant.reduce<Record<string, any>>((agg, col) => {
-        console.log(row, col)
-
         agg[removeDots(col.name as string)] = normalizeFnc(
           removeCommas(
             'format' in col && col.format
