@@ -95,8 +95,12 @@ export function useSearching() {
 
     const rowsRelevantData = rows.map<Record<string, any>>(row => {
       return columnsRelevant.reduce<Record<string, any>>((agg, col) => {
-        const colName = col.name
-        console.log('Log ~ useSearching ~ col:', col, colName)
+        const colName = typeof col.name === 'function'
+          ? col.name(row)
+          : col.name
+
+        console.log(col)
+        console.log(col.name)
 
         agg[removeDots(colName)] = normalizeFnc(
           removeCommas(
