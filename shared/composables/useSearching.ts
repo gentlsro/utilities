@@ -8,7 +8,9 @@ import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import { useText } from './useText'
 import { transliterate } from '../functions/transliterate'
 
-export function removeDots(str: string | (() => string)) {
+export function removeDots(str: string | ((row: any) => string)) {
+  console.log('Log ~ removeDots ~ str:', str)
+
   const _str = typeof str === 'function'
     ? str()
     : str
