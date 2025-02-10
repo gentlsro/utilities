@@ -84,20 +84,19 @@ export function useSearching() {
       return agg
     }, {} as Record<ObjectKey<T> | string, IItem<T>>)
 
-    const columnsRelevant = (optionsClone.keys as unknown as string[]).map(key => {
+    const columnsRelevant = (optionsClone.keys as unknown as string[]).map((key, idx) => {
       const col = colsByName?.[key]
       if (col) {
         return col
       }
 
       if (typeof key === 'function') {
-        return { field: `_${key}`, name: `_${key}`, format: key }
+        return { field: `_${idx}`, name: `_${idx}`, format: key }
       }
 
       return { name: key, field: key as any }
     })
 
-    console.log('Log ~ useSearching ~ columnsRelevant:', columnsRelevant)
     const rowsRelevantData = rows.map<Record<string, any>>(row => {
       return columnsRelevant.reduce<Record<string, any>>((agg, col) => {
         agg[removeDots(col.name)] = normalizeFnc(
