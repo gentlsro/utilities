@@ -90,19 +90,16 @@ export function useSearching() {
         return col
       }
 
+      if (typeof key === 'function') {
+        return { field: `_${key}`, name: `_${key}`, format: key }
+      }
+
       return { name: key, field: key as any }
     })
 
     const rowsRelevantData = rows.map<Record<string, any>>(row => {
       return columnsRelevant.reduce<Record<string, any>>((agg, col) => {
-        const colName = typeof col.name === 'function'
-          ? col.name(row)
-          : col.name
-
-        console.log(col)
-        console.log(col.name)
-
-        agg[removeDots(colName)] = normalizeFnc(
+        agg[removeDots(col.name)] = normalizeFnc(
           removeCommas(
             'format' in col && col.format
               ? col.format(row)
