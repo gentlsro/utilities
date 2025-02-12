@@ -1,5 +1,5 @@
-import type { ComparatorEnum } from '../../.nuxt/generated/comparator-enum'
-import type { ExtendedDataType } from '../../.nuxt/generated/data-type.type'
+import type { ComparatorEnum } from '$comparatorEnum'
+import type { ExtendedDataType } from '$dataType'
 import type { PredictDataTypeOptions } from './predict-data-type-options.type'
 
 export type IFormatValueOptions = {
