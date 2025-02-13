@@ -1,3 +1,4 @@
+export { blurAnyFocusedInput } from './client/functions/blur-any-focused-input'
 export { cleanObject } from './client/functions/clean-object'
 export { handleDownloadFile } from './client/functions/download-file'
 export { getElementSize } from './client/functions/get-element-size'
