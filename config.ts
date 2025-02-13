@@ -6,7 +6,7 @@ import type { IFormatValueOptions } from './shared/types/format-value-options.ty
 import type { formatValue } from './shared/functions/format-value'
 
 type IComponent = {
-  component: Component
+  component: string
   props?: IItem
   icon?: string
 }
