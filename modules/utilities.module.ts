@@ -1,5 +1,6 @@
 import { addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { existsSync, readFileSync } from 'node:fs'
+import { relative } from 'node:path'
 
 const { resolve } = createResolver(import.meta.url)
 const currentDir = resolve('..')
@@ -31,10 +32,15 @@ function extractTypeContent(content: string, typeName: string) {
 export default defineNuxtModule({
   setup: async (_, nuxt) => {
     console.log('✔ Creating utilities virtual file...')
+    const componentPaths: string[] = []
+
     const configPaths = nuxt.options._layers
       .map(layer => {
         const isBase = layer.cwd === currentDir
         const configPath = isBase ? 'config' : 'utilities-config'
+
+        componentPaths.push(relative(process.cwd(), `${layer.cwd}/client/components/**/*.vue`))
+        componentPaths.push(relative(process.cwd(), `${layer.cwd}/client/libs/**/*.vue`))
 
         return { path: resolve(layer.cwd, configPath), isBase, cwd: layer.cwd }
       })
@@ -79,6 +85,7 @@ export default utilsConfig
       getContents: () => configContents,
     })
 
+    // Merge the data types
     let dataTypes = configPaths
       .map(({ path }) => {
         const fileContents = readFileSync(`${path}.ts`, 'utf-8')
@@ -107,11 +114,40 @@ export type ExtendedDataType = DataType | SimpleDataType`
 
     const base = configPaths.find(({ isBase }) => isBase)
 
-    // Index
+    // Expose index
     addTemplate({
       filename: 'generated/utils.ts',
       write: true,
       getContents: () => `export * from '${base?.cwd}/index'
+`,
+    })
+
+    // Map components by name
+    addTemplate({
+      filename: 'generated/components-by-name.ts',
+      write: true,
+      getContents: () => `import { defu } from 'defu'
+import type { AsyncComponentLoader } from 'vue'
+
+${componentPaths.map((path, idx) => {
+  return `const components${idx} = import.meta.glob('../../${path}')`
+}).join('\n')}
+
+const componentsImportByPath = defu(\n${componentPaths.map((_, idx) => {
+  return `  components${idx}`
+}).join(',\n')},
+) as Record<string, AsyncComponentLoader<Component>>
+
+export const componentsImportByName = Object.entries(componentsImportByPath)
+  .reduce((agg, [key, value]) => {
+    const componentName = key.split('/')?.at(-1)?.slice(0, -4)
+
+    if (componentName) {
+      agg[componentName] = value
+    }
+
+    return agg
+  }, {} as Record<string, AsyncComponentLoader<Component>>)
 `,
     })
 
@@ -130,6 +166,7 @@ export type ExtendedDataType = DataType | SimpleDataType`
         $utilsConfig: `${nuxt.options.buildDir}/generated/utilsConfig.ts`,
         $comparatorEnum: `${nuxt.options.buildDir}/generated/comparator-enum.ts`,
         $dataType: `${nuxt.options.buildDir}/generated/data-type.type.ts`,
+        $components: `${nuxt.options.buildDir}/generated/components-by-name.ts`,
       }
     })
   },
