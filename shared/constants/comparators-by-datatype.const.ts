@@ -1,7 +1,14 @@
+import { utilsConfig } from '$utilsConfig'
 import type { ExtendedDataType } from '$dataType'
 import { ComparatorEnum } from '$comparatorEnum'
 
 export function getComparatorsByDataType(dataType: ExtendedDataType) {
+  const comparators = utilsConfig.dataTypeExtend.comparatorsByDataType?.[dataType]
+
+  if (comparators) {
+    return comparators
+  }
+
   switch (dataType) {
     case 'string':
     case 'stringSimple':
