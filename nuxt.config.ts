@@ -152,6 +152,7 @@ export default defineNuxtConfig({
         file: 'en-US_utilities.json',
         dateFormat: 'MM/DD/YYYY',
         currency: 'USD',
+        language: 'English',
         icon: 'i-emojione:flag-for-united-kingdom',
       },
       {
@@ -159,6 +160,7 @@ export default defineNuxtConfig({
         file: 'cs-CZ_utilities.json',
         dateFormat: 'DD.MM.YYYY',
         currency: 'CZK',
+        language: 'Česky',
         icon: 'i-emojione:flag-for-czechia',
       },
     ],
