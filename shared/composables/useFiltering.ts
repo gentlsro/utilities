@@ -36,7 +36,20 @@ export function useFiltering() {
     dataRef: MaybeRefOrGetter<T[]>,
     filtersRef: MaybeRefOrGetter<IFilter<T>[]>,
     rowKey = 'id',
+
+    options?: {
+      /**
+       * When true, the function will not stop after the first invalid filter
+       */
+      runAll?: boolean
+
+      /**
+       * When provided, the function will be called when a filter is invalid
+       */
+      onInvalid?: (filter: any, row: T) => void
+    },
   ) => {
+    const { runAll = false, onInvalid } = options ?? {}
     const data = toValue(dataRef)
     const filters = toValue(filtersRef)
 
@@ -45,7 +58,7 @@ export function useFiltering() {
 
       filters.forEach(f => {
         // Prevent cycle from running unnecessarily
-        if (!valid) {
+        if (!valid && !runAll) {
           return
         }
 
@@ -71,15 +84,33 @@ export function useFiltering() {
 
           if (!isAndCondition) {
             f.value.forEach(cVal => {
-              validInArray = validInArray || handleFilter(f.comparator, rowValue, cVal, f.dataType)
+              const isFilterValid = handleFilter(f.comparator, rowValue, cVal, f.dataType)
+
+              if (!isFilterValid) {
+                onInvalid?.(f, row)
+              }
+
+              validInArray = validInArray || isFilterValid
             })
           } else {
-            validInArray = validInArray || handleFilter(f.comparator, rowValue, f.value, f.dataType)
+            const isFilterValid = handleFilter(f.comparator, rowValue, f.value, f.dataType)
+
+            if (!isFilterValid) {
+              onInvalid?.(f, row)
+            }
+
+            validInArray = validInArray || isFilterValid
           }
 
           valid = valid && validInArray
         } else {
-          valid = valid && handleFilter(f.comparator, rowValue, f.value, f.dataType)
+          const isFilterValid = handleFilter(f.comparator, rowValue, f.value, f.dataType)
+
+          if (!isFilterValid) {
+            onInvalid?.(f, row)
+          }
+
+          valid = valid && isFilterValid
         }
 
         return valid
