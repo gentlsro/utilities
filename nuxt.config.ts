@@ -1,4 +1,4 @@
-import { createResolver } from '@nuxt/kit'
+import { createResolver } from 'nuxt/kit'
 import { join } from 'node:path'
 
 const { resolve } = createResolver(import.meta.url)

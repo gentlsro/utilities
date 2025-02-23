@@ -1,4 +1,4 @@
-import { addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { addTemplate, createResolver, defineNuxtModule } from 'nuxt/kit'
 import { existsSync, readFileSync } from 'node:fs'
 import { relative } from 'node:path'
 
