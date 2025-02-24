@@ -13,7 +13,7 @@ class CustomError extends Error {
   }
 }
 
-type UseRequestOptions = {
+type UseRequestOptions<T = any> = {
   payloadKey?: string
   $z?: IZodValidationOutput<any>
 
@@ -57,7 +57,7 @@ type UseRequestOptions = {
   /**
    * When valid request is done, we call this function
    */
-  onComplete?: () => void
+  onComplete?: (res: T) => void
 
   /**
    * When the request is done, the `onNotify` function will be called
@@ -179,7 +179,7 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
       // Notify about success
       onNotify?.({ payload: resPayload, type: 'positive' })
 
-      onComplete?.()
+      onComplete?.(res)
       $z?.value.$reset()
 
       return (noResolve ? res : resPayload) as T
