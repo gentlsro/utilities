@@ -1,3 +1,4 @@
+import type { Locale } from '#i18n'
 import type { RouteLocationRaw } from 'vue-router'
 
 // Types
@@ -8,7 +9,7 @@ import type { NavigateToOptions } from '../types/navigate-to.type'
  */
 export function $nav(
   route: RouteLocationRaw,
-  locale?: string | undefined,
+  locale?: Locale | undefined,
   options?: NavigateToOptions,
 ) {
   const localePath = useLocalePath()

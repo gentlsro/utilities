@@ -1,5 +1,4 @@
 // @unocss-include
-import { get, uniq } from 'lodash-es'
 import utilsConfig from '$utilsConfig'
 
 // Types
