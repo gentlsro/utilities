@@ -27,7 +27,7 @@ export function useSearching() {
     searchRef?: MaybeRefOrGetter<string>
     rowsRef: MaybeRefOrGetter<Array<T>>
     fuseOptions: Required<FuseOptions<any>, 'keys'>
-    columnsRef?: MaybeRefOrGetter<Array<IItem<T>>>
+    columnsRef?: MaybeRefOrGetter<Array<IItem>>
     useWorker?: boolean
     normalizeFnc?: (val: string) => string
 
