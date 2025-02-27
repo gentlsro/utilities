@@ -1,3 +1,5 @@
+import { klona } from 'klona/full'
+
 export function moveItems<T = any>(payload: {
   arrayRef: Ref<T[]>
   toMoveRef: MaybeRefOrGetter<T[]>
@@ -5,7 +7,7 @@ export function moveItems<T = any>(payload: {
 },
 ) {
   const { arrayRef, toIndex, toMoveRef } = payload
-  let items = toValue(arrayRef)
+  let items = klona(toValue(arrayRef))
   const toMove = toValue(toMoveRef)
 
   const splicedItems: T[] = []
@@ -24,5 +26,5 @@ export function moveItems<T = any>(payload: {
     ...splicedItems,
   )
 
-  arrayRef.value = items
+  return items.filter(item => !(item as any)._moved)
 }
