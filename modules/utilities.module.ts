@@ -130,6 +130,10 @@ export type ExtendedDataType = DataType | SimpleDataType`
 import type { AsyncComponentLoader } from 'vue'
 
 ${componentPaths.map((path, idx) => {
+  if (path.includes('node_modules')) {
+    return `const components${idx} = import.meta.glob('${path.replace('node_modules', '')}')`
+  }
+
   return `const components${idx} = import.meta.glob('../../${path}')`
 }).join('\n')}
 
