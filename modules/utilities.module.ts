@@ -122,37 +122,105 @@ export type ExtendedDataType = DataType | SimpleDataType`
 `,
     })
 
+    //     // Replace your current addTemplate for components-by-name.ts with this:
+    //     addTemplate({
+    //       filename: 'generated/components-by-name.ts',
+    //       write: true,
+    //       getContents: async () => {
+    //         // Use globby to find all component files at build time
+    //         const { globby } = await import('globby')
+    //         const allComponentFiles = []
+
+    //         // Collect all component files from all paths
+    //         for (const path of componentPaths) {
+    //           const files = await globby(path)
+    //           allComponentFiles.push(...files)
+    //         }
+
+    //         // Generate explicit imports for each component
+    //         const imports = allComponentFiles.map((file, index) => {
+    //           const componentName = file.split('/').pop()?.replace('.vue', '')
+    //           return `import * as _component${index} from '/${file}'`
+    //         }).join('\n')
+
+    //         // Create the component registry
+    //         const registry = allComponentFiles.map((file, index) => {
+    //           const componentName = file.split('/').pop()?.replace('.vue', '')
+    //           return `  "${componentName}": () => import('/${file}')`
+    //         }).join(',\n')
+
+    //         return `import type { AsyncComponentLoader } from 'vue'
+
+    // // Log the available components in development
+    // const availableComponents = ${JSON.stringify(
+    //   allComponentFiles.map(file => file.split('/').pop()?.replace('.vue', '')),
+    // )};
+    // console.log('Available components:', availableComponents);
+
+    // export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {
+    // ${registry}
+    // }
+    // `
+    //       },
+    //     })
+
     // Map components by name
     addTemplate({
       filename: 'generated/components-by-name.ts',
       write: true,
-      getContents: () => `import { defu } from 'defu'
-import type { AsyncComponentLoader } from 'vue'
+      getContents: async () => {
+        const { globby } = await import('globby')
+        const { resolve, relative } = await import('node:path')
+        const fs = await import('node:fs')
 
-${componentPaths.map((path, idx) => {
-  return `const components${idx} = import.meta.glob('../../${path}')`
-}).join('\n')}
+        // Create a map to store component names and their actual file paths
+        const componentMap = new Map()
 
-const componentsImportByPath = defu(\n${componentPaths.map((_, idx) => {
-  return `  components${idx}`
-}).join(',\n')},
-) as Record<string, AsyncComponentLoader<Component>>
+        // Process each layer to find components
+        for (const layer of nuxt.options._layers) {
+          const layerRoot = layer.cwd
 
-console.log(componentsImportByPath)
+          // These are the patterns within each layer
+          const patterns = [
+            'client/components/**/*.vue',
+            'client/libs/**/*.vue',
+          ]
 
-export const componentsImportByName = Object.entries(componentsImportByPath)
-  .reduce((agg, [key, value]) => {
-    const componentName = key.split('/')?.at(-1)?.slice(0, -4)
+          // For each pattern, find matching files in this layer
+          for (const pattern of patterns) {
+            const fullPattern = resolve(layerRoot, pattern)
+            try {
+              const files = await globby(fullPattern)
 
-    if (componentName) {
-      agg[componentName] = value
-    }
+              for (const file of files) {
+                const componentName = file.split('/').pop()?.replace('.vue', '')
+                if (componentName) {
+                  // Store the absolute file path
+                  componentMap.set(componentName, file)
+                }
+              }
+            } catch (err) {
+              console.warn(`Failed to glob pattern ${fullPattern}:`, err)
+            }
+          }
+        }
 
-    return agg
-  }, {} as Record<string, AsyncComponentLoader<Component>>)
+        // Generate explicit dynamic imports for each component
+        const imports = []
+        for (const [name, filePath] of componentMap.entries()) {
+          // We need to ensure the path is properly formatted for webpack/vite
+          const normalizedPath = filePath.replace(/\\/g, '/')
+          imports.push(`  "${name}": () => import("${normalizedPath}")`)
+        }
 
-  console.log(componentsImportByName)
-`,
+        return `import type { AsyncComponentLoader, Component } from 'vue'
+
+// Component registry generated at build time
+export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {
+${imports.join(',\n')}
+}
+`
+      },
     })
 
     nuxt.hook('vite:extendConfig', config => {
