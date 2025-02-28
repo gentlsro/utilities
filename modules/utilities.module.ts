@@ -148,6 +148,8 @@ export const componentsImportByName = Object.entries(componentsImportByPath)
 
     return agg
   }, {} as Record<string, AsyncComponentLoader<Component>>)
+
+  console.log(componentsImportByName)
 `,
     })
 
