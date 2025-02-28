@@ -138,6 +138,8 @@ const componentsImportByPath = defu(\n${componentPaths.map((_, idx) => {
 }).join(',\n')},
 ) as Record<string, AsyncComponentLoader<Component>>
 
+console.log(componentsImportByPath)
+
 export const componentsImportByName = Object.entries(componentsImportByPath)
   .reduce((agg, [key, value]) => {
     const componentName = key.split('/')?.at(-1)?.slice(0, -4)
