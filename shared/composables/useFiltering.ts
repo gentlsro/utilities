@@ -33,8 +33,8 @@ export function useFiltering() {
   const { normalizeText } = useText()
 
   const filterData = <T = IItem>(
-    dataRef: MaybeRefOrGetter<T[]>,
-    filtersRef: MaybeRefOrGetter<IFilter<T>[]>,
+    data: T[],
+    filters: IFilter<T>[],
     rowKey = 'id',
 
     options?: {
@@ -50,8 +50,6 @@ export function useFiltering() {
     },
   ) => {
     const { runAll = false, onInvalid } = options ?? {}
-    const data = toValue(dataRef)
-    const filters = toValue(filtersRef)
 
     return data.filter(row => {
       let valid = true
