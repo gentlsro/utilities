@@ -102,7 +102,7 @@ export function useSearching() {
         agg[removeDots(col.name)] = normalizeFnc(
           removeCommas(
             'format' in col && col.format
-              ? col.format(row)
+              ? col.format(row, get(row, col.field))
               : get(row, col.field),
           ),
         )
