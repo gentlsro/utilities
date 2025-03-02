@@ -301,5 +301,10 @@
     "date": "Date",
     "datetime": "Date and time",
     "time": "Time"
+  },
+  "theme": {
+    "self": "Theme",
+    "light": "Light theme",
+    "dark": "Dark theme"
   }
 }

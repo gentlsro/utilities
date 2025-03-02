@@ -301,5 +301,10 @@
     "date": "Datum",
     "datetime": "Datum a čas",
     "time": "Čas"
+  },
+  "theme": {
+    "self": "Téma",
+    "light": "Světlé téma",
+    "dark": "Tmavé téma"
   }
 }
