@@ -74,7 +74,8 @@
     "preview": "Preview",
     "selection": "Selection",
     "errorOccured": "An error occurred",
-    "submittedSuccessfully": "Submitted successfully"
+    "submittedSuccessfully": "Submitted successfully",
+    "create": "Create"
   },
   "zod": {
     "errors": {

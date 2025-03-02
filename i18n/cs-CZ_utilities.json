@@ -74,7 +74,8 @@
     "preview": "Ukázka",
     "selection": "Výběr",
     "errorOccured": "Došlo k chybě",
-    "submittedSuccessfully": "Úspěšně provedeno"
+    "submittedSuccessfully": "Úspěšně provedeno",
+    "create": "Vytvořit"
   },
   "zod": {
     "errors": {
