@@ -55,6 +55,7 @@
     "empty": "Empty",
     "apply": "Apply",
     "selected": "Selected",
+    "generalInfo": "General Info",
     "outOf": "out of",
     "row": "Row | Rows | Rows",
     "option": "Option | Options | Options",
@@ -291,5 +292,13 @@
     "isEmpty": "Empty",
     "in|every": "Every",
     "in|none": "None"
+  },
+  "dataType": {
+    "string": "Text",
+    "number": "Number",
+    "boolean": "Boolean",
+    "date": "Date",
+    "datetime": "Date and time",
+    "time": "Time"
   }
 }

@@ -40,6 +40,7 @@
     "empty": "Prázdné",
     "apply": "Aplikovat",
     "selected": "Zvoleno",
+    "generalInfo": "Základní údaje",
     "sorting": {
       "clear": "Zrušit řazení",
       "asc": "Vzestupně",
@@ -291,5 +292,13 @@
     "isEmpty": "Prázdný",
     "in|every": "Každý",
     "in|none": "Žádný"
+  },
+  "dataType": {
+    "string": "Text",
+    "number": "Číslo",
+    "boolean": "Boolean",
+    "date": "Datum",
+    "datetime": "Datum a čas",
+    "time": "Čas"
   }
 }
