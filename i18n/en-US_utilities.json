@@ -55,6 +55,9 @@
     "empty": "Empty",
     "apply": "Apply",
     "selected": "Selected",
+    "copyLink": "Copy link",
+    "duplicate": "Duplicate",
+    "noSelection": "Nothing is selected",
     "generalInfo": "General Info",
     "outOf": "out of",
     "row": "Row | Rows | Rows",
@@ -75,7 +78,8 @@
     "selection": "Selection",
     "errorOccured": "An error occurred",
     "submittedSuccessfully": "Submitted successfully",
-    "create": "Create"
+    "create": "Create",
+    "cancelSelection": "Cancel selection"
   },
   "zod": {
     "errors": {

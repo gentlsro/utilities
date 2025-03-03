@@ -40,6 +40,9 @@
     "empty": "Prázdné",
     "apply": "Aplikovat",
     "selected": "Zvoleno",
+    "copyLink": "Zkopírovat odkaz",
+    "duplicate": "Duplikovat",
+    "noSelection": "Nic není zvoleno",
     "generalInfo": "Základní údaje",
     "sorting": {
       "clear": "Zrušit řazení",
@@ -75,7 +78,8 @@
     "selection": "Výběr",
     "errorOccured": "Došlo k chybě",
     "submittedSuccessfully": "Úspěšně provedeno",
-    "create": "Vytvořit"
+    "create": "Vytvořit",
+    "cancelSelection": "Zrušit volbu"
   },
   "zod": {
     "errors": {
