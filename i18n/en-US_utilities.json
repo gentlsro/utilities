@@ -79,7 +79,8 @@
     "errorOccured": "An error occurred",
     "submittedSuccessfully": "Submitted successfully",
     "create": "Create",
-    "cancelSelection": "Cancel selection"
+    "cancelSelection": "Cancel selection",
+    "refresh": "Refresh"
   },
   "zod": {
     "errors": {

@@ -79,7 +79,8 @@
     "errorOccured": "Došlo k chybě",
     "submittedSuccessfully": "Úspěšně provedeno",
     "create": "Vytvořit",
-    "cancelSelection": "Zrušit volbu"
+    "cancelSelection": "Zrušit volbu",
+    "refresh": "Obnovit"
   },
   "zod": {
     "errors": {
