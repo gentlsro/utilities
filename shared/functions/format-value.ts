@@ -29,6 +29,18 @@ export function formatValue(
   const { formatNumber } = useNumberShared(localeIso)
   const { getDuration } = useDurationShared(localeIso)
 
+  // When array is provided, we format each value
+  if (Array.isArray(value)) {
+    return value
+      .map(val => formatValue(val, row, options))
+      .join(', ') as string
+  }
+
+  // When format function is provided, we use that
+  if (format) {
+    return format(row ?? {}, value, options)
+  }
+
   // In case we have a custom format function, we use that
   const customFormatFnc = options.dataType && utilsConfig.dataTypeExtend.formatFncByDataType[options.dataType]
 
@@ -44,18 +56,6 @@ export function formatValue(
   // We try to predict datatype if not provided
   if (_predictDataType) {
     options.dataType = predictDataType(_predictDataType)
-  }
-
-  // When array is provided, we format each value
-  if (Array.isArray(value)) {
-    return value
-      .map(val => formatValue(val, row, options))
-      .join(', ') as string
-  }
-
-  // When format function is provided, we use that
-  if (format) {
-    return format(row ?? {}, value, options)
   }
 
   // When value is null or undefined, we don't bother and just return empty string
