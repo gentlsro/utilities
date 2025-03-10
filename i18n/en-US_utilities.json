@@ -3,6 +3,7 @@
   "general": {
     "self": "General",
     "search": "Search",
+    "invalidForm": "Invalid form",
     "yes": "Yes",
     "no": "No",
     "noData": "No data",

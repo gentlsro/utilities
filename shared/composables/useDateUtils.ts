@@ -189,15 +189,15 @@ export function useDateUtils(localeIso: string) {
 
   const getDaysInPeriod = (
     periodRef: MaybeRefOrGetter<Period>,
-    options: { excludedDays?: DayEnum[], currentPeriod?: Period } = {},
+    options: { excludedDays?: DayEnum[], currentPeriod?: Period, utc?: boolean } = {},
   ) => {
-    const { excludedDays, currentPeriod } = options
+    const { excludedDays, currentPeriod, utc } = options
     const days: Day[] = []
     const period = toValue(periodRef)
     let current = toValue(period).periodStart
 
     while (current.isSameOrBefore(period.periodEnd)) {
-      const day = new Day(current, currentPeriod || period)
+      const day = new Day(current, currentPeriod || period, { useUtc: utc })
 
       if (!excludedDays?.includes(day.dayOfWeek)) {
         days.push(day)

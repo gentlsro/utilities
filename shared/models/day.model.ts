@@ -11,12 +11,14 @@ export class Day {
   isWeekend: boolean
   isNotCurrent: boolean
   daysInMonth: number
-  dateObj: Dayjs;
+  dateObj: Dayjs
+
+  useUtc: boolean
 
   [key: string]: unknown
 
   get isToday() {
-    const now = $date()
+    const now = $date(undefined, { utc: this.useUtc })
     const nowTime
       = now.year() * 31556926 + now.month() * 2629743 + now.date() * 86400
     const dateTime
@@ -49,11 +51,12 @@ export class Day {
     date: Datetime,
     period: Period,
     options: {
+      useUtc?: boolean
       holidays?: Record<string, boolean>
       extraObj?: Record<string, unknown>
     } = {},
   ) {
-    const { holidays = {}, extraObj = {} } = options
+    const { holidays = {}, extraObj = {}, useUtc = true } = options
 
     this.dateObj = $date(date)
     this.dateString = this.dateObj.format('YYYY-MM-DD')
@@ -61,6 +64,7 @@ export class Day {
     this.daysInMonth = this.dateObj.daysInMonth()
     this.dayOfWeek = this.dateObj.day()
     this.isWeekend = this.dayOfWeek === 0 || this.dayOfWeek === 6
+    this.useUtc = useUtc
 
     this.isHoliday = !!holidays[this.dateString]
     this.isNotCurrent = !this.dateObj.isBetween(
