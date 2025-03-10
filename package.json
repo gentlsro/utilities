@@ -12,9 +12,9 @@
   "dependencies": {
     "@floating-ui/dom": "1.6.13",
     "@floating-ui/vue": "1.1.6",
-    "@types/bun": "^1.1.18",
+    "@types/bun": "1.1.18",
     "axios": "1.7.9",
-    "bun": "^1.1.45",
+    "bun": "1.1.45",
     "dayjs": "1.11.13",
     "fuse.js": "7.0.0",
     "lodash-es": "4.17.21",
