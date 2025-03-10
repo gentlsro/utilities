@@ -80,7 +80,7 @@ export function useDateUtils(localeIso: string) {
 
     // Otherwise we use the Intl API
     else {
-      const { localeIso, outputIntlOptions } = options
+      const { outputIntlOptions } = options
       const usedLocaleIso = options?.localeIso ?? localeIso
       const parsedDate = parseDate(date, options)
 
