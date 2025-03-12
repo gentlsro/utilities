@@ -36,6 +36,15 @@ export function formatValue(
       .join(', ') as string
   }
 
+  // When `value` is equal to the `emptyValue`, we just return it
+  if (isEqual(value, emptyValue)) {
+    return emptyValue
+  }
+  // When value is null or undefined, we don't bother and just return empty string
+  if (isNil(value)) {
+    return ''
+  }
+
   // When format function is provided, we use that
   if (format) {
     return format(row ?? {}, value, options)
@@ -48,19 +57,9 @@ export function formatValue(
     return customFormatFnc(value, row, { ...options, formatFnc: formatValue })
   }
 
-  // When `value` is equal to the `emptyValue`, we just return it
-  if (isEqual(value, emptyValue)) {
-    return emptyValue
-  }
-
   // We try to predict datatype if not provided
   if (_predictDataType) {
     options.dataType = predictDataType(_predictDataType)
-  }
-
-  // When value is null or undefined, we don't bother and just return empty string
-  if (isNil(value)) {
-    return ''
   }
 
   switch (options.dataType) {
