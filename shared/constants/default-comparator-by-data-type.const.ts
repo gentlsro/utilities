@@ -8,7 +8,8 @@ export function getDefaultComparatorByDataType(dataType?: ExtendedDataType) {
   }
 
   let defaultComparator = utilsConfig.dataTypeExtend.defaultComparatorByDataType?.[dataType]
-  const comparators = utilsConfig.dataTypeExtend.comparatorsByDataType?.[dataType]
+  const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.comparatorsByDataType
+  const comparators = utilsConfig.dataTypeExtend.comparatorsByDataType?.[_dataType]
 
   if (!defaultComparator) {
     const dt = dataType?.replace('Simple', '') as ExtendedDataType
