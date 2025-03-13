@@ -80,7 +80,7 @@ export default utilsConfig
       .join('\n')
 
     addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/comparatorEnum.ts`,
+      filename: `${nuxt.options.rootDir}/generated/comparator-enum.ts`,
       write: true,
       getContents: () => configContents,
     })
