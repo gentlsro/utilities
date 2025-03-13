@@ -66,6 +66,7 @@ export default defineNuxtConfig({
   alias: {
     $utils: join(process.cwd(), 'generated', 'utils.ts'),
     $utilsConfig: join(process.cwd(), 'generated', 'utilsConfig.ts'),
+    $utilsLayer: resolve('.'),
     $comparatorEnum: join(process.cwd(), 'generated', 'comparator-enum.ts'),
     $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
     $components: join(process.cwd(), 'generated', 'components-by-name.ts'),
