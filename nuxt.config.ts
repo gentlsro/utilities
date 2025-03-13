@@ -64,12 +64,11 @@ export default defineNuxtConfig({
 
   // Alias
   alias: {
-    $utils: './generated/utils.ts',
-    $utilsConfig: './generated/utilsConfig.ts',
-    $utilsLayer: resolve('.'),
-    $comparatorEnum: './generated/comparator-enum.ts',
-    $dataType: './generated/data-type.type.ts',
-    $components: './generated/components-by-name.ts',
+    $utils: join(process.cwd(), 'generated', 'utils.ts'),
+    $utilsConfig: join(process.cwd(), 'generated', 'utilsConfig.ts'),
+    $comparatorEnum: join(process.cwd(), 'generated', 'comparator-enum.ts'),
+    $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
+    $components: join(process.cwd(), 'generated', 'components-by-name.ts'),
   },
 
   // Future
@@ -112,15 +111,26 @@ export default defineNuxtConfig({
     },
 
     alias: {
-      $utils: join(process.cwd(), '.nuxt', 'generated', 'utils.ts'),
-      $utilsConfig: join(process.cwd(), '.nuxt', 'generated', 'utilsConfig.ts'),
-      $comparatorEnum: join(process.cwd(), '.nuxt', 'generated', 'comparator-enum.ts'),
-      $dataType: join(process.cwd(), '.nuxt', 'generated', 'data-type.type.ts'),
+      $utils: join(process.cwd(), 'generated', 'utils.ts'),
+      $utilsConfig: join(process.cwd(), 'generated', 'utilsConfig.ts'),
+      $comparatorEnum: join(process.cwd(), 'generated', 'comparator-enum.ts'),
+      $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
     },
   },
 
   // Typescript https://nuxt.com/docs/api/configuration/nuxt-config#typescript
-  typescript: {},
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        paths: {
+          $utils: [join(process.cwd(), 'generated', 'utils.ts')],
+          $utilsConfig: [join(process.cwd(), 'generated', 'utilsConfig.ts')],
+          $comparatorEnum: [join(process.cwd(), 'generated', 'comparator-enum.ts')],
+          $dataType: [join(process.cwd(), 'generated', 'data-type.type.ts')],
+        },
+      },
+    },
+  },
 
   // Dayjs
   dayjs: {

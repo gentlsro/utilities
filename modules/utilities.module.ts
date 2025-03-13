@@ -49,8 +49,8 @@ export default defineNuxtModule({
     // Merge the utility configs
     const codeUtilityConfigs = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => {
-  return `import config${idx} from '${path}'`
-}).join('\n')}
+      return `import config${idx} from '${path}'`
+    }).join('\n')}
 
 export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
 
@@ -59,7 +59,7 @@ export default utilsConfig
 `
 
     addTemplate({
-      filename: 'generated/utilsConfig.ts',
+      filename: `${nuxt.options.rootDir}/generated/utilsConfig.ts`,
       write: true,
       getContents: () => codeUtilityConfigs,
     })
@@ -80,7 +80,7 @@ export default utilsConfig
       .join('\n')
 
     addTemplate({
-      filename: 'generated/comparator-enum.ts',
+      filename: `${nuxt.options.rootDir}/generated/comparatorEnum.ts`,
       write: true,
       getContents: () => configContents,
     })
@@ -107,7 +107,7 @@ type SimpleDataType = \`\${DataType}Simple\`
 export type ExtendedDataType = DataType | SimpleDataType`
 
     addTemplate({
-      filename: 'generated/data-type.type.ts',
+      filename: `${nuxt.options.rootDir}/generated/data-type.type.ts`,
       write: true,
       getContents: () => dataTypes,
     })
@@ -116,57 +116,15 @@ export type ExtendedDataType = DataType | SimpleDataType`
 
     // Expose index
     addTemplate({
-      filename: 'generated/utils.ts',
+      filename: `${nuxt.options.rootDir}/generated/utils.ts`,
       write: true,
       getContents: () => `export * from '${base?.cwd}/index'
 `,
     })
 
-    //     // Replace your current addTemplate for components-by-name.ts with this:
-    //     addTemplate({
-    //       filename: 'generated/components-by-name.ts',
-    //       write: true,
-    //       getContents: async () => {
-    //         // Use globby to find all component files at build time
-    //         const { globby } = await import('globby')
-    //         const allComponentFiles = []
-
-    //         // Collect all component files from all paths
-    //         for (const path of componentPaths) {
-    //           const files = await globby(path)
-    //           allComponentFiles.push(...files)
-    //         }
-
-    //         // Generate explicit imports for each component
-    //         const imports = allComponentFiles.map((file, index) => {
-    //           const componentName = file.split('/').pop()?.replace('.vue', '')
-    //           return `import * as _component${index} from '/${file}'`
-    //         }).join('\n')
-
-    //         // Create the component registry
-    //         const registry = allComponentFiles.map((file, index) => {
-    //           const componentName = file.split('/').pop()?.replace('.vue', '')
-    //           return `  "${componentName}": () => import('/${file}')`
-    //         }).join(',\n')
-
-    //         return `import type { AsyncComponentLoader } from 'vue'
-
-    // // Log the available components in development
-    // const availableComponents = ${JSON.stringify(
-    //   allComponentFiles.map(file => file.split('/').pop()?.replace('.vue', '')),
-    // )};
-    // console.log('Available components:', availableComponents);
-
-    // export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {
-    // ${registry}
-    // }
-    // `
-    //       },
-    //     })
-
     // Map components by name
     addTemplate({
-      filename: 'generated/components-by-name.ts',
+      filename: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
       write: true,
       getContents: async () => {
         const { globby } = await import('globby')
@@ -234,11 +192,11 @@ ${imports.join(',\n')}
 
       config.resolve.alias = {
         ...config.resolve.alias,
-        $utils: `${nuxt.options.buildDir}/generated/utils.ts`,
-        $utilsConfig: `${nuxt.options.buildDir}/generated/utilsConfig.ts`,
-        $comparatorEnum: `${nuxt.options.buildDir}/generated/comparator-enum.ts`,
-        $dataType: `${nuxt.options.buildDir}/generated/data-type.type.ts`,
-        $components: `${nuxt.options.buildDir}/generated/components-by-name.ts`,
+        $utils: `${nuxt.options.rootDir}/generated/utils.ts`,
+        $utilsConfig: `${nuxt.options.rootDir}/generated/utilsConfig.ts`,
+        $comparatorEnum: `${nuxt.options.rootDir}/generated/comparator-enum.ts`,
+        $dataType: `${nuxt.options.rootDir}/generated/data-type.type.ts`,
+        $components: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
       }
     })
   },
