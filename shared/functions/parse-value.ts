@@ -1,3 +1,4 @@
+import utilsConfig from '$utilsConfig'
 import type { ExtendedDataType } from '$dataType'
 
 // Types
@@ -19,6 +20,18 @@ export function parseValue(
 ) {
   const { dateFormat, predictDataType: _predictDataType } = options || {}
 
+  if (isNil(value)) {
+    return value
+  }
+
+  // In case we have a custom format function, we use that
+  const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.parseFncByDataType
+  const customFormatFnc = dataType && utilsConfig.dataTypeExtend.parseFncByDataType[_dataType]
+
+  if (customFormatFnc) {
+    return customFormatFnc(value)
+  }
+
   if (!dataType && _predictDataType) {
     const predictedDataType = predictDataType(_predictDataType)
 
@@ -26,10 +39,6 @@ export function parseValue(
   }
 
   dataType = dataType?.replace(/Simple$/, '') as ExtendedDataType
-
-  if (isNil(value)) {
-    return value
-  }
 
   switch (dataType) {
     case 'number':

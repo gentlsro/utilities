@@ -84,6 +84,10 @@ type IFormatFnc = (
   formatOptions?: IFormatValueOptions & { formatFnc?: typeof formatValue },
 ) => any
 
+type IParseFnc = (
+  value: any,
+) => any
+
 export type IUtilitiesConfig = {
   general: {
     domain?: string
@@ -99,7 +103,7 @@ export type IUtilitiesConfig = {
     defaultComparatorByDataType?: Partial<Record<ExtendedDataType, ComparatorEnum>>
     inputByDataType?: Partial<Record<ExtendedDataType, IComponent | undefined>>
     formatFncByDataType?: Partial<Record<ExtendedDataType, IFormatFnc>>
-
+    parseFncByDataType?: Partial<Record<ExtendedDataType, IParseFnc>>
     // We can also extend some of the predefined categories of data types
     selectorComparators?: MergedComparatorEnum[]
     nonValueComparators?: MergedComparatorEnum[]
@@ -151,6 +155,7 @@ export const defaultUtilitiesConfig = {
     nonValueComparators: [] as MergedComparatorEnum[],
     booleanishComparators: [] as MergedComparatorEnum[],
     formatFncByDataType: {} as Partial<Record<ExtendedDataType, IFormatFnc>>,
+    parseFncByDataType: {} as Partial<Record<ExtendedDataType, IParseFnc>>,
   },
 
   // Logging
