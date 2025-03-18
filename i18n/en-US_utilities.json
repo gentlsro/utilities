@@ -81,7 +81,8 @@
     "submittedSuccessfully": "Submitted successfully",
     "create": "Create",
     "cancelSelection": "Cancel selection",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "administration": "Administration"
   },
   "zod": {
     "errors": {

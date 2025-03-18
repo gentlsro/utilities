@@ -81,7 +81,8 @@
     "submittedSuccessfully": "Úspěšně provedeno",
     "create": "Vytvořit",
     "cancelSelection": "Zrušit volbu",
-    "refresh": "Obnovit"
+    "refresh": "Obnovit",
+    "administration": "Administrace"
   },
   "zod": {
     "errors": {
