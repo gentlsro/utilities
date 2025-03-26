@@ -27,6 +27,11 @@ export type IGroupRow = {
    * Indexes of rows which are contained in this group
    */
   data: number[]
+
+  /**
+   * Object of rows which are contained in this group
+   */
+  dataObj: any[]
 }
 
 // TODO: Initial collapse does not work in worker
@@ -96,6 +101,7 @@ export function useGrouping() {
             groupIdx,
             isGroup: true,
             data: [],
+            dataObj: [],
           }
 
           valuesById[id] = g
@@ -123,6 +129,7 @@ export function useGrouping() {
         }
 
         valuesById[id]?.data.push(idx)
+        valuesById[id]?.dataObj.push(row)
       }
 
       if (!isCollapsed) {
@@ -203,6 +210,7 @@ export function useGrouping() {
               groupIdx,
               isGroup: true,
               data: [],
+              dataObj: [],
             }
 
             valuesById[id] = g
@@ -227,6 +235,7 @@ export function useGrouping() {
           }
 
           valuesById[id]?.data.push(idx)
+          valuesById[id]?.dataObj.push(row)
         }
 
         if (!isCollapsed) {

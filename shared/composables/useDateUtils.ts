@@ -147,8 +147,9 @@ export function useDateUtils(localeIso: string) {
     periodStart = $date(periodStart).startOf(unit)
 
     if (unit === 'isoWeek' || unit.startsWith('w')) {
-      const firstDayOfWeekIdx
-        = periodStart.day() < firstDayOfWeek ? firstDayOfWeek - 7 : firstDayOfWeek
+      const firstDayOfWeekIdx = periodStart.day() < firstDayOfWeek
+        ? firstDayOfWeek - 7
+        : firstDayOfWeek
       periodStart = periodStart.day(firstDayOfWeekIdx)
     }
 

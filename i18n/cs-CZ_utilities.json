@@ -82,7 +82,8 @@
     "create": "Vytvořit",
     "cancelSelection": "Zrušit volbu",
     "refresh": "Obnovit",
-    "administration": "Administrace"
+    "administration": "Administrace",
+    "welcome": "Vítejte"
   },
   "zod": {
     "errors": {

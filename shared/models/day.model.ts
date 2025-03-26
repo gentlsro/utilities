@@ -19,12 +19,10 @@ export class Day {
 
   get isToday() {
     const now = $date(undefined, { utc: this.useUtc })
-    const nowTime
-      = now.year() * 31556926 + now.month() * 2629743 + now.date() * 86400
-    const dateTime
-      = this.dateObj.year() * 31556926
-        + this.dateObj.month() * 2629743
-        + this.dateObj.date() * 86400
+    const nowTime = now.year() * 31556926 + now.month() * 2629743 + now.date() * 86400
+    const dateTime = this.dateObj.year() * 31556926
+      + this.dateObj.month() * 2629743
+      + this.dateObj.date() * 86400
 
     return nowTime === dateTime
   }
@@ -56,9 +54,9 @@ export class Day {
       extraObj?: Record<string, unknown>
     } = {},
   ) {
-    const { holidays = {}, extraObj = {}, useUtc = true } = options
+    const { holidays = { '2025-03-02': true }, extraObj = {}, useUtc = true } = options
 
-    this.dateObj = $date(date)
+    this.dateObj = $date(date, { utc: useUtc })
     this.dateString = this.dateObj.format('YYYY-MM-DD')
     this.dayOfMonth = this.dateObj.date()
     this.daysInMonth = this.dateObj.daysInMonth()

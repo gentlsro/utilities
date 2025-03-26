@@ -82,7 +82,8 @@
     "create": "Create",
     "cancelSelection": "Cancel selection",
     "refresh": "Refresh",
-    "administration": "Administration"
+    "administration": "Administration",
+    "welcome": "Welcome"
   },
   "zod": {
     "errors": {
