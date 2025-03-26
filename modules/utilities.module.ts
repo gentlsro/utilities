@@ -49,8 +49,8 @@ export default defineNuxtModule({
     // Merge the utility configs
     const codeUtilityConfigs = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => {
-      return `import config${idx} from '${path}'`
-    }).join('\n')}
+  return `import config${idx} from '${path}'`
+}).join('\n')}
 
 export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
 
@@ -126,59 +126,62 @@ export type ExtendedDataType = DataType | SimpleDataType`
     addTemplate({
       filename: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
       write: true,
-      getContents: async () => {
-        const { globby } = await import('globby')
-        const { resolve, relative } = await import('node:path')
-        const fs = await import('node:fs')
+      getContents: () => `import type { AsyncComponentLoader, Component } from 'vue'
+export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {}
+`,
+      //       getContents: async () => {
+      //         const { globby } = await import('globby')
+      //         const { resolve, relative } = await import('node:path')
+      //         const fs = await import('node:fs')
 
-        // Create a map to store component names and their actual file paths
-        const componentMap = new Map()
+      //         // Create a map to store component names and their actual file paths
+      //         const componentMap = new Map()
 
-        // Process each layer to find components
-        for (const layer of nuxt.options._layers) {
-          const layerRoot = layer.cwd
+      //         // Process each layer to find components
+      //         for (const layer of nuxt.options._layers) {
+      //           const layerRoot = layer.cwd
 
-          // These are the patterns within each layer
-          const patterns = [
-            'client/components/**/*.vue',
-            'client/libs/**/*.vue',
-          ]
+      //           // These are the patterns within each layer
+      //           const patterns = [
+      //             'client/components/**/*.vue',
+      //             'client/libs/**/*.vue',
+      //           ]
 
-          // For each pattern, find matching files in this layer
-          for (const pattern of patterns) {
-            const fullPattern = resolve(layerRoot, pattern)
-            try {
-              const files = await globby(fullPattern)
+      //           // For each pattern, find matching files in this layer
+      //           for (const pattern of patterns) {
+      //             const fullPattern = resolve(layerRoot, pattern)
+      //             try {
+      //               const files = await globby(fullPattern)
 
-              for (const file of files) {
-                const componentName = file.split('/').pop()?.replace('.vue', '')
-                if (componentName) {
-                  // Store the absolute file path
-                  componentMap.set(componentName, file)
-                }
-              }
-            } catch (err) {
-              console.warn(`Failed to glob pattern ${fullPattern}:`, err)
-            }
-          }
-        }
+      //               for (const file of files) {
+      //                 const componentName = file.split('/').pop()?.replace('.vue', '')
+      //                 if (componentName) {
+      //                   // Store the absolute file path
+      //                   componentMap.set(componentName, file)
+      //                 }
+      //               }
+      //             } catch (err) {
+      //               console.warn(`Failed to glob pattern ${fullPattern}:`, err)
+      //             }
+      //           }
+      //         }
 
-        // Generate explicit dynamic imports for each component
-        const imports = []
-        for (const [name, filePath] of componentMap.entries()) {
-          // We need to ensure the path is properly formatted for webpack/vite
-          const normalizedPath = filePath.replace(/\\/g, '/')
-          imports.push(`  "${name}": () => import("${normalizedPath}")`)
-        }
+      //         // Generate explicit dynamic imports for each component
+      //         const imports = []
+      //         for (const [name, filePath] of componentMap.entries()) {
+      //           // We need to ensure the path is properly formatted for webpack/vite
+      //           const normalizedPath = filePath.replace(/\\/g, '/')
+      //           imports.push(`  "${name}": () => import("${normalizedPath}")`)
+      //         }
 
-        return `import type { AsyncComponentLoader, Component } from 'vue'
+      //         return `import type { AsyncComponentLoader, Component } from 'vue'
 
-// Component registry generated at build time
-export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {
-${imports.join(',\n')}
-}
-`
-      },
+      // // Component registry generated at build time
+      // export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {
+      // ${imports.join(',\n')}
+      // }
+      // `
+      //       },
     })
 
     nuxt.hook('vite:extendConfig', config => {
