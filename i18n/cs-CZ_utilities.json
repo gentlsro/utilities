@@ -83,7 +83,8 @@
     "cancelSelection": "Zrušit volbu",
     "refresh": "Obnovit",
     "administration": "Administrace",
-    "welcome": "Vítejte"
+    "welcome": "Vítejte",
+    "forExample": "Například"
   },
   "zod": {
     "errors": {

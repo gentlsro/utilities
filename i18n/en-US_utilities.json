@@ -83,7 +83,8 @@
     "cancelSelection": "Cancel selection",
     "refresh": "Refresh",
     "administration": "Administration",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "forExample": "For example"
   },
   "zod": {
     "errors": {
