@@ -321,6 +321,10 @@
     "count": "Počet",
     "sum": "Součet",
     "median": "Medián",
-    "average": "Průměr"
+    "average": "Průměr",
+    "COUNT": "Počet",
+    "SUM": "Součet",
+    "MEDIAN": "Medián",
+    "AVERAGE": "Průměr"
   }
 }

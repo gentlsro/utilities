@@ -321,6 +321,10 @@
     "count": "Count",
     "sum": "Sum",
     "median": "Median",
-    "average": "Average"
+    "average": "Average",
+    "COUNT": "Count",
+    "SUM": "Sum",
+    "MEDIAN": "Median",
+    "AVERAGE": "Average"
   }
 }
