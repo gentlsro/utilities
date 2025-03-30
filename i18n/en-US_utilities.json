@@ -84,7 +84,8 @@
     "refresh": "Refresh",
     "administration": "Administration",
     "welcome": "Welcome",
-    "forExample": "For example"
+    "forExample": "For example",
+    "reset": "Reset"
   },
   "zod": {
     "errors": {

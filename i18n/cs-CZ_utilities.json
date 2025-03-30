@@ -84,7 +84,8 @@
     "refresh": "Obnovit",
     "administration": "Administrace",
     "welcome": "Vítejte",
-    "forExample": "Například"
+    "forExample": "Například",
+    "reset": "Resetovat"
   },
   "zod": {
     "errors": {
