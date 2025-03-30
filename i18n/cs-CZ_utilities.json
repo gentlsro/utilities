@@ -316,5 +316,11 @@
     "self": "Téma",
     "light": "Světlé téma",
     "dark": "Tmavé téma"
+  },
+  "summary": {
+    "count": "Počet",
+    "sum": "Součet",
+    "median": "Medián",
+    "average": "Průměr"
   }
 }

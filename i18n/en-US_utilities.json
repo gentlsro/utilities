@@ -316,5 +316,11 @@
     "self": "Theme",
     "light": "Light theme",
     "dark": "Dark theme"
+  },
+  "summary": {
+    "count": "Count",
+    "sum": "Sum",
+    "median": "Median",
+    "average": "Average"
   }
 }

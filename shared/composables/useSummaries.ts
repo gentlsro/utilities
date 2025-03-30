@@ -1,73 +1,103 @@
-// import { get, set } from 'lodash-es'
-// import type { IGroupRow } from '~/utils/data/interfaces/group-row.interface'
-// import { IItem } from '~/utils/data/types/item.type'
-// import { SummaryEnum } from '~/utils/data/enums/summary.enum'
-// import { TableColumn } from '~/components/MyTable/models/table-column.model'
-// import { IGroupedItem } from '~/utils/data/functions/useGrouping'
+import { get, set } from 'lodash-es'
+import type { IGroupRow } from '$utils'
+import type { IGroupedItem } from './useGrouping'
 
-// export const useSummaries = () => {
-//   const createSummaries = <T = IItem>(
-//     groupedArrayRef: MaybeRefOrGetter<Array<IGroupedItem<T> | IGroupRow<T>>>,
-//     grouped: Record<string, any>,
-//     summariesRef: MaybeRefOrGetter<TableColumn<T>[]>,
-//   ) => {
-//     const groupedArray = unref(groupedArrayRef)
-//     const summaries = unref(summariesRef)
+// Models
+import { SummaryEnum } from '../enums/summary.enum'
+import type { SummaryItem } from '../models/summary-item.model'
 
-//     groupedArray.forEach(row => {
-//       if ('isGroup' in row) {
-//         summaries.forEach(summary => {
-//           const path = row.fullPath
-//           const data = get(grouped, `${path}.data`) as T[]
+type IInputItem = IGroupedItem<IItem> | IGroupRow
+type IResultItem = { id: string, label?: string | ((value: number) => string), value: number }
 
-//           const summaryValue = summary.summaryFormat
-//             ? summary.summaryFormat(data)
-//             : calculateSummary<T>(summary.summaryType as SummaryEnum, summary.field, data)
+export function useSummaries() {
+  const createSummaries = <T = IItem>(
+    groupedArrayRef: MaybeRefOrGetter<IInputItem[]>,
+    summariesRef: MaybeRefOrGetter<SummaryItem<T>[]>,
+    options?: {
+      /**
+       * When true, the `summary` property of the grouped array will be mutated in-place
+       */
+      mutateGroupedArray?: boolean
+    },
+  ) => {
+    const { mutateGroupedArray = false } = options ?? {}
 
-//           set(
-//             grouped,
-//             `${path}.summary.${summary.field}.${summary.summaryType}`,
-//             {
-//               label: summary.summaryLabel
-//                 ? summary.summaryLabel(summaryValue)
-//                 : null,
-//               value: summaryValue,
-//             },
-//           )
-//         })
-//       }
-//     })
-//   }
+    const groupedArray = toValue(groupedArrayRef)
+    const summaries = toValue(summariesRef)
+    const result: IResultItem[] = []
 
-//   const calculateSummary = <T = Record<string, any>>(
-//     type: SummaryEnum = SummaryEnum.COUNT,
-//     field: keyof T,
-//     data: T[],
-//   ) => {
-//     let values
+    groupedArray.forEach(row => {
+      if ('isGroup' in row) {
+        summaries.forEach(summary => {
+          const value = calculateSummary(summary, row.dataObj)
 
-//     switch (type) {
-//       case SummaryEnum.COUNT:
-//         return data.length
+          if (mutateGroupedArray) {
+            row.summary = {
+              ...row.summary,
+              [summary.field]: {
+                label: summary.label,
+                value,
+              },
+            }
+          }
 
-//       case SummaryEnum.SUM:
-//         return data.reduce((agg, row) => (agg += get(row, field) || 0), 0)
+          result.push({
+            id: summary.field,
+            label: summary.label,
+            value,
+          })
+        })
+      }
+    })
 
-//       case SummaryEnum.MEDIAN:
-//         values = data.map(row => get(row, field) || 0)
-//         values.sort()
+    return result
+  }
 
-//         return values[Math.floor(values.length / 2)].field as number
+  function getRowValue<T = IItem>(row: T, summaryItem: SummaryItem): number {
+    let value: number
 
-//       case SummaryEnum.AVERAGE:
-//         values = data.reduce((agg, row) => (agg += get(row, field) || 0), 0)
+    if ('summaryFormat' in summaryItem && summaryItem.summaryFormat) {
+      value = summaryItem.summaryFormat?.(row)
+    } else {
+      value = get(row, summaryItem.field)
+    }
 
-//         return values / data.length
+    if (typeof value === 'number') {
+      return value
+    }
 
-//       default:
-//         return data.length
-//     }
-//   }
+    return 0
+  }
 
-//   return { createSummaries }
-// }
+  const calculateSummary = <T = IItem>(
+    summaryItem: SummaryItem<T>,
+    data: T[],
+  ) => {
+    let values: number[] = []
+    let value: number = 0
+
+    switch (summaryItem.summaryType) {
+      case SummaryEnum.COUNT:
+        return data.length
+
+      case SummaryEnum.SUM:
+        return data.reduce((agg, row) => (agg += getRowValue(row, summaryItem)), 0)
+
+      case SummaryEnum.MEDIAN:
+        values = data.map(row => getRowValue(row, summaryItem))
+        values = values.toSorted((a, b) => a - b)
+
+        return values[Math.floor(values.length / 2)] as number
+
+      case SummaryEnum.AVERAGE:
+        value = data.reduce((agg, row) => (agg += getRowValue(row, summaryItem)), 0)
+
+        return value / data.length
+
+      default:
+        return data.length
+    }
+  }
+
+  return { createSummaries }
+}
