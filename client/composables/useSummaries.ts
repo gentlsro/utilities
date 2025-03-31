@@ -1,13 +1,13 @@
 import { get, set } from 'lodash-es'
 import type { IGroupRow } from '$utils'
-import type { IGroupedItem } from './useGrouping'
+import type { IGroupedItem } from '../../shared/composables/useGrouping'
 
 // Models
-import { SummaryEnum } from '../enums/summary.enum'
-import type { SummaryItem } from '../models/summary-item.model'
+import { SummaryEnum } from '../../shared/enums/summary.enum'
+import type { SummaryItem } from '../../shared/models/summary-item.model'
 
 type IInputItem = IGroupedItem<IItem> | IGroupRow
-type IResultItem = { id: string, label?: string | ((value: number) => string), value: number }
+type IResultItem = { id: string, field: string, label?: string | ((value: number) => string), value: number }
 
 export function useSummaries() {
   const createSummaries = <T = IItem>(
@@ -42,8 +42,9 @@ export function useSummaries() {
           }
 
           result.push({
-            id: summary.field,
-            label: summary.label,
+            id: row.id,
+            field: summary.field,
+            label: summary.label ?? row.label,
             value,
           })
         })
