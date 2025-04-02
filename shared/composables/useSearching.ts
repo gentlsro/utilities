@@ -99,14 +99,11 @@ export function useSearching() {
 
     const rowsRelevantData = rows.map<Record<string, any>>(row => {
       return columnsRelevant.reduce<Record<string, any>>((agg, col) => {
-        console.log(row, col)
-        console.log('🚀 ~ useSearching ~ removeDots(col.name):', removeDots(col.name), get(row, col.field))
-
         agg[removeDots(col.name)] = normalizeFnc(
           removeCommas(
             'format' in col && col.format
-              ? col.format(row, get(row, col.field))
-              : get(row, col.field),
+              ? String(col.format(row, get(row, col.field)))
+              : String(get(row, col.field)),
           ),
         )
 
