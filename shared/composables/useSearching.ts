@@ -99,6 +99,9 @@ export function useSearching() {
 
     const rowsRelevantData = rows.map<Record<string, any>>(row => {
       return columnsRelevant.reduce<Record<string, any>>((agg, col) => {
+        console.log(row, col)
+        console.log('🚀 ~ useSearching ~ removeDots(col.name):', removeDots(col.name), get(row, col.field))
+
         agg[removeDots(col.name)] = normalizeFnc(
           removeCommas(
             'format' in col && col.format
@@ -114,8 +117,6 @@ export function useSearching() {
     // We need to remove dots from keys, because we've removed them above in the reducer
     // and fuse.js would do it again, so the search would not work properly
     optionsClone.keys = columnsRelevant.map(col => removeDots(col.name))
-
-    console.log(rowsRelevantData, optionsClone.keys)
 
     let result: FuseResult<T>[] = []
 
@@ -159,7 +160,6 @@ export function useSearching() {
     options: Required<FuseOptions<any>, 'keys'>,
   ) => {
     options = { threshold: 0.4, ...options, includeScore: true }
-    console.log('🚀 ~ useSearching ~ options.keys:', options.keys)
 
     const fuse = new Fuse(items, options)
 
