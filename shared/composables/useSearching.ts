@@ -115,6 +115,8 @@ export function useSearching() {
     // and fuse.js would do it again, so the search would not work properly
     optionsClone.keys = columnsRelevant.map(col => removeDots(col.name))
 
+    console.log(rowsRelevantData, optionsClone.keys)
+
     let result: FuseResult<T>[] = []
 
     if (useWorker) {
@@ -157,6 +159,7 @@ export function useSearching() {
     options: Required<FuseOptions<any>, 'keys'>,
   ) => {
     options = { threshold: 0.4, ...options, includeScore: true }
+    console.log('🚀 ~ useSearching ~ options.keys:', options.keys)
 
     const fuse = new Fuse(items, options)
 
