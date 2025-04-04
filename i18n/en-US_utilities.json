@@ -85,7 +85,8 @@
     "administration": "Administration",
     "welcome": "Welcome",
     "forExample": "For example",
-    "reset": "Reset"
+    "reset": "Reset",
+    "relation": "Relation | Relations"
   },
   "zod": {
     "errors": {

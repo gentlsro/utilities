@@ -85,7 +85,8 @@
     "administration": "Administrace",
     "welcome": "Vítejte",
     "forExample": "Například",
-    "reset": "Resetovat"
+    "reset": "Resetovat",
+    "relation": "Vztah | Vztahy"
   },
   "zod": {
     "errors": {
