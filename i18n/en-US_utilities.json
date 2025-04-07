@@ -327,5 +327,8 @@
     "SUM": "Sum",
     "MEDIAN": "Median",
     "AVERAGE": "Average"
+  },
+  "screenSize": {
+    "self": "Screen size"
   }
 }

@@ -327,5 +327,8 @@
     "SUM": "Součet",
     "MEDIAN": "Medián",
     "AVERAGE": "Průměr"
+  },
+  "screenSize": {
+    "self": "Velikost obrazovky"
   }
 }
