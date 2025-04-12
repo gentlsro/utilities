@@ -102,12 +102,13 @@ export function useZod<T extends ZodSchemaObject>(
 ): IZodValidationOutput<T> {
   // Utils
   const { locale } = useI18n()
-  const componentName = getComponentName(getCurrentInstance())
+  const instance = getCurrentInstance()
+  const componentName = `${getComponentName(instance)}_${generateUUID()}`
   const instanceId = generateUUID()
   const hasValidation = checkHasValidation(schemasOrOptions)
 
   const {
-    immediate,
+    immediate = false,
     manual = true,
     deep = true,
     scope,
@@ -293,6 +294,10 @@ export function useZod<T extends ZodSchemaObject>(
 
         if (schemaValue instanceof z.ZodObject) {
           const isRequired = !schemaValue.isOptional()
+          const emptyStructure = createEmptyErrorStructureFromShape(
+            schemaValue.shape,
+            `${path}.${key}`,
+          )
 
           structure[key] = {
             $id: generateUUID(),
@@ -300,10 +305,7 @@ export function useZod<T extends ZodSchemaObject>(
             $messages: [],
             $path: key,
             $required: isRequired,
-            ...createEmptyErrorStructureFromShape(
-              schemaValue.shape,
-              `${path}.${key}`,
-            ),
+            ...emptyStructure,
           }
 
           // Set the requirement for the field
@@ -348,13 +350,17 @@ export function useZod<T extends ZodSchemaObject>(
 
         if (schemaValue instanceof z.ZodObject) {
           const isRequired = !schemaValue.isOptional()
+          const emptyStructure = createEmptyErrorStructureFromShape(
+            schemaValue.shape,
+            key,
+          )
 
           structure[key] = {
             $errors: [],
             $messages: [],
             $path: key,
             $required: isRequired,
-            ...createEmptyErrorStructureFromShape(schemaValue.shape, key),
+            ...emptyStructure,
           }
 
           // Set the requirement for the field
@@ -419,10 +425,12 @@ export function useZod<T extends ZodSchemaObject>(
     true, // Trailing
     false, // Leading
   )
-  const { pause, resume } = watchPausable(dataReactive, debouncedValidate, {
-    deep,
-    immediate,
-  })
+
+  const { pause, resume } = watchPausable(
+    dataReactive,
+    debouncedValidate,
+    { deep, immediate },
+  )
 
   // We watch the locale and localize the errors when it changes
   watch(locale, () => validate(false, true))
