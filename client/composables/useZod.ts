@@ -203,20 +203,14 @@ export function useZod<T extends ZodSchemaObject>(
         try {
           await schemas[key]?.parseAsync(toValue(data?.[key]))
         } catch (error: any) {
-          const zodIssues = error.issues.map((issue: z.ZodIssue) => {
-            issue.path = [key, ...issue.path]
-
-            return issue
-          }) as z.ZodIssue[]
-
           // Populate the error structure
-          zodIssues.forEach(issue => {
-            const $path = issue.path.join('.')
+          error.issues.forEach((issue: z.core.$ZodIssue) => {
+            const $path = [key, ...issue.path].join('.')
             const $id = generateUUID()
 
             const existingValidation = get($zTemp, $path, {
-              $errors: [],
-              $messages: [],
+              $errors: [] as z.core.$ZodIssue[],
+              $messages: [] as string[],
               $path,
               $id,
             }) as IZodValidationItem
@@ -283,7 +277,7 @@ export function useZod<T extends ZodSchemaObject>(
   }
 
   function createEmptyErrorStructureFromShape(
-    shape: z.ZodRawShape,
+    shape: ZodSchemaObject,
     path: string,
   ): any {
     const structure = {} as IZodShape<typeof shape>
@@ -295,7 +289,7 @@ export function useZod<T extends ZodSchemaObject>(
         if (schemaValue instanceof z.ZodObject) {
           const isRequired = !schemaValue.isOptional()
           const emptyStructure = createEmptyErrorStructureFromShape(
-            schemaValue.shape,
+            schemaValue.shape as ZodSchemaObject,
             `${path}.${key}`,
           )
 
@@ -351,7 +345,7 @@ export function useZod<T extends ZodSchemaObject>(
         if (schemaValue instanceof z.ZodObject) {
           const isRequired = !schemaValue.isOptional()
           const emptyStructure = createEmptyErrorStructureFromShape(
-            schemaValue.shape,
+            schemaValue.shape as ZodSchemaObject,
             key,
           )
 
