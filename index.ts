@@ -23,8 +23,9 @@ export {
   SELECTOR_COMPARATORS,
 } from './shared/constants/comparators-by-category.const'
 export { ZOD_VALIDATORS } from './shared/constants/zod-validators'
-export { cleanValue } from './shared/functions/clean-value'
+export { SummaryEnum } from './shared/enums/summary.enum'
 
+export { cleanValue } from './shared/functions/clean-value'
 export { formatValue } from './shared/functions/format-value'
 export { isBooleanish } from './shared/functions/is-booleanish'
 export { isNumeric } from './shared/functions/is-numeric'
