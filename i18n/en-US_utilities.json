@@ -90,40 +90,24 @@
   },
   "zod": {
     "errors": {
-      "invalid_type": "Invalid input",
+      "required": "Required",
+      "invalid_type": "Input type must be {expected}",
       "invalid_type_received_undefined": "Required",
-      "invalid_literal": "Invalid literal value, expected {expected}",
-      "unrecognized_keys": "Unrecognized key(s) in object: {keys}",
+      "invalid_value": "Expected one of the values: {expected}",
+      "unrecognized_keys": "Unrecognized keys in object: {keys}",
       "invalid_union": "Invalid input",
-      "invalid_union_discriminator": "Invalid discriminator value. Expected {options}",
-      "invalid_enum_value": "Invalid enum value. Expected {options}, received '{received}'",
-      "invalid_arguments": "Invalid function arguments",
-      "invalid_return_type": "Invalid function return type",
-      "invalid_date": "Invalid date",
       "custom": "Invalid input",
-      "invalid_intersection_types": "Intersection results could not be merged",
       "not_multiple_of": "Number must be a multiple of {multipleOf}",
-      "not_finite": "Number must be finite",
-      "invalid_string": {
-        "email": "Invalid {validation}",
-        "url": "Invalid {validation}",
-        "uuid": "Invalid {validation}",
-        "cuid": "Invalid {validation}",
-        "regex": "Invalid",
-        "datetime": "Invalid {validation}",
-        "startsWith": "Invalid input: must start with \"{startsWith}\"",
-        "endsWith": "Invalid input: must end with \"{endsWith}\""
-      },
       "too_small": {
         "array": {
-          "exact": "Array must contain exactly {minimum} element(s)",
-          "inclusive": "Array must contain at least {minimum} element(s)",
-          "not_inclusive": "Array must contain more than {minimum} element(s)"
+          "exact": "Array must contain exactly {minimum} item(s)",
+          "inclusive": "Array must contain at least {minimum} item(s)",
+          "not_inclusive": "Array must contain more than {minimum} item(s)"
         },
         "string": {
-          "exact": "Must contain exactly {minimum} character(s)",
-          "inclusive": "Required | Must contain at least {minimum} character(s)",
-          "not_inclusive": "Must contain over {minimum} character(s)"
+          "exact": "Text must contain exactly {minimum} character(s)",
+          "inclusive": "Text must contain at least {minimum} character(s)",
+          "not_inclusive": "Text must contain more than {minimum} character(s)"
         },
         "number": {
           "exact": "Number must be exactly {minimum}",
@@ -143,14 +127,14 @@
       },
       "too_big": {
         "array": {
-          "exact": "Array must contain exactly {maximum} element(s)",
-          "inclusive": "Array must contain at most {maximum} element(s)",
-          "not_inclusive": "Array must contain less than {maximum} element(s)"
+          "exact": "Array must contain exactly {maximum} item(s)",
+          "inclusive": "Array must contain at most {maximum} item(s)",
+          "not_inclusive": "Array must contain fewer than {maximum} item(s)"
         },
         "string": {
-          "exact": "Must contain exactly {maximum} character(s)",
-          "inclusive": "Must contain at most {maximum} character(s)",
-          "not_inclusive": "Must contain under {maximum} character(s)"
+          "exact": "Text must contain exactly {maximum} character(s)",
+          "inclusive": "Text must contain at most {maximum} character(s)",
+          "not_inclusive": "Text must contain fewer than {maximum} character(s)"
         },
         "number": {
           "exact": "Number must be exactly {maximum}",
@@ -164,19 +148,21 @@
         },
         "date": {
           "exact": "Date must be exactly {maximum}",
-          "inclusive": "Date must be smaller than or equal to {maximum}",
-          "not_inclusive": "Date must be smaller than {maximum}"
+          "inclusive": "Date must be less than or equal to {maximum}",
+          "not_inclusive": "Date must be less than {maximum}"
         }
-      },
-      "required": "Required"
+      }
     },
-    "validations": {
-      "email": "email",
-      "url": "url",
-      "uuid": "uuid",
-      "cuid": "cuid",
-      "regex": "regex",
-      "datetime": "datetime"
+    "invalid_format": {
+      "email": "Invalid email",
+      "url": "Invalid URL",
+      "uuid": "Invalid UUID",
+      "cuid": "Invalid CUID",
+      "regex": "Invalid input, must match: {regex}",
+      "date": "Invalid ISO date",
+      "datetime": "Invalid ISO date and time",
+      "starts_with": "Must start with {prefix}",
+      "ends_with": "Must end with {suffix}"
     },
     "types": {
       "function": "function",

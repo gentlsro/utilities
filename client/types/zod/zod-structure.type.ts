@@ -10,7 +10,7 @@ export type IZodShape<T extends ZodSchemaObject> = {
 
 type ZodErrorShape<T> = T extends object
   ? {
-      [P in keyof T]?: T[P] extends z.ZodType<any, any, any>
+      [P in keyof T]?: T[P] extends z.ZodType<any, any>
         ? IZodValidationItem
         : ZodErrorShape<T[P]> & IZodValidationItem
     }

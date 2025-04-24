@@ -91,40 +91,23 @@
   "zod": {
     "errors": {
       "required": "Povinné",
-      "invalid_type": "Typ vstupu musí být {expected}, ale byl obdržen typ {received}",
+      "invalid_type": "Typ vstupu musí být {expected}",
       "invalid_type_received_undefined": "Povinné",
-      "invalid_literal": "Neplatná doslovná hodnota, očekává se {expected}",
+      "invalid_value": "Očekává se hodnota jedna z hodnot: {expected}",
       "unrecognized_keys": "Nerozpoznané klíče v objektu: {keys}",
       "invalid_union": "Neplatný vstup",
-      "invalid_union_discriminator": "Neplatná hodnota diskriminátoru. Očekává se {options}",
-      "invalid_enum_value": "Neplatná hodnota výčtu. Očekává se {options}, ale bylo obdrženo '{received}'",
-      "invalid_arguments": "Neplatné argumenty funkce",
-      "invalid_return_type": "Neplatný typ návratové hodnoty",
-      "invalid_date": "Neplatné datum",
       "custom": "Neplatný vstup",
-      "invalid_intersection_types": "Hodnoty průniku nelze sloučit",
       "not_multiple_of": "Číslo musí být násobkem {multipleOf}",
-      "not_finite": "Číslo nesmí být nekonečné",
-      "invalid_string": {
-        "email": "Neplatný {validation}",
-        "url": "Neplatná {validation}",
-        "uuid": "Neplatný {validation}",
-        "cuid": "Neplatný {validation}",
-        "regex": "Neplatná kombinace",
-        "datetime": "Neplatné {validation}",
-        "startsWith": "Neplatný vstup: musí začínat \"{startsWith}\"",
-        "endsWith": "Neplatný vstup: musí končit \"{endsWith}\""
-      },
       "too_small": {
         "array": {
           "exact": "Pole musí obsahovat přesně {minimum} prvek/prvků",
           "inclusive": "Pole musí obsahovat alespoň {minimum} prvek/prvků",
-          "not_inclusive": "Pole musí obsahovat nejvýše {minimum} prvek/prvků"
+          "not_inclusive": "Pole musí obsahovat alespoň {minimum} prvek/prvků"
         },
         "string": {
           "exact": "Text musí obsahovat přesně {minimum} znak/znaků",
           "inclusive": "Text musí obsahovat alespoň {minimum} znak/znaků",
-          "not_inclusive": "Text musí obsahovat nejvýše {minimum} znak/znaků"
+          "not_inclusive": "Text musí obsahovat alespoň {minimum} znak/znaků"
         },
         "number": {
           "exact": "Číslo musí být přesně {minimum}",
@@ -170,13 +153,16 @@
         }
       }
     },
-    "validations": {
-      "email": "e-mail",
-      "url": "url",
-      "uuid": "uuid",
-      "cuid": "cuid",
-      "regex": "regex",
-      "datetime": "datum a čas"
+    "invalid_format": {
+      "email": "Neplatný e-mail",
+      "url": "Neplatná URL",
+      "uuid": "Neplatný UUID",
+      "cuid": "Neplatný CUID",
+      "regex": "Neplatný vstup, musí splňovat: {regex}",
+      "date": "Neplatné ISO datum",
+      "datetime": "Neplatné ISO datum a čas",
+      "starts_with": "Musí začínat {prefix}",
+      "ends_with": "Musí končit na {suffix}"
     },
     "types": {
       "function": "funkce",
@@ -188,7 +174,7 @@
       "boolean": "boolean",
       "date": "datum",
       "bigint": "bigint",
-      "undefined": "nedefinováno",
+      "undefined": "undefined",
       "symbol": "symbol",
       "null": "null",
       "array": "pole",

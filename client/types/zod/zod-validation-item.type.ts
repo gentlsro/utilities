@@ -2,7 +2,7 @@ import type { z } from 'zod'
 
 export type IZodValidationItem = {
   $id: string
-  $errors: z.ZodIssue[]
+  $errors: z.core.$ZodIssue[]
   $messages: string[]
   $path: string
   $required: boolean
