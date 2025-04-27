@@ -86,7 +86,8 @@
     "welcome": "Welcome",
     "forExample": "For example",
     "reset": "Reset",
-    "relation": "Relation | Relations"
+    "relation": "Relation | Relations",
+    "validate": "Validate"
   },
   "zod": {
     "errors": {

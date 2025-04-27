@@ -86,7 +86,8 @@
     "welcome": "Vítejte",
     "forExample": "Například",
     "reset": "Resetovat",
-    "relation": "Vztah | Vztahy"
+    "relation": "Vztah | Vztahy",
+    "validate": "Validovat"
   },
   "zod": {
     "errors": {
