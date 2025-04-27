@@ -1,12 +1,13 @@
+import type { Locale } from '#i18n'
 import { datetimeFormats, messagesByLocale, pluralRules } from './shared/i18n'
 
 type DatetimeFormat = Record<string, Intl.DateTimeFormatOptions>
 
 const DATETIME_FORMAT_BY_LANG = Object.keys(messagesByLocale).reduce((agg, lang) => {
-  agg[lang] = datetimeFormats
+  agg[lang as Locale] = datetimeFormats
 
   return agg
-}, {} as Record<string, DatetimeFormat>)
+}, {} as Record<Locale, DatetimeFormat>)
 
 export default defineI18nConfig(() => ({
   fallbackLocale: 'en-US',

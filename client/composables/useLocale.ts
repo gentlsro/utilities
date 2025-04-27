@@ -23,12 +23,12 @@ export function useLocale() {
 
   const currentLocaleCode = computed(() => currentLocale.value.code)
 
-  const getLocaleDateFormat = (localeCode: string) => {
-    return localesByCode.value[localeCode]?.dateFormat || 'YYYY-MM-DD'
+  function getLocaleDateFormat(localeCode: string): string {
+    return (localesByCode.value[localeCode] as any)?.dateFormat || 'YYYY-MM-DD'
   }
 
-  const getCurrentLocaleDateFormat = () => {
-    return getLocaleDateFormat(currentLocale.value.code!)
+  function getCurrentLocaleDateFormat(): string {
+    return getLocaleDateFormat(currentLocale.value.code)
   }
 
   // Communication across tabs

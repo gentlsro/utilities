@@ -132,7 +132,7 @@ export function useDateUtils(localeIso: string) {
     const usedLocale = locales.find(locale => locale.code === usedLocaleIso)
 
     return options?.isLocalString
-      ? $date(toValue(dateRef), usedLocale?.dateFormat)
+      ? $date(toValue(dateRef), (usedLocale as any)?.dateFormat)
       : $date(toValue(dateRef))
   }
 
