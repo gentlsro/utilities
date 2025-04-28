@@ -89,7 +89,9 @@
     "relation": "Relation | Relations",
     "validate": "Validate",
     "here": "Here",
-    "atLeastCharactersToSearch": "Seach by typing at least { count } characters"
+    "atLeastCharactersToSearch": "Seach by typing at least { count } characters",
+    "previous": "Previous",
+    "next": "Next"
   },
   "zod": {
     "errors": {
