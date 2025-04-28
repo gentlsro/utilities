@@ -87,7 +87,9 @@
     "forExample": "For example",
     "reset": "Reset",
     "relation": "Relation | Relations",
-    "validate": "Validate"
+    "validate": "Validate",
+    "here": "Here",
+    "atLeastCharactersToSearch": "Seach by typing at least { count } characters"
   },
   "zod": {
     "errors": {

@@ -87,7 +87,10 @@
     "forExample": "Například",
     "reset": "Resetovat",
     "relation": "Vztah | Vztahy",
-    "validate": "Validovat"
+    "validate": "Validovat",
+    "here": "Zde",
+    "atLeastCharactersToSearch": "Pro vyhledávání napište alespoň { count } znaky",
+    "searchIcon": "Vyhledat ikonu"
   },
   "zod": {
     "errors": {
