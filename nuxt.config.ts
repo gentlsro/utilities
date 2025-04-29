@@ -42,7 +42,7 @@ export default defineNuxtConfig({
       { name: 'Datetime', from: resolve('./shared/types/datetime.type.ts'), type: true },
       { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
       { name: 'isDev', from: resolve('./shared/functions/is-dev.ts') },
-      { name: 'resolveComponentByName', from: './client/functions/resolve-component-by-name.ts' },
+      { name: 'resolveComponentByName', from: resolve('./client/functions/resolve-component-by-name.ts') },
     ],
   },
 
