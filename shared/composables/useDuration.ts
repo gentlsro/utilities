@@ -58,14 +58,16 @@ export function useDuration(localeIso: string) {
     formatted: string
     formattedWithUnit: string
   } => {
+    const valueAbs = Math.abs(value)
+
     if (!unit) {
-      if ($duration(value).as('second') <= 1) {
+      if ($duration(valueAbs).as('second') <= 1) {
         unit = 'millisecond'
-      } else if ($duration(value).as('second') <= 30) {
+      } else if ($duration(valueAbs).as('second') <= 30) {
         unit = 'second'
-      } else if ($duration(value).as('minute') <= 30) {
+      } else if ($duration(valueAbs).as('minute') <= 30) {
         unit = 'minute'
-      } else if ($duration(value).as('hour') < 24) {
+      } else if ($duration(valueAbs).as('hour') < 24) {
         unit = 'hour'
       } else {
         unit = 'day'
@@ -74,7 +76,8 @@ export function useDuration(localeIso: string) {
 
     const val = $duration(value).as(unit)
     const formatted = formatNumber(val)
-    const unitTranslated = $t(`general.${unit}`, Math.round(val))
+    const unitTranslated = $t(`general.${unit}`, Math.round(Math.abs(val)))
+    console.log(unit, Math.round(Math.abs(val)))
 
     return {
       val,
