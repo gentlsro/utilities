@@ -91,7 +91,9 @@
     "here": "Here",
     "atLeastCharactersToSearch": "Seach by typing at least { count } characters",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "date": "Date",
+    "time": "Time"
   },
   "zod": {
     "errors": {

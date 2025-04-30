@@ -92,7 +92,9 @@
     "atLeastCharactersToSearch": "Pro vyhledávání napište alespoň { count } znaky",
     "searchIcon": "Vyhledat ikonu",
     "previous": "Předchozí",
-    "next": "Následující"
+    "next": "Následující",
+    "date": "Datum",
+    "time": "Čas"
   },
   "zod": {
     "errors": {
