@@ -94,7 +94,8 @@
     "previous": "Předchozí",
     "next": "Následující",
     "date": "Datum",
-    "time": "Čas"
+    "time": "Čas",
+    "notFilled": "Neuvedeno"
   },
   "zod": {
     "errors": {

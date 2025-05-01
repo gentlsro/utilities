@@ -93,7 +93,8 @@
     "previous": "Previous",
     "next": "Next",
     "date": "Date",
-    "time": "Time"
+    "time": "Time",
+    "notFilled": "Not specified"
   },
   "zod": {
     "errors": {
