@@ -5,9 +5,9 @@ import type { IFormatValueOptions } from '../types/format-value-options.type'
 
 // Functions
 import { predictDataType } from './predict-data-type'
-import { useDateUtils as useDateUtilsShared } from '../../shared/composables/useDateUtils'
-import { useNumber as useNumberShared } from '../../shared/composables/useNumber'
-import { useDuration as useDurationShared } from '../../shared/composables/useDuration'
+import { useDateUtils as useDateUtilsShared } from '../composables/useDateUtils'
+import { useNumber as useNumberShared } from '../composables/useNumber'
+import { useDuration as useDurationShared } from '../composables/useDuration'
 
 /**
  * Formats the value from given data type to string
