@@ -7,7 +7,7 @@ import { SummaryEnum } from '../../shared/enums/summary.enum'
 import type { SummaryItem } from '../../shared/models/summary-item.model'
 
 type IInputItem = IGroupedItem<IItem> | IGroupRow
-type IResultItem = { id: string, field: string, label?: string | ((value: number) => string), value: number }
+type IResultItem = { id: string, field: string, label?: string | ((value: number) => string), value: number, row: IGroupedItem<IItem> | IGroupRow }
 
 export function useSummaries() {
   const createSummaries = <T = IItem>(
@@ -46,6 +46,7 @@ export function useSummaries() {
             field: summary.field,
             label: summary.label ?? row.label,
             value,
+            row,
           })
         })
       }
