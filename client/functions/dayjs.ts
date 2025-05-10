@@ -1,3 +1,4 @@
+import utilsConfig from '$utilsConfig'
 import type { OptionType } from 'dayjs'
 
 export function $date(
@@ -6,10 +7,10 @@ export function $date(
   strict?: boolean,
 ) {
   const dayjs = useDayjs()
-  let isUtc = true
+  let isUtc: boolean = utilsConfig.general.useUtc
 
   if (typeof format === 'object' && 'utc' in format) {
-    isUtc = format.utc ?? true
+    isUtc = format.utc ?? utilsConfig.general.useUtc
   }
 
   if (isUtc) {

@@ -92,6 +92,7 @@ export type IUtilitiesConfig = {
   general: {
     domain?: string
     transliterate?: boolean
+    useUtc?: boolean
   }
 
   /**
@@ -140,6 +141,7 @@ export const defaultUtilitiesConfig = {
   general: {
     transliterate: false,
     domain: undefined,
+    useUtc: true,
   },
 
   // Data types

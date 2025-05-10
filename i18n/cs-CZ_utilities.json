@@ -97,7 +97,7 @@
     "date": "Datum",
     "time": "Čas",
     "notFilled": "Neuvedeno",
-    "additionalConfiguration": "Přizpúsobení"
+    "additionalConfiguration": "Přizpůsobení"
   },
   "zod": {
     "errors": {
