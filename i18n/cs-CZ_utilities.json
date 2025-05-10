@@ -96,7 +96,8 @@
     "next": "Následující",
     "date": "Datum",
     "time": "Čas",
-    "notFilled": "Neuvedeno"
+    "notFilled": "Neuvedeno",
+    "additionalConfiguration": "Přizpúsobení"
   },
   "zod": {
     "errors": {
