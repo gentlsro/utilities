@@ -3,43 +3,34 @@ export const datetimeFormats: Record<string, Intl.DateTimeFormatOptions> = {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    timeZone: 'UTC',
   },
   short: {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    timeZone: 'UTC',
   },
   monthShort: {
     month: 'short',
-    timeZone: 'UTC',
   },
   month: {
     month: 'long',
-    timeZone: 'UTC',
   },
   year: {
     year: 'numeric',
-    timeZone: 'UTC',
   },
   yearMonth: {
     year: 'numeric',
     month: 'long',
-    timeZone: 'UTC',
   },
   dayShort: {
     weekday: 'short',
-    timeZone: 'UTC',
   },
   day: {
     weekday: 'long',
-    timeZone: 'UTC',
   },
   time: {
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC',
   },
   long: {
     year: 'numeric',
@@ -47,7 +38,6 @@ export const datetimeFormats: Record<string, Intl.DateTimeFormatOptions> = {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC',
   },
   shortLong: {
     year: 'numeric',
@@ -55,7 +45,6 @@ export const datetimeFormats: Record<string, Intl.DateTimeFormatOptions> = {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC',
   },
   shortLongWithSeconds: {
     year: '2-digit',
@@ -64,7 +53,6 @@ export const datetimeFormats: Record<string, Intl.DateTimeFormatOptions> = {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    timeZone: 'UTC',
   },
   timestamp: {
     year: 'numeric',
@@ -72,5 +60,62 @@ export const datetimeFormats: Record<string, Intl.DateTimeFormatOptions> = {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'UTC',
+  },
+  utc: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  },
+  utcShort: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    timeZone: 'UTC',
+  },
+  utcLong: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  },
+  utcShortLong: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  },
+  utcShortLongWithSeconds: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'UTC',
+  },
+  utcMonth: {
+    month: '2-digit',
+    timeZone: 'UTC',
+  },
+  utcYear: {
+    year: 'numeric',
+    timeZone: 'UTC',
+  },
+  utcYearMonth: {
+    year: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  },
+  utcDayShort: {
+    weekday: 'short',
+    timeZone: 'UTC',
   },
 }
