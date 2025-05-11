@@ -55,7 +55,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       COOKIE_DOMAIN: undefined as string | undefined,
-      NUXT_PUBLIC_FILES_HOST: undefined as string | undefined,
+      FILES_HOST: undefined as string | undefined,
     },
   },
 

@@ -30,7 +30,7 @@ export async function handleDownloadFile(
 
   let url = _url
     ? typeof _url === 'function' ? _url(file) : _url
-    : `${rC.public.NUXT_PUBLIC_FILES_HOST}/${decodeURIComponent(file.path ?? '')}`
+    : `${rC.public.FILES_HOST}/${decodeURIComponent(file.path ?? '')}`
 
   // Make sure to remove double slashes
   url = url.replace('//', '/')
