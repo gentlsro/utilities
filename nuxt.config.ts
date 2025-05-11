@@ -51,14 +51,6 @@ export default defineNuxtConfig({
     enabled: isMonorepo,
   },
 
-  // Runtime config https://nuxt.com/docs/api/configuration/nuxt-config#runtimeconfig
-  runtimeConfig: {
-    public: {
-      COOKIE_DOMAIN: undefined as string | undefined,
-      FILES_HOST: undefined as string | undefined,
-    },
-  },
-
   // Src dir https://nuxt.com/docs/api/configuration/nuxt-config#srcdir
   srcDir: 'client/',
 
