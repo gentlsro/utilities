@@ -14,11 +14,23 @@ export function parseValue(
   value: any,
   dataType?: ExtendedDataType,
   options?: {
+    /**
+     * Output date format
+     */
     dateFormat?: string
+
+    /**
+     * Timezone to use for the date output
+     */
+    timezone?: string
+
+    /**
+     * When true, the function will try to guess the data type based on the value
+     */
     predictDataType?: PredictDataTypeOptions
   },
 ) {
-  const { dateFormat, predictDataType: _predictDataType } = options || {}
+  const { dateFormat, predictDataType: _predictDataType, timezone } = options || {}
 
   if (isNil(value)) {
     return value
@@ -49,7 +61,11 @@ export function parseValue(
     case 'datetime':
     case 'timestamp':
     case 'yearMonth':
-      return dateFormat ? $date(value).format(dateFormat) : $date(value)
+      return dateFormat
+        ? timezone
+          ? $date(value).tz(timezone).format(dateFormat)
+          : $date(value).format(dateFormat)
+        : $date(value)
 
     case 'boolean':
       if (typeof value === 'boolean') {
