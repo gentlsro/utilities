@@ -4,7 +4,7 @@ export function useTheme() {
   const prefersDark = usePreferredDark()
   const themeCookie = useCookie('theme', {
     default: getColor,
-    domain: utilsConfig.general.domain,
+    domain: utilsConfig.general.domain ?? undefined,
   })
 
   const isDark = computed(() => {
