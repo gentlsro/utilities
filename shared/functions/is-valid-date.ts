@@ -1,7 +1,7 @@
-export function isValidDate(value: any) {
-  const { isDayjs } = useDayjs()
+import dayjs from 'dayjs'
 
-  if (value instanceof Date || isDayjs(value)) {
+export function isValidDate(value: any) {
+  if (value instanceof Date || dayjs.isDayjs(value)) {
     // Check if it's a Date instance and valid
     return true
   } else if (typeof value === 'string' || typeof value === 'number') {
