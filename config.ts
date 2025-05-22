@@ -141,7 +141,7 @@ export const defaultUtilitiesConfig = {
   general: {
     transliterate: false,
     domain: undefined,
-    useUtc: true,
+    useUtc: false,
   },
 
   // Data types
