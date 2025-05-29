@@ -96,7 +96,8 @@
     "date": "Date",
     "time": "Time",
     "notFilled": "Not specified",
-    "additionalConfiguration": "Additional configuration"
+    "additionalConfiguration": "Additional configuration",
+    "use": "Use"
   },
   "zod": {
     "errors": {
