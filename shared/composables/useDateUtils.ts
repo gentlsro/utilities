@@ -100,9 +100,12 @@ export function useDateUtils(localeIso: string) {
         typeof outputIntlOptions === 'string'
         && datetimeFormats[outputIntlOptions]
       ) {
-        return Intl.DateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
+        const formattedDate = Intl.DateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
           .format(parsedDate.valueOf())
-          .replace(/ /g, '')
+
+        return options?.removeSpaces
+          ? formattedDate.replace(/ /g, '')
+          : formattedDate
       }
 
       // When using an explicit format, we use the dayjs API
@@ -110,9 +113,12 @@ export function useDateUtils(localeIso: string) {
         return parsedDate.format(outputIntlOptions)
       }
 
-      return Intl.DateTimeFormat(usedLocaleIso, outputIntlOptions)
+      const formattedDate = Intl.DateTimeFormat(usedLocaleIso, outputIntlOptions)
         .format(parsedDate.valueOf())
-        .replace(/ /g, '')
+
+      return options?.removeSpaces
+        ? formattedDate.replace(/ /g, '')
+        : formattedDate
     }
   }
 
