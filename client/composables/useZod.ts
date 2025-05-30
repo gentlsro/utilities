@@ -427,7 +427,11 @@ export function useZod<T extends ZodSchemaObject>(
   )
 
   // We watch the locale and localize the errors when it changes
-  watch(locale, () => validate(false, true))
+  watch(locale, () => {
+    if (isValidated.value) {
+      validate(false, true)
+    }
+  })
 
   // Lifecycle
   onUnmounted(() => {
