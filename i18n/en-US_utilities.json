@@ -273,7 +273,7 @@
     "black": "Black"
   },
   "comparator": {
-    "in": "Value",
+    "in": "In",
     "eq": "Equals",
     "like": "Like",
     "stw": "Starts with",
@@ -297,7 +297,7 @@
     "is|not": "Is not",
     "is|$empty": "Is empty",
     "is|not|$empty": "Is not empty",
-    "not|in": "Not value",
+    "not|in": "Not in",
     "isEmpty": "Empty",
     "in|every": "Every",
     "in|none": "None"
