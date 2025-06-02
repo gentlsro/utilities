@@ -25,6 +25,7 @@ export {
 export { ZOD_VALIDATORS } from './shared/constants/zod-validators'
 export { SummaryEnum } from './shared/enums/summary.enum'
 
+export { buildZodFromJson } from './shared/functions/build-zod-from-json'
 export { cleanValue } from './shared/functions/clean-value'
 export { formatValue } from './shared/functions/format-value'
 export { isBooleanish } from './shared/functions/is-booleanish'

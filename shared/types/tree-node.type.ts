@@ -7,7 +7,7 @@ export type ITreeNode<T extends IItem = IItem> = IItem<T> & {
   /**
    * Name of the node
    */
-  name: string
+  name?: string
 
   /**
    * Children of the node

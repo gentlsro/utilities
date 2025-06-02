@@ -4,6 +4,13 @@ function parseDate(dateRef: MaybeRefOrGetter<Datetime>) {
 
 export const ZOD_VALIDATORS = {
   /**
+   * Checks if the value is required
+   */
+  required: (value: unknown) => {
+    return !isNil(value)
+  },
+
+  /**
    * Checks if the string value is numeric ~ contains only integers
    *
    * Note: will return true for empty string
