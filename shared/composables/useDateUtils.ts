@@ -1,3 +1,4 @@
+import { removeDatetimeSpaces } from '$utils'
 import type { ManipulateType, OpUnitType } from 'dayjs'
 
 // Types
@@ -104,7 +105,7 @@ export function useDateUtils(localeIso: string) {
           .format(parsedDate.valueOf())
 
         return options?.removeSpaces
-          ? formattedDate.replace(/ /g, '')
+          ? removeDatetimeSpaces(formattedDate)
           : formattedDate
       }
 
@@ -117,7 +118,7 @@ export function useDateUtils(localeIso: string) {
         .format(parsedDate.valueOf())
 
       return options?.removeSpaces
-        ? formattedDate.replace(/ /g, '')
+        ? removeDatetimeSpaces(formattedDate)
         : formattedDate
     }
   }
