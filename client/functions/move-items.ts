@@ -4,8 +4,7 @@ export function moveItems<T = any>(payload: {
   arrayRef: Ref<T[]>
   toMoveRef: MaybeRefOrGetter<T[]>
   toIndex: number
-},
-) {
+}) {
   const { arrayRef, toIndex, toMoveRef } = payload
   let items = klona(toValue(arrayRef))
   const toMove = toValue(toMoveRef)
