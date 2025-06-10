@@ -59,7 +59,7 @@ export function useLocale() {
 
       // useHead({ htmlAttrs: { lang: locale.code } })
       callback?.()
-    })
+    }, 500)
   }
 
   return {
