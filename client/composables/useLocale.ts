@@ -3,7 +3,7 @@ import utilsConfig from '$utilsConfig'
 
 export function useLocale() {
   const localeCookie = useCookie('lang', { domain: utilsConfig.general.domain ?? undefined })
-  const { locale, locales, defaultLocale } = useI18n()
+  const { locale, locales, defaultLocale, loadLocaleMessages } = useI18n()
   const switchLocalePath = useSwitchLocalePath()
 
   const localesByCode = computed(() => {
@@ -48,7 +48,9 @@ export function useLocale() {
     handleSetLocale(foundLocale)
   })
 
-  function handleSetLocale(_locale: LocaleObject, callback?: () => void) {
+  async function handleSetLocale(_locale: LocaleObject, callback?: () => void) {
+    await loadLocaleMessages(_locale.code)
+
     const localePath = switchLocalePath(_locale.code)
     history.replaceState(null, '', localePath)
     locale.value = _locale.code
