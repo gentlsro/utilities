@@ -51,13 +51,15 @@ export function useLocale() {
   async function handleSetLocale(_locale: LocaleObject, callback?: () => void) {
     await loadLocaleMessages(_locale.code)
 
-    const localePath = switchLocalePath(_locale.code)
-    history.replaceState(null, '', localePath)
-    locale.value = _locale.code
-    localeCookie.value = _locale.code
+    setTimeout(() => {
+      const localePath = switchLocalePath(_locale.code)
+      history.replaceState(null, '', localePath)
+      locale.value = _locale.code
+      localeCookie.value = _locale.code
 
-    // useHead({ htmlAttrs: { lang: locale.code } })
-    callback?.()
+      // useHead({ htmlAttrs: { lang: locale.code } })
+      callback?.()
+    })
   }
 
   return {
