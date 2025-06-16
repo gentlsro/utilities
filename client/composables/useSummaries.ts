@@ -1,4 +1,4 @@
-import { get, set } from 'lodash-es'
+import { get } from 'lodash-es'
 import type { IGroupRow } from '$utils'
 import type { IGroupedItem } from '../../shared/composables/useGrouping'
 
@@ -29,7 +29,7 @@ export function useSummaries() {
     groupedArray.forEach(row => {
       if ('isGroup' in row) {
         summaries.forEach(summary => {
-          const value = calculateSummary(summary, row.dataObj)
+          const value = Math.round(calculateSummary(summary, row.dataObj) * 100) / 100
 
           if (mutateGroupedArray) {
             row.summary = {
