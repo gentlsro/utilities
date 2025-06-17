@@ -107,5 +107,5 @@ export function useSummaries() {
     }
   }
 
-  return { createSummaries }
+  return { createSummaries, getRowValue, calculateSummary }
 }
