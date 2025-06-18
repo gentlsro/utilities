@@ -91,13 +91,15 @@
     "validate": "Validate",
     "here": "Here",
     "atLeastCharactersToSearch": "Seach by typing at least { count } characters",
+    "searchIcon": "Search icon",
     "previous": "Previous",
     "next": "Next",
     "date": "Date",
     "time": "Time",
     "notFilled": "Not specified",
     "additionalConfiguration": "Additional configuration",
-    "use": "Use"
+    "use": "Use",
+    "invalidForm2": "Icorrectly filled data"
   },
   "zod": {
     "errors": {
