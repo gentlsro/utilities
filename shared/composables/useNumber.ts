@@ -64,6 +64,10 @@ export function useNumber(localeIso: string) {
     const usedLocale = options.localeIso || localeIso
     const usedIntlOptions = options.intlOptions || defaultIntlOptions
 
+    if (typeof val === 'string') {
+      return Intl.NumberFormat(usedLocale, usedIntlOptions).format(parseNumber(val))
+    }
+
     return Intl.NumberFormat(usedLocale, usedIntlOptions).format(+val)
   }
 
