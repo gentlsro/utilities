@@ -66,15 +66,16 @@ export function useFiltering() {
           return
         }
 
-        let rowValue: any
+        // let rowValue: any
+        const rowValue = get(row, f.field)
 
-        if ('format' in f) {
-          rowValue = f.filterFormat?.(row)
-            ?? f.format?.(row, get(row, f.field))
-            ?? get(row, f.field)
-        } else {
-          rowValue = get(row, f.field)
-        }
+        // if ('format' in f) {
+        //   rowValue = f.filterFormat?.(row)
+        //     ?? f.format?.(row, get(row, f.field))
+        //     ?? get(row, f.field)
+        // } else {
+        //   rowValue = get(row, f.field)
+        // }
 
         if (Array.isArray(f.value)) {
           const isAndCondition = f.comparator === ComparatorEnum.IN_EVERY || f.comparator === ComparatorEnum.IN_NONE
@@ -145,31 +146,27 @@ export function useFiltering() {
 
     switch (comparator) {
       case ComparatorEnum.STARTS_WITH:
-        valid
-          = valid
-            && textFnc((formattedRowValue || '').toString())
-              .startsWith(textFnc((formattedValue || '').toString()))
+        valid = valid
+          && textFnc((formattedRowValue || '').toString())
+            .startsWith(textFnc((formattedValue || '').toString()))
         break
 
       case ComparatorEnum.NOT_STARTS_WITH:
-        valid
-          = valid
-            && !textFnc((formattedRowValue || '').toString())
-              .startsWith(textFnc((formattedValue || '').toString()))
+        valid = valid
+          && !textFnc((formattedRowValue || '').toString())
+            .startsWith(textFnc((formattedValue || '').toString()))
         break
 
       case ComparatorEnum.ENDS_WITH:
-        valid
-          = valid
-            && textFnc((formattedRowValue || '').toString())
-              .endsWith(textFnc((formattedValue || '').toString()))
+        valid = valid
+          && textFnc((formattedRowValue || '').toString())
+            .endsWith(textFnc((formattedValue || '').toString()))
         break
 
       case ComparatorEnum.NOT_ENDS_WITH:
-        valid
-          = valid
-            && !textFnc((formattedRowValue || '').toString())
-              .endsWith(textFnc((formattedValue || '').toString()))
+        valid = valid
+          && !textFnc((formattedRowValue || '').toString())
+            .endsWith(textFnc((formattedValue || '').toString()))
         break
 
       case ComparatorEnum.GREATER_THAN:
@@ -221,10 +218,9 @@ export function useFiltering() {
         break
 
       case ComparatorEnum.NOT_CONTAINS:
-        valid
-          = valid
-            && !textFnc((formattedRowValue || '').toString())
-              .includes(textFnc((formattedValue || '').toString()))
+        valid = valid
+          && !textFnc((formattedRowValue || '').toString())
+            .includes(textFnc((formattedValue || '').toString()))
         break
 
       case ComparatorEnum.IN:
@@ -244,10 +240,9 @@ export function useFiltering() {
 
       case ComparatorEnum.NOT_IN:
       case ComparatorEnum.IN_NONE:
-        valid
-          = valid
-            && !textFnc((formattedRowValue || '').toString())
-              .includes(textFnc((formattedValue || '').toString()))
+        valid = valid
+          && !textFnc((formattedRowValue || '').toString())
+            .includes(textFnc((formattedValue || '').toString()))
         break
 
       case ComparatorEnum.IS:
