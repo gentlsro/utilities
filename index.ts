@@ -27,6 +27,7 @@ export { SummaryEnum } from './shared/enums/summary.enum'
 
 export { buildZodFromJson } from './shared/functions/build-zod-from-json'
 export { cleanValue } from './shared/functions/clean-value'
+export { customDefu } from './shared/functions/custom-defu'
 export { extractObjectKeys } from './shared/functions/extract-object-keys'
 export { formatValue } from './shared/functions/format-value'
 export { isBooleanish } from './shared/functions/is-booleanish'
