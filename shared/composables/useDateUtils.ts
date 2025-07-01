@@ -131,9 +131,10 @@ export function useDateUtils(localeIso: string) {
   ) => {
     const { appendString = '' } = options
 
-    return formatDate(`2020-01-01 ${toValue(timeRef)} ${appendString}`, {
-      outputIntlOptions: 'time',
-    })
+    return formatDate(
+      `2020-01-01 ${toValue(timeRef)} ${appendString}`,
+      { outputIntlOptions: 'time' },
+    )
   }
 
   const parseDate = (
