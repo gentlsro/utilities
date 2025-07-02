@@ -99,7 +99,8 @@
     "time": "Čas",
     "notFilled": "Neuvedeno",
     "additionalConfiguration": "Přizpůsobení",
-    "use": "Použijte"
+    "use": "Použijte",
+    "recent": "Nedávné"
   },
   "zod": {
     "errors": {
