@@ -100,7 +100,11 @@
     "additionalConfiguration": "Additional configuration",
     "use": "Use",
     "invalidForm2": "Icorrectly filled data",
-    "recent": "Recent"
+    "recent": "Recent",
+    "rename": "Rename",
+    "collapseAll": "Collapse all",
+    "expandAll": "Expand all",
+    "content": "Content"
   },
   "zod": {
     "errors": {

@@ -100,7 +100,11 @@
     "notFilled": "Neuvedeno",
     "additionalConfiguration": "Přizpůsobení",
     "use": "Použijte",
-    "recent": "Nedávné"
+    "recent": "Nedávné",
+    "rename": "Přejmenovat",
+    "collapseAll": "Sbalit vše",
+    "expandAll": "Rozbalit vše",
+    "content": "Obsah"
   },
   "zod": {
     "errors": {
