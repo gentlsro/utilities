@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { type AxiosRequestHeaders, type RawAxiosRequestHeaders } from 'axios'
 import type { Required } from 'utility-types'
 
 export class FileModel {
@@ -39,11 +39,12 @@ export class FileModel {
     options?: {
       onComplete?: (model: any) => void
       onError?: (error: any) => void
+      headers?: RawAxiosRequestHeaders
       notifyError?: boolean
       $z?: any
     },
   ) {
-    const { onComplete, onError, notifyError, $z } = options ?? {}
+    const { onComplete, onError, notifyError, $z, headers } = options ?? {}
 
     if (this.uploadProgress === 100 && !this.hasError) {
       return
@@ -58,6 +59,7 @@ export class FileModel {
     const { data } = await requestHandler(
       () =>
         axios.post(filesHost, formData, {
+          headers,
           onUploadProgress: progressEvent => {
             const { loaded, total } = progressEvent
 
