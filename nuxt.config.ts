@@ -76,7 +76,7 @@ export default defineNuxtConfig({
   nitro: {
     imports: {
       imports: [
-        { name: 'z', from: 'zod' },
+        { name: 'z', from: 'zod/v4' },
 
         // Lodash
         { name: 'get', from: 'lodash-es' },
