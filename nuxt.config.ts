@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   // Imports https://nuxt.com/docs/api/configuration/nuxt-config#imports
   imports: {
     imports: [
-      { name: 'z', from: 'zod' },
+      { name: 'z', from: 'zod/v4' },
 
       // Client
       { name: 'getComponentName', from: resolve('./client/functions/get-component-name.ts') },

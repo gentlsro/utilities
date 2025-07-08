@@ -1,5 +1,5 @@
 import type { DataType } from '$dataType'
-import type { ZodArray, ZodBoolean, ZodNumber, ZodObject, ZodString } from 'zod'
+import type { ZodArray, ZodBoolean, ZodNumber, ZodObject, ZodString } from 'zod/v4'
 
 export function buildZodFromJson(payload: {
   schema: IItem

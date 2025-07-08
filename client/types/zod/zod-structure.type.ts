@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import type { z } from 'zod/v4'
 
 // Types
 import type { IZodValidationItem } from './zod-validation-item.type'
