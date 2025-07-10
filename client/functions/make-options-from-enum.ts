@@ -16,7 +16,6 @@ export function makeSelectorOptionsFromEnum(
     numericValue?: boolean
   },
 ): IItem[] {
-  const { t } = useI18n()
   const {
     keyField = 'id',
     labelField = 'label',
@@ -32,14 +31,14 @@ export function makeSelectorOptionsFromEnum(
       .filter(key => Number.isFinite(Number(key)))
       .map(key => {
         return {
-          [labelField]: t(`${translationPrefix}.${key}`),
+          [labelField]: $t(`${translationPrefix}.${key}`),
           [keyField]: numericValue ? Number.parseInt(key) : transformKey(key),
         }
       })
   } else {
     return Object.keys(enumObj).map(key => {
       return {
-        [labelField]: t(`${translationPrefix}.${transformKey(key)}`),
+        [labelField]: $t(`${translationPrefix}.${transformKey(key)}`),
         [keyField]: key,
       }
     })
