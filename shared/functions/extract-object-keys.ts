@@ -31,7 +31,31 @@ import type { IItem } from '../types/item.type'
  */
 export function extractObjectKeys(
   obj: unknown,
-  options: { prefix?: string, keepObjectKeys?: boolean } = {},
+  options: {
+    prefix?: string
+
+    /**
+     * When true, the process will also keep the "object" keys
+     *
+     * For example, for the following object:
+     * @example
+     * {
+     *   "str": "foo",
+     *   "num": 123,
+     *   "obj": { "nestedKey": "Test" },
+     * }
+     *
+     * Would return:
+     * @example
+     * [
+     *   "str",
+     *   "num",
+     *   "obj", // <- This is the object key that wouldn't be normally returned
+     *   "obj.nestedKey",
+     * ]
+     */
+    keepObjectKeys?: boolean
+  } = {},
 ): string[] {
   const { prefix = '', keepObjectKeys = false } = options
 
