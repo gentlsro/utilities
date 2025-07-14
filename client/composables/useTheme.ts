@@ -34,6 +34,10 @@ export function useTheme() {
     themeCookie.value = theme
   }
 
+  function reset() {
+    themeCookie.value = getColor()
+  }
+
   // Communication across tabs
   const { data, post } = useBroadcastChannel<string, string>({ name: 'theme' })
 
@@ -45,5 +49,5 @@ export function useTheme() {
     toggleDark(themeCookie === 'dark')
   })
 
-  return { color: themeCookie, isDark, toggleDark }
+  return { color: themeCookie, isDark, toggleDark, reset }
 }
