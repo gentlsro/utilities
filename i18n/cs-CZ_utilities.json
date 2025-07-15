@@ -104,7 +104,9 @@
     "rename": "Přejmenovat",
     "collapseAll": "Sbalit vše",
     "expandAll": "Rozbalit vše",
-    "content": "Obsah"
+    "content": "Obsah",
+    "show": "Zobrazit",
+    "hide": "Schovat"
   },
   "zod": {
     "errors": {

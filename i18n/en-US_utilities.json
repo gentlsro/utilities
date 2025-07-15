@@ -104,7 +104,9 @@
     "rename": "Rename",
     "collapseAll": "Collapse all",
     "expandAll": "Expand all",
-    "content": "Content"
+    "content": "Content",
+    "show": "Show",
+    "hide": "Hide"
   },
   "zod": {
     "errors": {
