@@ -106,7 +106,8 @@
     "expandAll": "Expand all",
     "content": "Content",
     "show": "Show",
-    "hide": "Hide"
+    "hide": "Hide",
+    "execute": "Execute"
   },
   "zod": {
     "errors": {
@@ -317,7 +318,9 @@
     "boolean": "Boolean",
     "date": "Date",
     "datetime": "Date and time",
-    "time": "Time"
+    "time": "Time",
+    "link": "Link",
+    "task": "Task"
   },
   "theme": {
     "self": "Theme",

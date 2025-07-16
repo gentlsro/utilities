@@ -106,7 +106,8 @@
     "expandAll": "Rozbalit vše",
     "content": "Obsah",
     "show": "Zobrazit",
-    "hide": "Schovat"
+    "hide": "Schovat",
+    "execute": "Provést"
   },
   "zod": {
     "errors": {
@@ -317,7 +318,9 @@
     "boolean": "Boolean",
     "date": "Datum",
     "datetime": "Datum a čas",
-    "time": "Čas"
+    "time": "Čas",
+    "link": "Odkaz",
+    "task": "Úkol"
   },
   "theme": {
     "self": "Téma",
