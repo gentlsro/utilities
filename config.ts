@@ -51,34 +51,34 @@ enum ComparatorEnum {
   NOT_IS_EMPTY = 'is.not.$empty',
 }
 
-type DataType
+type DataType =
   // String
-  = | 'string'
+  | 'string'
 
   // Number
-    | 'number'
-    | 'percent'
+  | 'number'
+  | 'percent'
 
   // Currency
-    | 'currency'
+  | 'currency'
 
   // Duration
-    | 'duration'
+  | 'duration'
 
   // Date
-    | 'date'
-    | 'datetime'
-    | 'yearMonth'
-    | 'timestamp'
-    | 'fullDateTime'
+  | 'date'
+  | 'datetime'
+  | 'yearMonth'
+  | 'timestamp'
+  | 'fullDateTime'
 
   // Boolean
-    | 'boolean'
-    | 'bool'
+  | 'boolean'
+  | 'bool'
 
   // Custom
-    | 'time'
-    | 'custom'
+  | 'time'
+  | 'custom'
 
 type IFormatFnc = (
   value: any,
