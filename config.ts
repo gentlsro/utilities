@@ -5,6 +5,8 @@ import type { ComparatorEnum as MergedComparatorEnum } from '$comparatorEnum'
 import type { IFormatValueOptions } from './shared/types/format-value-options.type'
 import type { formatValue } from './shared/functions/format-value'
 
+const environment = import.meta.env.NUX_PUBLIC_ENV ?? 'development'
+
 type IComponent = {
   component: string
   props?: IItem
@@ -49,34 +51,34 @@ enum ComparatorEnum {
   NOT_IS_EMPTY = 'is.not.$empty',
 }
 
-type DataType =
+type DataType
   // String
-  | 'string'
+  = | 'string'
 
   // Number
-  | 'number'
-  | 'percent'
+    | 'number'
+    | 'percent'
 
   // Currency
-  | 'currency'
+    | 'currency'
 
   // Duration
-  | 'duration'
+    | 'duration'
 
   // Date
-  | 'date'
-  | 'datetime'
-  | 'yearMonth'
-  | 'timestamp'
-  | 'fullDateTime'
+    | 'date'
+    | 'datetime'
+    | 'yearMonth'
+    | 'timestamp'
+    | 'fullDateTime'
 
   // Boolean
-  | 'boolean'
-  | 'bool'
+    | 'boolean'
+    | 'bool'
 
   // Custom
-  | 'time'
-  | 'custom'
+    | 'time'
+    | 'custom'
 
 type IFormatFnc = (
   value: any,
@@ -93,6 +95,7 @@ export type IUtilitiesConfig = {
     domain?: string
     transliterate?: boolean
     useUtc?: boolean
+    environment?: string
   }
 
   /**
@@ -142,6 +145,7 @@ export const defaultUtilitiesConfig = {
     transliterate: false,
     domain: undefined,
     useUtc: false,
+    environment,
   },
 
   // Data types
