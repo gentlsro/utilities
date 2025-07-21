@@ -6,6 +6,11 @@ export class FileModel {
   uploadProgress: number
   hasError = false
 
+  /**
+   * A function that is called when the file is uploaded
+   */
+  onUploadCompleteQueue?: Array<(res: any) => void | Promise<void>> = []
+
   uploadedFile?: {
     filepath: string
     newFilename: string
@@ -32,6 +37,10 @@ export class FileModel {
 
   get isUploaded() {
     return this.uploadProgress === 100
+  }
+
+  get path() {
+    return this.uploadedFile?.filepath
   }
 
   async upload(
@@ -88,7 +97,9 @@ export class FileModel {
       },
     )
 
-    this.uploadedFile = data?.[0]
+    const file = data?.[0]
+    this.uploadedFile = file
+    this.onUploadCompleteQueue?.forEach(fn => fn(file))
 
     return data
   }
@@ -131,5 +142,6 @@ export class FileModel {
     this.file = obj.file
     this.uploadProgress = 0
     this.customData = obj.customData
+    this.onUploadCompleteQueue = obj.onUploadCompleteQueue
   }
 }
