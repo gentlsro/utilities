@@ -90,7 +90,7 @@ export function useGrouping() {
           const label = typeof group.label === 'string'
             ? group.label
             : typeof group.label === 'function'
-              ? group.label(val)
+              ? group.label(val, group)
               : val
 
           const g: IGroupRow = {
@@ -170,7 +170,7 @@ export function useGrouping() {
         row.label = typeof group.label === 'string'
           ? group.label
           : typeof group.label === 'function'
-            ? group.label(row.value)
+            ? group.label(row.value, group)
             : (row.value as string)
 
         return row

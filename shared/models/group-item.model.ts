@@ -3,7 +3,7 @@ import type { ObjectKey } from '../types/object-key.type'
 
 export class GroupItem<T = any> {
   name: string | ObjectKey<T>
-  label?: string | ((value: any) => string)
+  label?: string | ((value: any, group: GroupItem<T>) => string)
   field: ObjectKey<T>
   initialCollapsed?: boolean
   format?: (row: T) => any
