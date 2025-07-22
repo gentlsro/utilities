@@ -10,10 +10,12 @@ import { isBooleanish } from './is-booleanish'
 export function predictDataType(
   options: PredictDataTypeOptions,
 ): ExtendedDataType {
-  const { field, rows, useSimple } = options
+  const { field, rows, useSimple, rowsToConsider = rows.length } = options
+
+  const _rows = rows.slice(0, rowsToConsider)
 
   return (
-    rows.reduce<ExtendedDataType>((dataType, row) => {
+    _rows.reduce<ExtendedDataType>((dataType, row) => {
       const rowValue = get(row, field)
 
       if (isNil(rowValue) || !isNil(dataType)) {
