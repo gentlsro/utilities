@@ -36,6 +36,8 @@ export function getComparatorsByDataType(dataType: ExtendedDataType) {
     case 'percentSimple':
     case 'duration':
     case 'durationSimple':
+    case 'currency':
+    case 'currencySimple':
       return [
         ComparatorEnum.EQUAL,
         ComparatorEnum.NOT_EQUAL,
