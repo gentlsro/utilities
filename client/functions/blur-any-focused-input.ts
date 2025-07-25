@@ -10,5 +10,7 @@ export function blurAnyFocusedInput() {
     || activeElement.value?.contentEditable
   ) {
     activeElement.value.blur()
+
+    return activeElement.value
   }
 }
