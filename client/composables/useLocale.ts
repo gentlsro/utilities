@@ -3,7 +3,7 @@ import utilsConfig from '$utilsConfig'
 
 export function useLocale() {
   const localeCookie = useCookie('lang', { domain: utilsConfig.general.domain ?? undefined })
-  const { locale, locales, defaultLocale, loadLocaleMessages } = useI18n()
+  const { locale, locales, defaultLocale, loadLocaleMessages, setLocale } = useI18n()
   const switchLocalePath = useSwitchLocalePath()
 
   const localesByCode = computed(() => {
@@ -48,16 +48,32 @@ export function useLocale() {
     handleSetLocale(foundLocale)
   })
 
-  async function handleSetLocale(_locale: LocaleObject, callback?: () => void) {
-    await loadLocaleMessages(_locale.code)
+  async function handleSetLocale(_locale: LocaleObject, payload?: {
+    callback?: () => void
 
-    const localePath = switchLocalePath(_locale.code)
-    history.replaceState(null, '', localePath)
-    locale.value = _locale.code
-    localeCookie.value = _locale.code
+    /**
+     * When true, the locale will be set without triggering the nuxt navigation
+     *
+     * @default true
+     */
+    silent?: boolean
+  }) {
+    const { callback, silent = true } = payload ?? {}
 
-    // useHead({ htmlAttrs: { lang: locale.code } })
-    callback?.()
+    if (silent) {
+      await loadLocaleMessages(_locale.code)
+
+      const localePath = switchLocalePath(_locale.code)
+      history.replaceState(null, '', localePath)
+      locale.value = _locale.code
+      localeCookie.value = _locale.code
+
+      // useHead({ htmlAttrs: { lang: locale.code } })
+      callback?.()
+    } else {
+      setLocale(_locale.code)
+      callback?.()
+    }
   }
 
   return {
