@@ -75,6 +75,8 @@ export function useFiltering() {
           rowValue = f.format?.(row, rowValue)
         }
 
+        console.log('rowValue', rowValue)
+
         if (Array.isArray(f.value)) {
           const isAndCondition = f.comparator === ComparatorEnum.IN_EVERY || f.comparator === ComparatorEnum.IN_NONE
           let validInArray = false
