@@ -108,10 +108,16 @@ export type IUtilitiesConfig = {
     inputByDataType?: Partial<Record<ExtendedDataType, IComponent | undefined>>
     formatFncByDataType?: Partial<Record<ExtendedDataType, IFormatFnc>>
     parseFncByDataType?: Partial<Record<ExtendedDataType, IParseFnc>>
+
     // We can also extend some of the predefined categories of data types
     selectorComparators?: MergedComparatorEnum[]
     nonValueComparators?: MergedComparatorEnum[]
     booleanishComparators?: MergedComparatorEnum[]
+
+    // We can also define "categories" of data types
+    // For example, if we use the `Comparator.IN` for the `number` data type, we
+    // want to only allow numbers to be inputted
+    numberDataTypes?: ExtendedDataType[]
   }
 
   /**
@@ -162,6 +168,7 @@ export const defaultUtilitiesConfig = {
     booleanishComparators: [] as MergedComparatorEnum[],
     formatFncByDataType: {} as Partial<Record<ExtendedDataType, IFormatFnc>>,
     parseFncByDataType: {} as Partial<Record<ExtendedDataType, IParseFnc>>,
+    numberDataTypes: ['number', 'numberSimple'] as ExtendedDataType[],
   },
 
   // Logging

@@ -67,15 +67,13 @@ export function useFiltering() {
         }
 
         // let rowValue: any
-        const rowValue = get(row, f.field)
+        let rowValue: any = get(row, f.field)
 
-        // if ('format' in f) {
-        //   rowValue = f.filterFormat?.(row)
-        //     ?? f.format?.(row, get(row, f.field))
-        //     ?? get(row, f.field)
-        // } else {
-        //   rowValue = get(row, f.field)
-        // }
+        if ('filterFormat' in f && f.filterFormat) {
+          rowValue = f.filterFormat(row)
+        } else if ('format' in f && f.format) {
+          rowValue = f.format(row, rowValue)
+        }
 
         if (Array.isArray(f.value)) {
           const isAndCondition = f.comparator === ComparatorEnum.IN_EVERY || f.comparator === ComparatorEnum.IN_NONE
