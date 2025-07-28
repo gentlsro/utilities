@@ -69,13 +69,11 @@ export function useFiltering() {
         // let rowValue: any
         let rowValue: any = get(row, f.field)
 
-        if ('filterFormat' in f) {
-          rowValue = f.filterFormat?.(row)
-        } else if ('format' in f) {
-          rowValue = f.format?.(row, rowValue)
+        if ('filterFormat' in f && f.filterFormat) {
+          rowValue = f.filterFormat(row)
+        } else if ('format' in f && f.format) {
+          rowValue = f.format(row, rowValue)
         }
-
-        console.log('rowValue', rowValue)
 
         if (Array.isArray(f.value)) {
           const isAndCondition = f.comparator === ComparatorEnum.IN_EVERY || f.comparator === ComparatorEnum.IN_NONE
