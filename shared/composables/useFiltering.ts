@@ -103,6 +103,7 @@ export function useFiltering() {
 
           valid = valid && validInArray
         } else {
+          console.log('handleFilter', rowValue, f.value)
           const isFilterValid = handleFilter(f.comparator, rowValue, f.value, f.dataType)
 
           if (!isFilterValid) {
