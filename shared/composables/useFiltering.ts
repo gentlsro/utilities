@@ -212,6 +212,9 @@ export function useFiltering() {
         break
 
       case ComparatorEnum.CONTAINS:
+        console.log('contains', formattedRowValue, formattedValue)
+        console.log('contains', textFnc((formattedRowValue || '').toString()), textFnc((formattedValue || '').toString()))
+
         valid = valid
           && textFnc((formattedRowValue || '').toString())
             .includes(textFnc((formattedValue || '').toString()))
