@@ -67,15 +67,13 @@ export function useFiltering() {
         }
 
         // let rowValue: any
-        const rowValue = get(row, f.field)
+        let rowValue: any = get(row, f.field)
 
-        // if ('format' in f) {
-        //   rowValue = f.filterFormat?.(row)
-        //     ?? f.format?.(row, get(row, f.field))
-        //     ?? get(row, f.field)
-        // } else {
-        //   rowValue = get(row, f.field)
-        // }
+        if ('filterFormat' in f) {
+          rowValue = f.filterFormat?.(row)
+        } else if ('format' in f) {
+          rowValue = f.format?.(row, rowValue)
+        }
 
         if (Array.isArray(f.value)) {
           const isAndCondition = f.comparator === ComparatorEnum.IN_EVERY || f.comparator === ComparatorEnum.IN_NONE
@@ -103,7 +101,6 @@ export function useFiltering() {
 
           valid = valid && validInArray
         } else {
-          console.log('handleFilter', rowValue, f.value)
           const isFilterValid = handleFilter(f.comparator, rowValue, f.value, f.dataType)
 
           if (!isFilterValid) {
@@ -213,9 +210,6 @@ export function useFiltering() {
         break
 
       case ComparatorEnum.CONTAINS:
-        console.log('contains', formattedRowValue, formattedValue)
-        console.log('contains', textFnc((formattedRowValue || '').toString()), textFnc((formattedValue || '').toString()))
-
         valid = valid
           && textFnc((formattedRowValue || '').toString())
             .includes(textFnc((formattedValue || '').toString()))
