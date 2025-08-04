@@ -70,6 +70,7 @@ export function buildZodFromJson(payload: {
 
   // Not required
   if (!schema.required) {
+    // @ts-expect-error
     zodSchema = zodSchema.nullish()
   }
 
