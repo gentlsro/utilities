@@ -107,7 +107,8 @@
     "content": "Content",
     "show": "Show",
     "hide": "Hide",
-    "execute": "Execute"
+    "execute": "Execute",
+    "noResults": "No results"
   },
   "zod": {
     "errors": {

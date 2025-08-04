@@ -107,7 +107,8 @@
     "content": "Obsah",
     "show": "Zobrazit",
     "hide": "Schovat",
-    "execute": "Provést"
+    "execute": "Provést",
+    "noResults": "Žádné výsledky"
   },
   "zod": {
     "errors": {
