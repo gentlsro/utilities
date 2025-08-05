@@ -57,7 +57,7 @@ export function useRefReset<T, Transformed = T>(
      */
     syncFromParent: () => {
       _initialValue = toValue(initialValue)
-      originalValue.value = klona(toValue(_initialValue) as UnwrapRef<T>)
+      originalValue.value = klona(toValue(modifyFnc?.(_initialValue) || _initialValue) as UnwrapRef<T>)
 
       reset()
     },
