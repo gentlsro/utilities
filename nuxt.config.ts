@@ -74,6 +74,10 @@ export default defineNuxtConfig({
 
   // Nitro https://nuxt.com/docs/api/configuration/nuxt-config#nitro
   nitro: {
+    modules: [
+      resolve('./modules/lodash.module'),
+    ],
+
     imports: {
       imports: [
         { name: 'z', from: 'zod/v4' },
