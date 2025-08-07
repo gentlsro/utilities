@@ -11,9 +11,9 @@ export default defineNuxtConfig({
   // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
     resolve('./modules/utilities.module'),
+    resolve('./modules/lodash.module'),
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
-    'nuxt-lodash',
     'dayjs-nuxt',
   ],
 
@@ -77,15 +77,6 @@ export default defineNuxtConfig({
     imports: {
       imports: [
         { name: 'z', from: 'zod/v4' },
-
-        // Lodash
-        { name: 'get', from: 'lodash-es' },
-        { name: 'set', from: 'lodash-es' },
-        { name: 'isNil', from: 'lodash-es' },
-        { name: 'pick', from: 'lodash-es' },
-        { name: 'omit', from: 'lodash-es' },
-        { name: 'isEmpty', from: 'lodash-es' },
-        { name: 'isEqual', from: 'lodash-es' },
 
         // Server
         { name: '$t', from: resolve('./server/functions/$t.ts') },
@@ -168,7 +159,4 @@ export default defineNuxtConfig({
       },
     ],
   },
-
-  // Lodash
-  lodash: { prefix: '' },
 })
