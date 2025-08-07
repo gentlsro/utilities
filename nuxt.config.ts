@@ -74,13 +74,18 @@ export default defineNuxtConfig({
 
   // Nitro https://nuxt.com/docs/api/configuration/nuxt-config#nitro
   nitro: {
-    modules: [
-      resolve('./modules/lodash.module'),
-    ],
-
     imports: {
       imports: [
         { name: 'z', from: 'zod/v4' },
+
+        // Lodash
+        { name: 'get', from: 'lodash-es' },
+        { name: 'set', from: 'lodash-es' },
+        { name: 'isNil', from: 'lodash-es' },
+        { name: 'pick', from: 'lodash-es' },
+        { name: 'omit', from: 'lodash-es' },
+        { name: 'isEmpty', from: 'lodash-es' },
+        { name: 'isEqual', from: 'lodash-es' },
 
         // Server
         { name: '$t', from: resolve('./server/functions/$t.ts') },
