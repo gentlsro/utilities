@@ -28,7 +28,7 @@ const EXCLUDED_KEYS = [
 
 export default defineNuxtModule({
   setup: () => {
-    console.log('🚀 Lodash module setup')
+    console.log('✔ Lodash module setup')
     for (const name of Object.keys(lodash)) {
       if (EXCLUDED_KEYS.includes(name)) {
         continue
