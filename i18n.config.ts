@@ -11,7 +11,7 @@ const DATETIME_FORMAT_BY_LANG = Object.keys(messagesByLocale).reduce((agg, lang)
 
 export default defineI18nConfig(() => ({
   fallbackLocale: 'en-US',
-  // pluralRules,
+  pluralRules,
   datetimeFormats: DATETIME_FORMAT_BY_LANG,
   warnHtmlInMessage: false,
   missingWarn: false,
