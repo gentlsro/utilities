@@ -60,7 +60,7 @@ export class FileModel {
     }
 
     this.abortController = new AbortController()
-    const filesHost = useRuntimeConfig().public.FILES_HOST ?? '/api/files'
+    const filesHost = (useRuntimeConfig().public.FILES_HOST ?? '/api/files') as string
     const formData = new FormData()
     formData.append('files', this.file)
     this.hasError = false
@@ -117,7 +117,7 @@ export class FileModel {
       return
     }
 
-    const filesHost = useRuntimeConfig().public.FILES_HOST ?? '/api/files'
+    const filesHost = (useRuntimeConfig().public.FILES_HOST ?? '/api/files') as string
 
     await requestHandler(
       () => $fetch(filesHost, {
