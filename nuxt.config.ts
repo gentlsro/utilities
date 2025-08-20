@@ -17,6 +17,11 @@ export default defineNuxtConfig({
     'dayjs-nuxt',
   ],
 
+  // Layer meta
+  $meta: {
+    name: 'utilities',
+  },
+
   // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
   // ssr: false,
 
