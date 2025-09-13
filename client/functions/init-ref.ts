@@ -26,10 +26,18 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
     return ref(defaultValue) as Ref<T[K]>
   }
 
+  // @ts-expect-error Vue doesn't type this
+  const dynamicProps = (instance.vnode?.dynamicProps ?? [])
+    .map((propName: string) => camelCase(propName)) as Array<keyof T>
+
   const providedProps = Object.keys(instance.vnode?.props ?? {})
     .map(propName => camelCase(propName)) as Array<keyof T>
 
-  return providedProps.includes(propName)
+  const _defaultValue = providedProps.includes(propName)
+    ? props?.[propName]
+    : defaultValue
+
+  return dynamicProps.includes(propName)
     ? useVModel(props, propName) as Ref<T[K]>
-    : ref(defaultValue) as Ref<T[K]>
+    : ref(_defaultValue) as Ref<T[K]>
 }
