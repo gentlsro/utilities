@@ -36,6 +36,7 @@ export default defineNuxtConfig({
       { name: '$p', from: resolve('./client/functions/$p.ts') },
       { name: '$nav', from: resolve('./client/functions/$nav.ts') },
       { name: 'injectStrict', from: resolve('./client/functions/inject-strict.ts') },
+      { name: 'initRef', from: resolve('./client/functions/init-ref.ts') },
 
       // Shared
       { name: 'generateUUID', from: resolve('./shared/functions/generate-uuid.ts') },
