@@ -14,10 +14,10 @@ import { camelCase } from 'change-case'
  * Use-case:
  * - In stores, where we initialize the state with provided props
  */
-export function initRef<T, K>(payload: {
-  defaultValue: K
+export function initRef<T extends IItem, K extends keyof T>(payload: {
+  defaultValue?: T[K]
   props?: T
-  propName: string
+  propName: K
   instance?: ComponentInternalInstance | null
 }) {
   const { propName, instance, props, defaultValue } = payload
@@ -27,9 +27,9 @@ export function initRef<T, K>(payload: {
   }
 
   const providedProps = Object.keys(instance.vnode?.props ?? {})
-    .map(propName => camelCase(propName))
+    .map(propName => camelCase(propName)) as Array<keyof T>
 
   return providedProps.includes(propName)
-    ? useVModel(instance?.props, propName)
+    ? useVModel(props, propName)
     : ref(defaultValue)
 }
