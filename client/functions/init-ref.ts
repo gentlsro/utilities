@@ -23,13 +23,13 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
   const { propName, instance, props, defaultValue } = payload
 
   if (!instance || !props) {
-    return ref(defaultValue)
+    return ref(defaultValue) as Ref<T[K]>
   }
 
   const providedProps = Object.keys(instance.vnode?.props ?? {})
     .map(propName => camelCase(propName)) as Array<keyof T>
 
   return providedProps.includes(propName)
-    ? useVModel(props, propName)
-    : ref(defaultValue)
+    ? useVModel(props, propName) as Ref<T[K]>
+    : ref(defaultValue) as Ref<T[K]>
 }
