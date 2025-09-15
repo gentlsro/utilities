@@ -108,7 +108,9 @@
     "show": "Show",
     "hide": "Hide",
     "execute": "Execute",
-    "noResults": "No results"
+    "noResults": "No results",
+    "sync": "Sync",
+    "sync2": "Sync"
   },
   "zod": {
     "errors": {

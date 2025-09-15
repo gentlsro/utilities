@@ -108,7 +108,9 @@
     "show": "Zobrazit",
     "hide": "Schovat",
     "execute": "Provést",
-    "noResults": "Žádné výsledky"
+    "noResults": "Žádné výsledky",
+    "sync": "Synchronizovat",
+    "sync2": "Synchronizace"
   },
   "zod": {
     "errors": {
