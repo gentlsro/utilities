@@ -19,8 +19,22 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
   props?: T
   propName: K
   instance?: ComponentInternalInstance | null
+
+  initWith?: {
+    condition: (payload: {
+      instance?: ComponentInternalInstance | null
+      props?: T
+      propName: K
+    }) => boolean
+
+    fnc: (payload: {
+      instance?: ComponentInternalInstance | null
+      props?: T
+      propName: K
+    }) => T[K]
+  }
 }) {
-  const { propName, instance, props, defaultValue } = payload
+  const { propName, instance, props, defaultValue, initWith } = payload
 
   if (!instance || !props) {
     return ref(defaultValue) as Ref<T[K]>
@@ -33,11 +47,21 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
   const providedProps = Object.keys(instance.vnode?.props ?? {})
     .map(propName => camelCase(propName)) as Array<keyof T>
 
-  const _defaultValue = providedProps.includes(propName)
-    ? props?.[propName]
-    : defaultValue
+  let _defaultValue = defaultValue
 
-  return dynamicProps.includes(propName)
-    ? useVModel(props, propName) as Ref<T[K]>
+  if (providedProps.includes(propName) && props?.[propName] !== undefined) {
+    _defaultValue = props?.[propName]
+  }
+
+  const result = dynamicProps.includes(propName)
+    ? useVModel(props, propName, undefined, { defaultValue: _defaultValue }) as Ref<T[K]>
     : ref(_defaultValue) as Ref<T[K]>
+
+  // Set the initial value if needed
+  if (initWith?.condition(payload)) {
+    const initialValue = initWith.fnc(payload)
+    result.value = initialValue
+  }
+
+  return result
 }

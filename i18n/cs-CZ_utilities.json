@@ -110,7 +110,8 @@
     "execute": "Provést",
     "noResults": "Žádné výsledky",
     "sync": "Synchronizovat",
-    "sync2": "Synchronizace"
+    "sync2": "Synchronizace",
+    "active": "Aktivní"
   },
   "zod": {
     "errors": {

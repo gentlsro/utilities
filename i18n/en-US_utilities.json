@@ -110,7 +110,8 @@
     "execute": "Execute",
     "noResults": "No results",
     "sync": "Sync",
-    "sync2": "Sync"
+    "sync2": "Sync",
+    "active": "Active"
   },
   "zod": {
     "errors": {
