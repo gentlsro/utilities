@@ -111,7 +111,8 @@
     "noResults": "Žádné výsledky",
     "sync": "Synchronizovat",
     "sync2": "Synchronizace",
-    "active": "Aktivní"
+    "active": "Aktivní",
+    "behaviour": "Chování"
   },
   "zod": {
     "errors": {

@@ -111,7 +111,8 @@
     "noResults": "No results",
     "sync": "Sync",
     "sync2": "Sync",
-    "active": "Active"
+    "active": "Active",
+    "behaviour": "Behaviour"
   },
   "zod": {
     "errors": {
