@@ -112,7 +112,8 @@
     "sync": "Sync",
     "sync2": "Sync",
     "active": "Active",
-    "behaviour": "Behaviour"
+    "behaviour": "Behaviour",
+    "notFound": "Not found"
   },
   "zod": {
     "errors": {

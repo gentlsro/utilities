@@ -112,7 +112,8 @@
     "sync": "Synchronizovat",
     "sync2": "Synchronizace",
     "active": "Aktivní",
-    "behaviour": "Chování"
+    "behaviour": "Chování",
+    "notFound": "Nenalezeno"
   },
   "zod": {
     "errors": {
