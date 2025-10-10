@@ -114,7 +114,8 @@
     "active": "Active",
     "behaviour": "Behaviour",
     "notFound": "Not found",
-    "advanced": "Advanced"
+    "advanced": "Advanced",
+    "setAll": "Set all"
   },
   "zod": {
     "errors": {

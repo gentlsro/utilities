@@ -114,7 +114,8 @@
     "active": "Aktivní",
     "behaviour": "Chování",
     "notFound": "Nenalezeno",
-    "advanced": "Pokročilé"
+    "advanced": "Pokročilé",
+    "setAll": "Nastavit všechny"
   },
   "zod": {
     "errors": {
