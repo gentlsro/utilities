@@ -115,7 +115,8 @@
     "behaviour": "Chování",
     "notFound": "Nenalezeno",
     "advanced": "Pokročilé",
-    "setAll": "Nastavit všechny"
+    "setAll": "Nastavit všechny",
+    "name": "Název"
   },
   "zod": {
     "errors": {

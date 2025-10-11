@@ -115,7 +115,8 @@
     "behaviour": "Behaviour",
     "notFound": "Not found",
     "advanced": "Advanced",
-    "setAll": "Set all"
+    "setAll": "Set all",
+    "name": "Name"
   },
   "zod": {
     "errors": {
