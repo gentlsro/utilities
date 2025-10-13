@@ -1,8 +1,12 @@
-// Models
-import { SummaryEnum } from '../enums/summary.enum'
-
 // Regex
 import { stringToFloat } from '../regex/string-to-float.regex'
+
+/**
+ * Escapes special regex characters in a string
+ */
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
 
 export type INumberOptions = {
   localeIso?: string
@@ -14,34 +18,31 @@ const defaultIntlOptions: Intl.NumberFormatOptions = {
   useGrouping: true,
 }
 
-export function useNumber(localeIso: string) {
-  const separators = computed(() => getSeparators(localeIso))
-
-  const summaryMetricOptions = computed(() => {
-    return [
-      { id: SummaryEnum.SUM, label: $t(`summaryEnum.${SummaryEnum.SUM}`) },
-      { id: SummaryEnum.AVERAGE, label: $t(`summaryEnum.${SummaryEnum.AVERAGE}`) },
-      { id: SummaryEnum.MEDIAN, label: $t(`summaryEnum.${SummaryEnum.MEDIAN}`) },
-      { id: SummaryEnum.COUNT, label: $t(`summaryEnum.${SummaryEnum.COUNT}`) },
-    ]
-  })
+export function useNumber(payload: {
+  localeIso?: string
+  separators?: {
+    thousandSeparator: string
+    decimalSeparator: string
+  }
+}) {
+  const { localeIso, separators = { thousandSeparator: '', decimalSeparator: '' } } = payload ?? {}
 
   /**
    * Parses a number from a string
    *
    * Respects locale (thousand separator, decimal separator)
    */
-  const parseNumber = (valueRef?: MaybeRefOrGetter<string | number | null>) => {
-    const val = String(toValue(valueRef))
+  const parseNumber = (value?: string | number | null) => {
+    const val = String(value)
     if (!val) {
       return 0
     }
 
     let result = val
-      .replace(new RegExp(`\\${separators.value.thousandSeparator}`, 'g'), '')
-      .replace(new RegExp(`\\${separators.value.decimalSeparator}`), '.')
+      .replace(new RegExp(escapeRegExp(separators.thousandSeparator), 'g'), '')
+      .replace(new RegExp(escapeRegExp(separators.decimalSeparator)), '.')
 
-    if (separators.value.thousandSeparator.charCodeAt(0) === 160) {
+    if (separators.thousandSeparator.charCodeAt(0) === 160) {
       result = result.replace(/ /g, '')
     }
     result = stringToFloat(result) || '0'
@@ -53,39 +54,36 @@ export function useNumber(localeIso: string) {
    * Formats a number to a locale-aware string
    */
   const formatNumber = (
-    valueRef?: MaybeRefOrGetter<number | string | null>,
+    value?: MaybeRefOrGetter<number | string | null>,
     options: INumberOptions = {},
   ) => {
-    const val = toValue(valueRef)
-    if (val === null || val === undefined) {
+    if (value === null || value === undefined) {
       return ''
     }
 
     const usedLocale = options.localeIso || localeIso
     const usedIntlOptions = options.intlOptions || defaultIntlOptions
 
-    if (typeof val === 'string') {
-      return Intl.NumberFormat(usedLocale, usedIntlOptions).format(parseNumber(val))
+    if (typeof value === 'string') {
+      return Intl.NumberFormat(usedLocale, usedIntlOptions).format(parseNumber(value))
     }
 
-    return Intl.NumberFormat(usedLocale, usedIntlOptions).format(+val)
+    return Intl.NumberFormat(usedLocale, usedIntlOptions).format(+value)
   }
 
   /**
    * Formats currency
    */
   function formatCurrency(
-    valueRef?: MaybeRefOrGetter<number | string | null>,
+    value?: MaybeRefOrGetter<number | string | null>,
     currency?: string,
     options: INumberOptions = {},
   ) {
-    const val = toValue(valueRef)
-
-    if (val === null || val === undefined) {
+    if (value === null || value === undefined) {
       return ''
     }
 
-    const formattedNumber = formatNumber(valueRef, {
+    const formattedNumber = formatNumber(value, {
       ...options,
       intlOptions: {
         minimumFractionDigits: 2,
@@ -112,23 +110,7 @@ export function useNumber(localeIso: string) {
     return `${formatNumber(bytes / k ** i)} ${sizes[i]}`
   }
 
-  function getSeparators(localeRef?: MaybeRefOrGetter<string>) {
-    const locale = toValue(localeRef) || localeIso
-
-    const helperVal = Intl.NumberFormat(locale).formatToParts(1111.1)
-    const thousandSeparator = helperVal[1]!.value
-    const decimalSeparator = helperVal[3]!.value
-
-    return {
-      thousandSeparator,
-      decimalSeparator,
-    }
-  }
-
   return {
-    separators,
-    summaryMetricOptions,
-    getSeparators,
     parseNumber,
     formatNumber,
     formatBytes,

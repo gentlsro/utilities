@@ -116,7 +116,10 @@
     "notFound": "Nenalezeno",
     "advanced": "Pokročilé",
     "setAll": "Nastavit všechny",
-    "name": "Název"
+    "name": "Název",
+    "bulkUpdate": "Hromadná úprava",
+    "useTableFilter": "Použít filtr tabulky",
+    "useSelection": "Použít výběr ({ selectedCount })"
   },
   "zod": {
     "errors": {

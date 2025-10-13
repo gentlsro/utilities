@@ -2,15 +2,15 @@
 import type { INumberOptions } from './useNumber'
 import { useNumber } from './useNumber'
 
-export type DurationUnit =
-  | 'millisecond'
-  | 'second'
-  | 'minute'
-  | 'hour'
-  | 'day'
-  | 'week'
-  | 'month'
-  | 'year'
+export type DurationUnit
+  = | 'millisecond'
+    | 'second'
+    | 'minute'
+    | 'hour'
+    | 'day'
+    | 'week'
+    | 'month'
+    | 'year'
 
 export type IDurationOptions = INumberOptions & { unit?: DurationUnit }
 
@@ -26,7 +26,7 @@ export const MODIFIER_BY_UNIT: Record<DurationUnit, number> = {
 }
 
 export function useDuration(localeIso: string) {
-  const { parseNumber, formatNumber } = useNumber(localeIso)
+  const { parseNumber, formatNumber } = useNumber({ localeIso })
 
   const formatDuration = (
     valueRef?: MaybeRefOrGetter<number | string | null>,

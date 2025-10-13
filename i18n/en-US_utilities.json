@@ -116,7 +116,10 @@
     "notFound": "Not found",
     "advanced": "Advanced",
     "setAll": "Set all",
-    "name": "Name"
+    "name": "Name",
+    "bulkUpdate": "Bulk update",
+    "useTableFilter": "Use table filter",
+    "useSelection": "Use selection ({ selectedCount })"
   },
   "zod": {
     "errors": {
