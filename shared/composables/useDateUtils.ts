@@ -1,4 +1,3 @@
-import type { Dayjs } from '$utils'
 import { removeDatetimeSpaces } from '$utils'
 import type { ManipulateType, OpUnitType } from 'dayjs'
 
@@ -160,7 +159,7 @@ export function useDateUtils(localeIso: string) {
   }: IExtendedPeriodOptions = {}): Period => {
     const period = toValue(periodRef)
     let periodStart = toValue(period?.periodStart || dateRef)
-    periodStart = $date(periodStart).startOf(unit) as Dayjs
+    periodStart = $date(periodStart).startOf(unit)
 
     if (unit === 'isoWeek' || unit.startsWith('w')) {
       const firstDayOfWeekIdx = periodStart.day() < firstDayOfWeek

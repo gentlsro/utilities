@@ -1,4 +1,4 @@
-import type { Dayjs } from '$utils'
+import type { Dayjs } from 'dayjs'
 import type { ExtendedDataType } from '$dataType'
 
 export type Datetime = Dayjs | number | string | Date | null | undefined

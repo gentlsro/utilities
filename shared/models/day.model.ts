@@ -1,4 +1,4 @@
-import type { Dayjs } from '$utils'
+import type { Dayjs } from 'dayjs'
 
 // Types
 import type { Period } from '../types/period.type'
