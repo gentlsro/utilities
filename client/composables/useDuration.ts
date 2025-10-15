@@ -5,5 +5,5 @@ import { useDuration as useDurationShared } from '../../shared/composables/useDu
 export function useDuration() {
   const { currentLocale } = useLocale()
 
-  return useDurationShared(currentLocale.value.code)
+  return useDurationShared({ localeIso: currentLocale.value.code })
 }

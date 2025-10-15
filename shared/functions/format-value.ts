@@ -26,8 +26,8 @@ export function formatValue(
   } = options ?? {}
 
   const { formatDate, formatTime } = useDateUtilsShared(localeIso)
-  const { formatNumber } = useNumberShared(localeIso)
-  const { getDuration } = useDurationShared(localeIso)
+  const { formatNumber } = useNumberShared({ localeIso })
+  const { getDuration } = useDurationShared({ localeIso })
 
   // When array is provided, we format each value
   if (Array.isArray(value)) {

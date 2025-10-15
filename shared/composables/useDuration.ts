@@ -25,7 +25,9 @@ export const MODIFIER_BY_UNIT: Record<DurationUnit, number> = {
   year: $duration(1, 'year').as('ms'),
 }
 
-export function useDuration(localeIso: string) {
+export function useDuration(payload: { localeIso?: string }) {
+  const { localeIso } = payload ?? {}
+
   const { parseNumber, formatNumber } = useNumber({ localeIso })
 
   const formatDuration = (

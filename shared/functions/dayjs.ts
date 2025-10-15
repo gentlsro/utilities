@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 import duration from 'dayjs/plugin/duration.js'
 import customParseFormat from 'dayjs/plugin/customParseFormat.js'
 import isBetween from 'dayjs/plugin/isBetween.js'
@@ -9,8 +9,11 @@ import dayOfYear from 'dayjs/plugin/dayOfYear.js'
 import utc from 'dayjs/plugin/utc.js'
 import timezone from 'dayjs/plugin/timezone.js'
 import quarterOfYear from 'dayjs/plugin/quarterOfYear.js'
+
+// Locales
 import 'dayjs/locale/en-gb.js'
-import 'dayjs/locale/sr'
+import 'dayjs/locale/sr.js'
+import 'dayjs/locale/cs.js'
 
 dayjs.extend(duration)
 dayjs.extend(customParseFormat)
@@ -41,4 +44,7 @@ export function $date(
 
   return dayjs(date ?? undefined, format, strict)
 }
+
 export const $duration = dayjs.duration
+
+export type { Dayjs }

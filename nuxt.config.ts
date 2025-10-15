@@ -14,7 +14,6 @@ export default defineNuxtConfig({
     resolve('./modules/lodash.module'),
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
-    'dayjs-nuxt',
   ],
 
   // Layer meta
@@ -40,8 +39,8 @@ export default defineNuxtConfig({
 
       // Shared
       { name: 'generateUUID', from: resolve('./shared/functions/generate-uuid.ts') },
-      { name: '$date', from: resolve('./client/functions/dayjs.ts') },
-      { name: '$duration', from: resolve('./client/functions/dayjs.ts') },
+      { name: '$date', from: resolve('./shared/functions/dayjs.ts') },
+      { name: '$duration', from: resolve('./shared/functions/dayjs.ts') },
       { name: '$log', from: resolve('./shared/functions/$log.ts') },
       { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
       { name: 'ClassType', from: resolve('./client/types/class.type.ts'), type: true },
@@ -64,7 +63,6 @@ export default defineNuxtConfig({
   alias: {
     $utils: join(process.cwd(), 'generated', 'utils.ts'),
     $utilsConfig: join(process.cwd(), 'generated', 'utilsConfig.ts'),
-    $utilsLayer: resolve('.'),
     $comparatorEnum: join(process.cwd(), 'generated', 'comparator-enum.ts'),
     $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
     $components: join(process.cwd(), 'generated', 'components-by-name.ts'),
@@ -98,8 +96,8 @@ export default defineNuxtConfig({
 
         // Shared
         { name: 'generateUUID', from: resolve('./shared/functions/generate-uuid.ts') },
-        { name: '$date', from: resolve('./server/functions/dayjs.ts') },
-        { name: '$duration', from: resolve('./server/functions/dayjs.ts') },
+        { name: '$date', from: resolve('./shared/functions/dayjs.ts') },
+        { name: '$duration', from: resolve('./shared/functions/dayjs.ts') },
         { name: '$log', from: resolve('./shared/functions/$log.ts') },
         { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
         { name: 'ClassType', from: resolve('./client/types/class.type.ts'), type: true },
@@ -129,24 +127,6 @@ export default defineNuxtConfig({
         },
       },
     },
-  },
-
-  // Dayjs
-  dayjs: {
-    defaultLocale: 'en-gb',
-    locales: ['en-gb', 'sr', 'cs'],
-    plugins: [
-      'duration',
-      'customParseFormat',
-      'isBetween',
-      'isSameOrAfter',
-      'isSameOrBefore',
-      'isoWeek',
-      'dayOfYear',
-      'utc',
-      'timezone',
-      'quarterOfYear',
-    ],
   },
 
   i18n: {

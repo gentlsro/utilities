@@ -1,4 +1,4 @@
-import type { Dayjs } from 'dayjs'
+import type { Dayjs } from '$utils'
 
 export type Period = {
   periodStart: Dayjs
