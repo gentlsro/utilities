@@ -47,7 +47,7 @@ export default defineNuxtModule({
       .filter(({ path }) => existsSync(`${path}.ts`))
 
     // Merge the utility configs
-    const codeUtilityConfigs = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
+    const codeUtilityConfigs = `import { customDefu } from '#layers/utilities/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => {
   return `import config${idx} from '${path}'`
 }).join('\n')}
