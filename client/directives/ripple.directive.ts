@@ -3,15 +3,21 @@ import type { Directive } from 'vue'
 function getRippleAttributes(ev: MouseEvent) {
   const target = ev.currentTarget as HTMLElement
   const rect = target.getBoundingClientRect()
-  const x = ev.clientX - rect.left
-  const y = ev.clientY - rect.top
-  const borderWidth = getComputedStyle(target).getPropertyValue('border-width')
+  const computedStyle = getComputedStyle(target)
+  const borderWidth = computedStyle.getPropertyValue('border-width')
+  const zoomValue = computedStyle.getPropertyValue('--zoom')
+  const zoom = zoomValue ? Number.parseFloat(zoomValue) : 1
+
+  const x = (ev.clientX - rect.left) / zoom
+  const y = (ev.clientY - rect.top) / zoom
+  const width = rect.width / zoom
+  const height = rect.height / zoom
 
   return {
     x,
     y,
-    width: `${rect.width}px`,
-    height: `${rect.height}px`,
+    width: `${width}px`,
+    height: `${height}px`,
     ...(borderWidth && { top: `-${borderWidth}`, left: `-${borderWidth}` }),
   }
 }
