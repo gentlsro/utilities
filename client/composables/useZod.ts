@@ -201,6 +201,7 @@ export function useZod<T extends ZodSchemaObject>(
     for (const key in schemas) {
       if (key in schemas) {
         try {
+          console.log('validating', key, 'with value', toValue(data?.[key]))
           await schemas[key]?.parseAsync(toValue(data?.[key]))
         } catch (error: any) {
           // Populate the error structure
