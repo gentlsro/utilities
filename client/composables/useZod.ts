@@ -420,7 +420,7 @@ export function useZod<T extends ZodSchemaObject>(
     false, // Leading
   )
 
-  const { pause, resume } = watch(
+  const { pause, resume } = watchPausable(
     dataReactive,
     debouncedValidate,
     { deep, immediate },
