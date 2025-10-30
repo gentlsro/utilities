@@ -429,6 +429,7 @@ export function useZod<T extends ZodSchemaObject>(
     dataReactive,
     () => {
       console.log('dataReactive changed')
+      console.log('calling debouncedValidate')
       debouncedValidate()
     },
     { deep, immediate },
