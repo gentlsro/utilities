@@ -417,7 +417,7 @@ export function useZod<T extends ZodSchemaObject>(
 
   const debouncedValidate = useThrottleFn(
     () => {
-      console.log('debouncedValidate')
+      console.log('💀 debouncedValidate')
       validate(false)
     },
     150, // Throttle ms
@@ -428,16 +428,12 @@ export function useZod<T extends ZodSchemaObject>(
   const { pause, resume, isActive } = watchPausable(
     dataReactive,
     () => {
-      console.log('dataReactive changed')
-      console.log('calling debouncedValidate')
+      console.log('💀 dataReactive changed')
+      console.log('💀 calling debouncedValidate')
       debouncedValidate()
     },
     { deep, immediate },
   )
-
-  watchEffect(() => {
-    console.log('isActive', isActive.value)
-  })
 
   // We watch the locale and localize the errors when it changes
   watch(locale, () => {
