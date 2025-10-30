@@ -385,6 +385,7 @@ export function useZod<T extends ZodSchemaObject>(
   }
 
   function reset(shouldPause = true, resetNested = true) {
+    console.log('reset', 'with args', 'shouldPause', shouldPause, 'resetNested', resetNested)
     defaultStructure.value = createEmptyErrorStructure()
     $z.value = klona(defaultStructure.value)
     isValidated.value = false
@@ -420,7 +421,7 @@ export function useZod<T extends ZodSchemaObject>(
     false, // Leading
   )
 
-  const { pause, resume } = watchPausable(
+  const { pause, resume, isActive } = watchPausable(
     dataReactive,
     () => {
       console.log('dataReactive changed')
@@ -428,6 +429,10 @@ export function useZod<T extends ZodSchemaObject>(
     },
     { deep, immediate },
   )
+
+  watchEffect(() => {
+    console.log('isActive', isActive.value)
+  })
 
   // We watch the locale and localize the errors when it changes
   watch(locale, () => {
