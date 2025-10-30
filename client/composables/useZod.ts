@@ -201,7 +201,6 @@ export function useZod<T extends ZodSchemaObject>(
     for (const key in schemas) {
       if (key in schemas) {
         try {
-          console.log('validating', key, 'with value', toValue(data?.[key]))
           await schemas[key]?.parseAsync(toValue(data?.[key]))
         } catch (error: any) {
           // Populate the error structure
@@ -386,7 +385,6 @@ export function useZod<T extends ZodSchemaObject>(
   }
 
   function reset(shouldPause = true, resetNested = true) {
-    console.log('reset', 'with args', 'shouldPause', shouldPause, 'resetNested', resetNested)
     defaultStructure.value = createEmptyErrorStructure()
     $z.value = klona(defaultStructure.value)
     isValidated.value = false
@@ -416,10 +414,7 @@ export function useZod<T extends ZodSchemaObject>(
   }
 
   const debouncedValidate = useThrottleFn(
-    () => {
-      console.log('💀 debouncedValidate')
-      validate(false)
-    },
+    () => validate(false),
     150, // Throttle ms
     true, // Trailing
     false, // Leading
@@ -427,11 +422,7 @@ export function useZod<T extends ZodSchemaObject>(
 
   const { pause, resume, isActive } = watchPausable(
     dataReactive,
-    () => {
-      console.log('💀 dataReactive changed')
-      console.log('💀 calling debouncedValidate')
-      debouncedValidate()
-    },
+    () => debouncedValidate(),
     { deep, immediate },
   )
 
