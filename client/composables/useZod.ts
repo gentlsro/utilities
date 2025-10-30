@@ -416,7 +416,10 @@ export function useZod<T extends ZodSchemaObject>(
   }
 
   const debouncedValidate = useThrottleFn(
-    () => validate(false),
+    () => {
+      console.log('debouncedValidate')
+      validate(false)
+    },
     150, // Throttle ms
     true, // Trailing
     false, // Leading
