@@ -422,7 +422,10 @@ export function useZod<T extends ZodSchemaObject>(
 
   const { pause, resume } = watchPausable(
     dataReactive,
-    debouncedValidate,
+    () => {
+      console.log('dataReactive changed')
+      debouncedValidate()
+    },
     { deep, immediate },
   )
 
