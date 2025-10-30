@@ -119,7 +119,8 @@
     "name": "Název",
     "bulkUpdate": "Hromadná úprava",
     "useTableFilter": "Použít filtr tabulky",
-    "useSelection": "Použít výběr ({ selectedCount })"
+    "useSelection": "Použít výběr ({ selectedCount })",
+    "item": "Položka | Položky"
   },
   "zod": {
     "errors": {
