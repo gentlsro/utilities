@@ -120,7 +120,8 @@
     "bulkUpdate": "Bulk update",
     "useTableFilter": "Use table filter",
     "useSelection": "Use selection ({ selectedCount })",
-    "item": "item | items"
+    "item": "item | items",
+    "you": "You"
   },
   "zod": {
     "errors": {
