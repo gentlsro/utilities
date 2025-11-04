@@ -120,7 +120,8 @@
     "bulkUpdate": "Hromadná úprava",
     "useTableFilter": "Použít filtr tabulky",
     "useSelection": "Použít výběr ({ selectedCount })",
-    "item": "Položka | Položky"
+    "item": "Položka | Položky",
+    "you": "Vy"
   },
   "zod": {
     "errors": {
