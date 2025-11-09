@@ -1,4 +1,4 @@
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 
 export function isValidDate(value: any) {
   if (value instanceof Date || dayjs.isDayjs(value)) {
