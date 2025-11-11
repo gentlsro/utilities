@@ -185,21 +185,19 @@ export const componentsImportByName: Record<string, AsyncComponentLoader<Compone
     })
 
     nuxt.hook('vite:extendConfig', config => {
-      if (!config.resolve) {
-        config.resolve = {}
-      }
+      if (config.resolve) {
+        if (!config.resolve.alias) {
+          config.resolve.alias = {}
+        }
 
-      if (!config.resolve.alias) {
-        config.resolve.alias = {}
-      }
-
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        $utils: `${nuxt.options.rootDir}/generated/utils.ts`,
-        $utilsConfig: `${nuxt.options.rootDir}/generated/utilsConfig.ts`,
-        $comparatorEnum: `${nuxt.options.rootDir}/generated/comparator-enum.ts`,
-        $dataType: `${nuxt.options.rootDir}/generated/data-type.type.ts`,
-        $components: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
+        config.resolve.alias = {
+          ...config.resolve.alias,
+          $utils: `${nuxt.options.rootDir}/generated/utils.ts`,
+          $utilsConfig: `${nuxt.options.rootDir}/generated/utilsConfig.ts`,
+          $comparatorEnum: `${nuxt.options.rootDir}/generated/comparator-enum.ts`,
+          $dataType: `${nuxt.options.rootDir}/generated/data-type.type.ts`,
+          $components: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
+        }
       }
     })
   },
