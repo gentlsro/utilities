@@ -55,14 +55,29 @@ export function extractObjectKeys(
      * ]
      */
     keepObjectKeys?: boolean
+
+    /**
+     * When provided, the process will omit the keys that are present in the array
+     *
+     * For example, if the omitKeys is ["obj.nestedKey"], the function will return:
+     * @example
+     * [
+     *   "str",
+     *   "num",
+     * ]
+     */
+    omitKeys?: string[]
   } = {},
 ): string[] {
-  const { prefix = '', keepObjectKeys = false } = options
+  const { prefix = '', keepObjectKeys = false, omitKeys = [] } = options
 
   if (Array.isArray(obj)) {
     // Only process the first item, if present
     return obj.length > 0
-      ? extractObjectKeys(obj[0], { prefix: prefix ? `${prefix}.[n]` : '[n]', keepObjectKeys })
+      ? extractObjectKeys(
+          obj[0],
+          { prefix: prefix ? `${prefix}.[n]` : '[n]', keepObjectKeys, omitKeys },
+        )
       : []
   }
 
@@ -71,7 +86,11 @@ export function extractObjectKeys(
 
     // If keepObjectKeys is true, add the current object key to results
     if (keepObjectKeys && prefix) {
-      results.push(prefix)
+      const isOmitted = omitKeys.some(key => prefix.endsWith(key))
+
+      if (!isOmitted) {
+        results.push(prefix)
+      }
     }
 
     // Process nested keys
@@ -79,13 +98,15 @@ export function extractObjectKeys(
       ([key, value]) => {
         return extractObjectKeys(
           value,
-          { prefix: prefix ? `${prefix}.${key}` : key, keepObjectKeys },
+          { prefix: prefix ? `${prefix}.${key}` : key, keepObjectKeys, omitKeys },
         )
       },
     )
-
     return results.concat(nestedKeys)
   }
+
   // Primitive value
-  return prefix ? [prefix] : []
+  const isOmitted = omitKeys.some(key => prefix.endsWith(key))
+
+  return prefix && !isOmitted ? [prefix] : []
 }
