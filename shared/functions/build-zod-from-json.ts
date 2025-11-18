@@ -1,5 +1,6 @@
 import type { DataType } from '$dataType'
-import type { ZodArray, ZodBoolean, ZodNumber, ZodObject, ZodString } from 'zod/v4'
+import { ZOD_VALIDATORS } from '$utils'
+import type { ZodAny, ZodArray, ZodBoolean, ZodCustom, ZodDate, ZodNumber, ZodObject, ZodString, ZodUnknown } from 'zod/v4'
 
 export function buildZodFromJson(payload: {
   schema: IItem
@@ -7,7 +8,7 @@ export function buildZodFromJson(payload: {
 }) {
   const { schema, dataType } = payload
 
-  let zodSchema: ZodNumber | ZodBoolean | ZodString | ZodObject | ZodArray
+  let zodSchema: ZodNumber | ZodBoolean | ZodString | ZodObject | ZodArray | ZodDate | ZodAny | ZodUnknown | ZodCustom
 
   switch (dataType) {
     case 'number':
@@ -22,8 +23,15 @@ export function buildZodFromJson(payload: {
       zodSchema = z.string()
       break
 
+    case 'date':
+      zodSchema = z
+        .custom<Datetime>()
+        .refine(value => ZOD_VALIDATORS.validDate(value))
+
+      break
+
     default:
-      zodSchema = z.object({})
+      zodSchema = z.unknown()
       break
   }
 
@@ -72,6 +80,13 @@ export function buildZodFromJson(payload: {
   if (!schema.required) {
     // @ts-expect-error
     zodSchema = zodSchema.nullish()
+  }
+
+  // Required and custom
+  if (schema.required && dataType === 'custom') {
+    zodSchema = zodSchema.refine((val: any) => !isNil(val), {
+      message: $t('zod.errors.required'),
+    })
   }
 
   return zodSchema
