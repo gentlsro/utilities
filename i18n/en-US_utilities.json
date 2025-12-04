@@ -121,7 +121,8 @@
     "useTableFilter": "Use table filter",
     "useSelection": "Use selection ({ selectedCount })",
     "item": "item | items",
-    "you": "You"
+    "you": "You",
+    "deleteItemConfirmation": "Are you sure you want to delete this item?"
   },
   "zod": {
     "errors": {

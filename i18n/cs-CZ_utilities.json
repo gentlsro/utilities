@@ -121,7 +121,8 @@
     "useTableFilter": "Použít filtr tabulky",
     "useSelection": "Použít výběr ({ selectedCount })",
     "item": "Položka | Položky",
-    "you": "Vy"
+    "you": "Vy",
+    "deleteItemConfirmation": "Opravdu chcete smazat tuto položku?"
   },
   "zod": {
     "errors": {
