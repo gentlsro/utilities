@@ -19,52 +19,52 @@ export function useR<T>(
   regle?: () => T,
   options?: { scope?: string },
 ) {
-  const { scope } = options ?? {}
+  // const { scope } = options ?? {}
 
-  const instance = getCurrentInstance()
-  const componentName = `${getComponentName(instance)}_${generateUUID()}`
-  const scopeName = getScopeName(scope)
-  const result = regle?.() ?? useRegleSchema({}, type({})) as T
+  // const instance = getCurrentInstance()
+  // const componentName = `${getComponentName(instance)}_${generateUUID()}`
+  // const scopeName = getScopeName(scope)
+  // const result = regle?.() ?? useRegleSchema({}, type({})) as T
 
-  const regleObjects = injectLocal<Ref<IRegelItem<T>[]>>(scopeName, ref([]))
+  // const regleObjects = injectLocal<Ref<IRegelItem<T>[]>>(scopeName, ref([]))
 
-  // Push the regel result on init
-  regleObjects.value.push({ regelObject: result, componentName })
+  // // Push the regel result on init
+  // regleObjects.value.push({ regelObject: result, componentName })
 
-  provideLocal(scopeName, regleObjects)
+  // provideLocal(scopeName, regleObjects)
 
-  const merged = computed(() => {
-    const regelsByComponentName = regleObjects.value.reduce((agg, obj) => {
-      agg[obj.componentName] = (obj.regelObject as IItem).r$
+  // const merged = computed(() => {
+  //   const regelsByComponentName = regleObjects.value.reduce((agg, obj) => {
+  //     agg[obj.componentName] = (obj.regelObject as IItem).r$
 
-      return agg
-    }, {} as IItem)
+  //     return agg
+  //   }, {} as IItem)
 
-    return mergeRegles(regelsByComponentName)
-  })
+  //   return mergeRegles(regelsByComponentName)
+  // })
 
-  const errorsByField = computed(() => {
-    return Object.entries(merged.value.$errors).reduce((agg, [field, err]) => {
-      const fieldErrors = get(agg, field) ?? {}
+  // const errorsByField = computed(() => {
+  //   return Object.entries(merged.value.$errors).reduce((agg, [field, err]) => {
+  //     const fieldErrors = get(agg, field) ?? {}
 
-      set(agg, field, { ...fieldErrors, ...err })
+  //     set(agg, field, { ...fieldErrors, ...err })
 
-      return agg
-    }, {} as IItem)
-  })
+  //     return agg
+  //   }, {} as IItem)
+  // })
 
-  // Remove the regle object onUnmounted
-  tryOnUnmounted(() => {
-    regleObjects.value = regleObjects.value.filter(obj => obj !== result)
-  })
+  // // Remove the regle object onUnmounted
+  // tryOnUnmounted(() => {
+  //   regleObjects.value = regleObjects.value.filter(obj => obj !== result)
+  // })
 
-  return {
-    ...result,
-    merged,
-    errorsByField,
-    $validate: (localOnly?: boolean) => localOnly
-      // @ts-expect-error
-      ? result.$validate?.()
-      : merged.value.$validate(),
-  }
+  // return {
+  //   ...result,
+  //   merged,
+  //   errorsByField,
+  //   $validate: (localOnly?: boolean) => localOnly
+  //     // @ts-expect-error
+  //     ? result.$validate?.()
+  //     : merged.value.$validate(),
+  // }
 }
