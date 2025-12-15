@@ -2,39 +2,40 @@
   "name": "@gentl/utilities",
   "type": "module",
   "private": true,
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
   "main": "./nuxt.config.ts",
   "scripts": {
     "dev": "nuxt dev",
     "postinstall": "nuxt prepare",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "update": "npx npm-check-updates -t latest --interactive"
   },
   "dependencies": {
     "@floating-ui/dom": "1.7.4",
     "@floating-ui/vue": "1.1.9",
-    "axios": "1.12.2",
-    "dayjs": "1.11.18",
+    "axios": "1.13.2",
+    "dayjs": "1.11.19",
     "fuse.js": "7.1.0",
     "lodash-es": "4.17.21",
-    "nuxt": "3.19.3",
+    "nuxt": "4.2.2",
+    "pathe": "2.0.3",
     "uuid": "13.0.0",
-    "zod": "4.1.12"
+    "zod": "4.2.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "6.0.0",
-    "@nuxt/eslint": "1.9.0",
+    "@antfu/eslint-config": "6.7.1",
+    "@nuxt/eslint": "1.12.1",
     "@nuxtjs/i18n": "9.5.5",
-    "@unocss/eslint-plugin": "66.5.4",
-    "@unocss/nuxt": "66.5.4",
-    "@vueuse/core": "13.9.0",
-    "@vueuse/integrations": "13.9.0",
-    "@vueuse/math": "13.9.0",
-    "@vueuse/nuxt": "13.9.0",
+    "@unocss/eslint-plugin": "66.5.10",
+    "@unocss/nuxt": "66.5.10",
+    "@vueuse/core": "14.1.0",
+    "@vueuse/integrations": "14.1.0",
+    "@vueuse/math": "14.1.0",
+    "@vueuse/nuxt": "14.1.0",
     "dayjs-nuxt": "2.1.11",
-    "eslint": "9.38.0",
-    "eslint-plugin-format": "1.0.2",
-    "unocss": "66.5.4",
+    "eslint": "9.39.2",
+    "eslint-plugin-format": "1.1.0",
+    "unocss": "66.5.10",
     "utility-types": "3.11.0",
-    "vue-tsc": "https://pkg.pr.new/vuejs/language-tools/vue-tsc@3fb59af"
+    "vue-tsc": "3.1.8"
   }
 }

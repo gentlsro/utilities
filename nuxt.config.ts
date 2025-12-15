@@ -1,5 +1,5 @@
 import { createResolver } from '@nuxt/kit'
-import { join } from 'node:path'
+import { join } from 'pathe'
 
 const { resolve } = createResolver(import.meta.url)
 const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
@@ -10,8 +10,6 @@ export default defineNuxtConfig({
 
   // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
-    resolve('./modules/utilities.module'),
-    resolve('./modules/lodash.module'),
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
     'dayjs-nuxt',
@@ -46,9 +44,11 @@ export default defineNuxtConfig({
       { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
       { name: 'ClassType', from: resolve('./client/types/class.type.ts'), type: true },
       { name: 'Datetime', from: resolve('./shared/types/datetime.type.ts'), type: true },
-      { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
       { name: 'isDev', from: resolve('./shared/functions/is-dev.ts') },
       { name: 'resolveComponentByName', from: resolve('./client/functions/resolve-component-by-name.ts') },
+
+      // Config
+      { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
     ],
   },
 
@@ -57,9 +57,6 @@ export default defineNuxtConfig({
     enabled: isMonorepo,
   },
 
-  // Src dir https://nuxt.com/docs/api/configuration/nuxt-config#srcdir
-  srcDir: 'client/',
-
   // Alias
   alias: {
     $utils: join(process.cwd(), 'generated', 'utils.ts'),
@@ -67,11 +64,6 @@ export default defineNuxtConfig({
     $comparatorEnum: join(process.cwd(), 'generated', 'comparator-enum.ts'),
     $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
     $components: join(process.cwd(), 'generated', 'components-by-name.ts'),
-  },
-
-  // Future
-  future: {
-    compatibilityVersion: 4,
   },
 
   // Compatibility date https://nuxt.com/docs/api/configuration/nuxt-config#compatibilitydate
@@ -117,18 +109,18 @@ export default defineNuxtConfig({
   },
 
   // Typescript https://nuxt.com/docs/api/configuration/nuxt-config#typescript
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        paths: {
-          $utils: [join(process.cwd(), 'generated', 'utils.ts')],
-          $utilsConfig: [join(process.cwd(), 'generated', 'utilsConfig.ts')],
-          $comparatorEnum: [join(process.cwd(), 'generated', 'comparator-enum.ts')],
-          $dataType: [join(process.cwd(), 'generated', 'data-type.type.ts')],
-        },
-      },
-    },
-  },
+  // typescript: {
+  //   tsConfig: {
+  //     compilerOptions: {
+  //       paths: {
+  //         $utils: [join(process.cwd(), 'generated', 'utils.ts')],
+  //         $utilsConfig: [join(process.cwd(), 'generated', 'utilsConfig.ts')],
+  //         $comparatorEnum: [join(process.cwd(), 'generated', 'comparator-enum.ts')],
+  //         $dataType: [join(process.cwd(), 'generated', 'data-type.type.ts')],
+  //       },
+  //     },
+  //   },
+  // },
 
   // Dayjs
   dayjs: {
