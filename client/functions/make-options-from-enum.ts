@@ -26,10 +26,9 @@ export function makeSelectorOptionsFromEnum(
   const enumKeys = Object.keys(enumObj).slice(0, Object.keys(enumObj).length / 2)
   const enumValues = Object.values(enumObj).slice(0, Object.values(enumObj).length / 2)
   const isNumberedEnum = enumKeys.every(key => /^[\d.]+$/.test(key))
-  console.log('🚀 ~ makeSelectorOptionsFromEnum ~ isNumberedEnum:', isNumberedEnum)
 
   if (isNumberedEnum) {
-    return enumValues
+    return enumKeys
       .map(value => {
         return {
           [labelField]: $t(`${translationPrefix}.${value}`),
@@ -37,7 +36,7 @@ export function makeSelectorOptionsFromEnum(
         }
       })
   } else {
-    return enumValues.map(value => {
+    return enumKeys.map(value => {
       return {
         [labelField]: $t(`${translationPrefix}.${transformKey(value)}`),
         [keyField]: value,
