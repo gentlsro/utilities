@@ -42,8 +42,6 @@ export function makeSelectorOptionsFromEnum(
     enumValues = enumKeys.map(key => enumObj[key])
   }
 
-  console.log({ enumKeys, enumValues, isNumericEnum })
-
   if (isNumericEnum) {
     return enumKeys.map(key => {
       const value = enumObj[key]
@@ -55,9 +53,10 @@ export function makeSelectorOptionsFromEnum(
   } else {
     return enumKeys.map(key => {
       const value = enumObj[key]
+
       return {
         [labelField]: $t(`${translationPrefix}.${transformKey(String(value))}`),
-        [keyField]: value,
+        [keyField]: key,
       }
     })
   }
