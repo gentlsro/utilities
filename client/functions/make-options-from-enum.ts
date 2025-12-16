@@ -23,23 +23,20 @@ export function makeSelectorOptionsFromEnum(
     transformKey = (key: string) => key,
   } = options || {}
 
-  const enumValues = Object.values(enumObj)
-  const enumKeys = Object.keys(enumObj)
-  const isNumberedEnum = enumKeys.every(key => /^[\d.]+$/.test(enumObj[key]))
+  // const enumKeys = Object.keys(enumObj).slice(0, Object.keys(enumObj).length / 2)
+  const enumValues = Object.values(enumObj).slice(0, Object.values(enumObj).length / 2)
+  const isNumberedEnum = enumValues.every(key => /^[\d.]+$/.test(key))
 
   if (isNumberedEnum) {
     return enumValues
-      .filter(key => Number.isFinite(Number(key)))
-      .map(key => {
+      .map(value => {
         return {
-          [labelField]: $t(`${translationPrefix}.${key}`),
-          [keyField]: numericValue ? Number.parseInt(key) : transformKey(key),
+          [labelField]: $t(`${translationPrefix}.${value}`),
+          [keyField]: numericValue ? Number.parseInt(value) : transformKey(value),
         }
       })
   } else {
-    return Object.keys(enumObj).map(key => {
-      const value = enumObj[key]
-
+    return enumValues.map(value => {
       return {
         [labelField]: $t(`${translationPrefix}.${transformKey(value)}`),
         [keyField]: value,
