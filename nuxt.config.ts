@@ -29,23 +29,23 @@ export default defineNuxtConfig({
       { name: 'z', from: 'zod/v4' },
 
       // Client
-      { name: 'getComponentName', from: resolve('./client/functions/get-component-name.ts') },
-      { name: '$t', from: resolve('./client/functions/$t.ts') },
-      { name: '$p', from: resolve('./client/functions/$p.ts') },
-      { name: '$nav', from: resolve('./client/functions/$nav.ts') },
-      { name: 'injectStrict', from: resolve('./client/functions/inject-strict.ts') },
-      { name: 'initRef', from: resolve('./client/functions/init-ref.ts') },
+      { name: 'getComponentName', from: resolve('./app/functions/get-component-name.ts') },
+      { name: '$t', from: resolve('./app/functions/$t.ts') },
+      { name: '$p', from: resolve('./app/functions/$p.ts') },
+      { name: '$nav', from: resolve('./app/functions/$nav.ts') },
+      { name: 'injectStrict', from: resolve('./app/functions/inject-strict.ts') },
+      { name: 'initRef', from: resolve('./app/functions/init-ref.ts') },
 
       // Shared
       { name: 'generateUUID', from: resolve('./shared/functions/generate-uuid.ts') },
-      { name: '$date', from: resolve('./client/functions/dayjs.ts') },
-      { name: '$duration', from: resolve('./client/functions/dayjs.ts') },
+      { name: '$date', from: resolve('./app/functions/dayjs.ts') },
+      { name: '$duration', from: resolve('./app/functions/dayjs.ts') },
       { name: '$log', from: resolve('./shared/functions/$log.ts') },
       { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
-      { name: 'ClassType', from: resolve('./client/types/class.type.ts'), type: true },
+      { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
       { name: 'Datetime', from: resolve('./shared/types/datetime.type.ts'), type: true },
       { name: 'isDev', from: resolve('./shared/functions/is-dev.ts') },
-      { name: 'resolveComponentByName', from: resolve('./client/functions/resolve-component-by-name.ts') },
+      { name: 'resolveComponentByName', from: resolve('./app/functions/resolve-component-by-name.ts') },
 
       // Config
       { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
@@ -65,9 +65,6 @@ export default defineNuxtConfig({
     $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
     $components: join(process.cwd(), 'generated', 'components-by-name.ts'),
   },
-
-  // Compatibility date https://nuxt.com/docs/api/configuration/nuxt-config#compatibilitydate
-  compatibilityDate: '2024-12-13',
 
   // Nitro https://nuxt.com/docs/api/configuration/nuxt-config#nitro
   nitro: {
@@ -93,7 +90,7 @@ export default defineNuxtConfig({
         { name: '$duration', from: resolve('./server/functions/dayjs.ts') },
         { name: '$log', from: resolve('./shared/functions/$log.ts') },
         { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
-        { name: 'ClassType', from: resolve('./client/types/class.type.ts'), type: true },
+        { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
         { name: 'Datetime', from: resolve('./shared/types/datetime.type.ts'), type: true },
         { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
         { name: 'isDev', from: resolve('./shared/functions/is-dev.ts') },
@@ -107,20 +104,6 @@ export default defineNuxtConfig({
       $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
     },
   },
-
-  // Typescript https://nuxt.com/docs/api/configuration/nuxt-config#typescript
-  // typescript: {
-  //   tsConfig: {
-  //     compilerOptions: {
-  //       paths: {
-  //         $utils: [join(process.cwd(), 'generated', 'utils.ts')],
-  //         $utilsConfig: [join(process.cwd(), 'generated', 'utilsConfig.ts')],
-  //         $comparatorEnum: [join(process.cwd(), 'generated', 'comparator-enum.ts')],
-  //         $dataType: [join(process.cwd(), 'generated', 'data-type.type.ts')],
-  //       },
-  //     },
-  //   },
-  // },
 
   // Dayjs
   dayjs: {

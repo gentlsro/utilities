@@ -39,8 +39,8 @@ export default defineNuxtModule({
         const isBase = layer.cwd === currentDir
         const configPath = isBase ? 'config' : 'utilities-config'
 
-        componentPaths.push(relative(process.cwd(), `${layer.cwd}/client/components/**/*.vue`))
-        componentPaths.push(relative(process.cwd(), `${layer.cwd}/client/libs/**/*.vue`))
+        componentPaths.push(relative(process.cwd(), `${layer.cwd}/app/components/**/*.vue`))
+        componentPaths.push(relative(process.cwd(), `${layer.cwd}/app/libs/**/*.vue`))
 
         return { path: resolve(layer.cwd, configPath), isBase, cwd: layer.cwd }
       })
