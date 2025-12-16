@@ -36,12 +36,12 @@ export function makeSelectorOptionsFromEnum(
         }
       })
   } else {
-    return enumKeys.map((key, idx) => {
+    return enumKeys.map((_, idx) => {
       const value = enumValues[idx]
 
       return {
         [labelField]: $t(`${translationPrefix}.${transformKey(value)}`),
-        [keyField]: key,
+        [keyField]: value,
       }
     })
   }
