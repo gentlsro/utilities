@@ -31,10 +31,10 @@ export function useDuration(payload: { localeIso?: string }) {
   const { parseNumber, formatNumber } = useNumber({ localeIso })
 
   const formatDuration = (
-    valueRef?: MaybeRefOrGetter<number | string | null>,
+    value?: number | string | null,
     options: IDurationOptions = {},
   ): { val: number, unit: IDurationOptions['unit'], formatted: string } => {
-    let val = toValue(valueRef)
+    let val = value
 
     if (isNil(val) || val === '') {
       return {

@@ -5,7 +5,7 @@ import type { ComparatorEnum as MergedComparatorEnum } from '$comparatorEnum'
 import type { IFormatValueOptions } from './shared/types/format-value-options.type'
 import type { formatValue } from './shared/functions/format-value'
 
-const environment = import.meta.env.NUX_PUBLIC_ENV ?? 'development'
+const environment = import.meta.env.NUXT_PUBLIC_ENV ?? 'development'
 
 type IComponent = {
   component: string

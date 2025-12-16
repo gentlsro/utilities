@@ -1,9 +1,26 @@
 // Functions
 import { useLocale } from './useLocale'
-import { useDuration as useDurationShared } from '../../shared/composables/useDuration'
+import { useDuration as useDurationShared, type IDurationOptions } from '../../shared/composables/useDuration'
 
 export function useDuration() {
   const { currentLocale } = useLocale()
 
-  return useDurationShared({ localeIso: currentLocale.value.code })
+  const {
+    formatDuration: formatDurationShared,
+    ...other
+  } = useDurationShared({ localeIso: currentLocale.value.code })
+
+  function formatDuration(
+    valueRef?: MaybeRefOrGetter<number | string | null>,
+    options: IDurationOptions = {},
+  ) {
+    const value = toValue(valueRef)
+
+    return formatDurationShared(value, options)
+  }
+
+  return {
+    ...other,
+    formatDuration,
+  }
 }

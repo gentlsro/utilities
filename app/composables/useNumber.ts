@@ -2,7 +2,7 @@ import { SummaryEnum } from '../../shared/enums/summary.enum'
 
 // Functions
 import { useLocale } from './useLocale'
-import { useNumber as useNumberShared } from '../../shared/composables/useNumber'
+import { useNumber as useNumberShared, type INumberOptions } from '../../shared/composables/useNumber'
 
 function getSeparators(localeRef?: MaybeRefOrGetter<string>) {
   const locale = toValue(localeRef)
@@ -21,6 +21,14 @@ export function useNumber(options?: { localeIso?: string }) {
   const { localeIso } = options ?? {}
   const { currentLocale } = useLocale()
 
+  const {
+    formatNumber: formatNumberShared,
+    formatCurrency: formatCurrencyShared,
+
+    ...other
+  } = useNumberShared({ localeIso: currentLocale.value.code })
+
+
   const separators = computed(() => getSeparators(localeIso ?? currentLocale.value.code))
 
   const summaryMetricOptions = computed(() => {
@@ -32,8 +40,30 @@ export function useNumber(options?: { localeIso?: string }) {
     ]
   })
 
+  function formatNumber(
+    valueRef?: MaybeRefOrGetter<number | string | null>,
+    options: INumberOptions = {},
+  ) {
+    const value = toValue(valueRef)
+
+    return formatNumberShared(value, options)
+  }
+
+  function formatCurrency(
+    valueRef?: MaybeRefOrGetter<number | string | null>,
+    currency?: string,
+    options: INumberOptions = {},
+  ) {
+    const value = toValue(valueRef)
+
+    return formatCurrencyShared(value, currency, options)
+  }
+
   return {
-    ...useNumberShared({ localeIso: currentLocale.value.code }),
+    ...other,
+
+    formatNumber,
+    formatCurrency,
     separators,
     summaryMetricOptions,
     getSeparators,

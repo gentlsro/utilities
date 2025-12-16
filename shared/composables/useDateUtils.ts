@@ -15,32 +15,14 @@ export type IExtendedPeriodOptions = {
   unit?: OpUnitType | ManipulateType | 'isoWeek'
   firstDayOfWeek?: DayEnum
   minCountOfWeeks?: number
-  periodRef?: MaybeRefOrGetter<Period>
-  dateRef?: MaybeRefOrGetter<Datetime>
+  period?: Period
+  date?: Datetime
 }
-
-export type IDateOptions = {
-  localeIso?: string
-  isLocalString?: boolean
-  outputIntlOptions?: Intl.DateTimeFormatOptions | DateFormatPreset
-  format?: string
-
-  /**
-   * When true, the spaces between the date parts will be removed
-   * For exmaple, for czech locale, the date would be formatted as `29. 05. 2025` by default
-   * but with `removeSpaces: true` it would be formatted as `29.05.2025`
-   */
-  removeSpaces?: boolean
-}
-
-export type DateFormatPreset = keyof typeof datetimeFormats
 
 /**
  * Works the same way as `.valueOf()` but ignores the time part of the date
  */
-export function getDateSimpleValue(dateRef: MaybeRefOrGetter<Datetime>) {
-  const date = toValue(dateRef)
-
+export function getDateSimpleValue(date: Datetime) {
   return $date(date).startOf('day').valueOf()
 }
 
@@ -56,11 +38,9 @@ export function useDateUtils(localeIso: string) {
   }
 
   const formatDate = (
-    dateRef?: MaybeRefOrGetter<Datetime>,
+    date?: Datetime,
     options: IDateOptions | DateFormatPreset = 'short',
   ) => {
-    let date = toValue(dateRef)
-
     if (typeof date === 'string') {
       date = date.trim()
     }
@@ -124,7 +104,7 @@ export function useDateUtils(localeIso: string) {
   }
 
   const formatTime = (
-    timeRef: MaybeRefOrGetter<string>,
+    time: string,
     options: {
       appendString?: string
     } = {},
@@ -132,33 +112,29 @@ export function useDateUtils(localeIso: string) {
     const { appendString = '' } = options
 
     return formatDate(
-      `2020-01-01 ${toValue(timeRef)} ${appendString}`,
+      `2020-01-01 ${time} ${appendString}`,
       { outputIntlOptions: 'time' },
     )
   }
 
   const parseDate = (
-    dateRef: MaybeRefOrGetter<Datetime>,
+    date: Datetime,
     options?: IDateOptions,
   ) => {
-    const { $i18n } = tryUseNuxtApp() ?? {}
-    const locales = toValue($i18n?.locales) ?? []
-    const usedLocaleIso = options?.localeIso ?? localeIso
-    const usedLocale = locales.find(locale => locale.code === usedLocaleIso)
-
     return options?.isLocalString
-      ? $date(toValue(dateRef), (usedLocale as any)?.dateFormat)
-      : $date(toValue(dateRef))
+      ? $date(date, options?.format)
+      : $date(date)
   }
 
-  const getPeriod = ({
-    dateRef = undefined,
-    periodRef = undefined,
-    firstDayOfWeek = DayEnum.MONDAY,
-    unit = 'isoWeek' as ManipulateType,
-  }: IExtendedPeriodOptions = {}): Period => {
-    const period = toValue(periodRef)
-    let periodStart = toValue(period?.periodStart || dateRef)
+  const getPeriod = (payload: IExtendedPeriodOptions = {}): Period => {
+    const {
+      date = undefined,
+      period = undefined,
+      firstDayOfWeek = DayEnum.MONDAY,
+      unit = 'isoWeek' as ManipulateType,
+    } = payload
+
+    let periodStart = period?.periodStart || date
     periodStart = $date(periodStart).startOf(unit)
 
     if (unit === 'isoWeek' || unit.startsWith('w')) {
@@ -174,16 +150,18 @@ export function useDateUtils(localeIso: string) {
     }
   }
 
-  const getExtendedPeriod = ({
-    dateRef = undefined,
-    periodRef = undefined,
-    firstDayOfWeek = DayEnum.MONDAY,
-    minCountOfWeeks = 0,
-    unit = 'isoWeek',
-  }: IExtendedPeriodOptions = {}): Period => {
-    const period = toValue(periodRef)
-    let periodStart = toValue(period?.periodStart || dateRef)
-    let periodEnd = toValue(period?.periodEnd || dateRef)
+  const getExtendedPeriod = (payload: IExtendedPeriodOptions = {}): Period => {
+    let {
+      date = undefined,
+      period = undefined,
+      firstDayOfWeek = DayEnum.MONDAY,
+      unit = 'isoWeek' as ManipulateType,
+      minCountOfWeeks = 6
+    } = payload
+
+
+    let periodStart = period?.periodStart || date
+    let periodEnd = period?.periodEnd || date
 
     periodStart = $date(periodStart).startOf(unit)
     periodEnd = $date(periodEnd).endOf(unit)
@@ -204,13 +182,12 @@ export function useDateUtils(localeIso: string) {
   }
 
   const getDaysInPeriod = (
-    periodRef: MaybeRefOrGetter<Period>,
+    period: Period,
     options: { excludedDays?: DayEnum[], currentPeriod?: Period, utc?: boolean } = {},
   ) => {
     const { excludedDays, currentPeriod, utc } = options
     const days: Day[] = []
-    const period = toValue(periodRef)
-    let current = toValue(period).periodStart
+    let current = period.periodStart
 
     while (current.isSameOrBefore(period.periodEnd)) {
       const day = new Day(current, currentPeriod || period, { useUtc: utc })
@@ -230,12 +207,9 @@ export function useDateUtils(localeIso: string) {
    * before `toRef` and both must be before the current date.
    */
   const isValidRange = (
-    fromRef: MaybeRefOrGetter<Datetime>,
-    toRef?: MaybeRefOrGetter<Datetime>,
+    from: Datetime,
+    to?: Datetime,
   ) => {
-    const from = toValue(fromRef)
-    const to = toValue(toRef)
-
     // If no `to` date is provided, we assume that the `from` date is valid
     if (!to) {
       return true

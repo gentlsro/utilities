@@ -54,7 +54,7 @@ export function useNumber(payload: {
    * Formats a number to a locale-aware string
    */
   const formatNumber = (
-    value?: MaybeRefOrGetter<number | string | null>,
+    value?: number | string | null,
     options: INumberOptions = {},
   ) => {
     if (value === null || value === undefined) {
@@ -75,7 +75,7 @@ export function useNumber(payload: {
    * Formats currency
    */
   function formatCurrency(
-    value?: MaybeRefOrGetter<number | string | null>,
+    value?: number | string | null,
     currency?: string,
     options: INumberOptions = {},
   ) {

@@ -20,9 +20,6 @@ export default defineNuxtConfig({
     name: 'utilities',
   },
 
-  // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
-  // ssr: false,
-
   // Imports https://nuxt.com/docs/api/configuration/nuxt-config#imports
   imports: {
     imports: [
@@ -92,8 +89,10 @@ export default defineNuxtConfig({
         { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
         { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
         { name: 'Datetime', from: resolve('./shared/types/datetime.type.ts'), type: true },
-        { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
         { name: 'isDev', from: resolve('./shared/functions/is-dev.ts') },
+
+        // Config
+        { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
       ],
     },
 

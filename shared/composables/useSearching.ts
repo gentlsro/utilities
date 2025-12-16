@@ -24,10 +24,10 @@ export function useSearching() {
   const { normalizeText } = useText()
 
   const searchData = async <T extends IItem>(payload: {
-    searchRef?: MaybeRefOrGetter<string>
-    rowsRef: MaybeRefOrGetter<Array<T>>
+    search?: string
+    rows: T[]
+    columns?: IItem[]
     fuseOptions: Required<FuseOptions<any>, 'keys'>
-    columnsRef?: MaybeRefOrGetter<Array<IItem>>
     useWorker?: boolean
     normalizeFnc?: (val: string) => string
 
@@ -49,11 +49,11 @@ export function useSearching() {
     _extra?: { hasExactMatch?: boolean }
   }): Promise<FuseResult<T>[]> => {
     const {
-      searchRef,
-      rowsRef,
+      search: searchString = '',
+      rows,
+      columns,
       fuseOptions,
       fuseSearchToken,
-      columnsRef,
       useWorker,
       _extra,
     } = payload
@@ -62,9 +62,7 @@ export function useSearching() {
       ? transliterate
       : normalizeText
 
-    const search = normalizeFnc(toValue(searchRef) ?? '')
-    const rows = toValue(rowsRef)
-    const columns = toValue(columnsRef)
+    const search = normalizeFnc(searchString)
     const optionsClone = klona(fuseOptions)
 
     if (!search) {
@@ -117,14 +115,14 @@ export function useSearching() {
 
     let result: FuseResult<T>[] = []
 
-    if (useWorker) {
-      workerTerminate()
+    // if (useWorker) {
+    //   workerTerminate()
 
-      await nextTick()
-      result = await workerFn(pattern, rowsRelevantData, optionsClone) as FuseResult<T>[]
-    } else {
-      result = handleSearch(pattern, rowsRelevantData, optionsClone) as FuseResult<T>[]
-    }
+    //   await nextTick()
+    //   result = await workerFn(pattern, rowsRelevantData, optionsClone) as FuseResult<T>[]
+    // }
+
+    result = handleSearch(pattern, rowsRelevantData, optionsClone) as FuseResult<T>[]
 
     if (_extra) {
       _extra.hasExactMatch = result.some(item => {
@@ -139,17 +137,17 @@ export function useSearching() {
     })
   }
 
-  const handleSearchInWorker = <T extends IItem>(
-    pattern: string,
-    rowsRelevantData: T[],
-    options: Required<FuseOptions<any>, 'keys'>,
-  ) => {
-    options = { threshold: 0.4, ...options, includeScore: true }
-    const fuse = new Fuse(rowsRelevantData, options)
+  // const handleSearchInWorker = <T extends IItem>(
+  //   pattern: string,
+  //   rowsRelevantData: T[],
+  //   options: Required<FuseOptions<any>, 'keys'>,
+  // ) => {
+  //   options = { threshold: 0.4, ...options, includeScore: true }
+  //   const fuse = new Fuse(rowsRelevantData, options)
 
-    // @ts-expect-error Weird fuse.js typing
-    return fuse.search(pattern, options)
-  }
+  //   // @ts-expect-error Weird fuse.js typing
+  //   return fuse.search(pattern, options)
+  // }
 
   const handleSearch = <T extends IItem>(
     pattern: string,
@@ -164,11 +162,11 @@ export function useSearching() {
     return fuse.search(pattern, options)
   }
 
-  // XXX: Manually check for updates for dependency
-  const { workerFn, workerTerminate } = useWebWorkerFn(handleSearchInWorker, {
-    dependencies: ['https://cdn.jsdelivr.net/npm/fuse.js@7.0.0'],
-    timeout: 1e5, // 100 sec
-  })
+  // TODO: Fix worker
+  // const { workerFn, workerTerminate } = useWebWorkerFn(handleSearchInWorker, {
+  //   dependencies: ['https://cdn.jsdelivr.net/npm/fuse.js@7.0.0'],
+  //   timeout: 1e5, // 100 sec
+  // })
 
   return {
     searchData,
