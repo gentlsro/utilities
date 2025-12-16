@@ -1,5 +1,5 @@
-function parseDate(dateRef: MaybeRefOrGetter<Datetime>) {
-  return $date(toValue(dateRef))
+function parseDate(date: Datetime) {
+  return $date(date)
 }
 
 export const ZOD_VALIDATORS = {

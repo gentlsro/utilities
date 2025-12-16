@@ -15,15 +15,11 @@ const SORT_MAP = { asc: 1, desc: -1 }
 
 export function useSorting() {
   const sortData = async <T = IItem>(
-    rowsRef: MaybeRefOrGetter<Array<T>>,
-    columnsRef: MaybeRefOrGetter<Array<SortItem<T> | IOrderBy<T>>>,
-    groupsRef: MaybeRefOrGetter<Array<GroupItem<T>>> = [],
+    rows: T[],
+    cols: Array<SortItem<T> | IOrderBy<T>>,
+    groups: GroupItem<T>[] = [],
     useWorker?: boolean,
   ): Promise<Array<T>> => {
-    const rows = [...toValue(rowsRef)]
-    const cols = toValue(columnsRef)
-    const groups = toValue(groupsRef)
-
     const sortCols = cols
       .filter(col => 'direction' in col || col.sort)
       .map(col => {
@@ -62,24 +58,25 @@ export function useSorting() {
       }, {}),
     }))
 
-    if (useWorker) {
-      workerTerminate()
 
-      const res = await workerFn(values, [
-        ...groups.map(g => ({
-          name: g.name,
-          isGroup: true,
-          sort: g.sort,
-        })),
-        ...sortCols.map(col => ({
-          name: col.name as string,
-          isGroup: false,
-          sort: col.sort,
-        })),
-      ])
+    // if (useWorker) {
+    //   workerTerminate()
 
-      return res.map(idx => rows[idx]) as T[]
-    }
+    //   const res = await workerFn(values, [
+    //     ...groups.map(g => ({
+    //       name: g.name,
+    //       isGroup: true,
+    //       sort: g.sort,
+    //     })),
+    //     ...sortCols.map(col => ({
+    //       name: col.name as string,
+    //       isGroup: false,
+    //       sort: col.sort,
+    //     })),
+    //   ])
+
+    //   return res.map(idx => rows[idx]) as T[]
+    // }
 
     values.sort((a, b) => {
       for (let idx = 0; idx < groups.length; idx++) {
@@ -132,46 +129,47 @@ export function useSorting() {
     return values.map(({ idx }) => rows[idx]) as T[]
   }
 
-  const { workerFn, workerTerminate } = useWebWorkerFn(
-    (
-      rows: any,
-      sortBy: { name: string, isGroup?: boolean, sort?: 'asc' | 'desc' }[],
-    ) => {
-      return [...rows]
-        .sort((a: any, b: any) => {
-          for (let idx = 0; idx < sortBy.length; idx++) {
-            const s = sortBy[idx]!
+  // TODO: Implement worker on server
+  // const { workerFn, workerTerminate } = useWebWorkerFn(
+  //   (
+  //     rows: any,
+  //     sortBy: { name: string, isGroup?: boolean, sort?: 'asc' | 'desc' }[],
+  //   ) => {
+  //     return [...rows]
+  //       .sort((a: any, b: any) => {
+  //         for (let idx = 0; idx < sortBy.length; idx++) {
+  //           const s = sortBy[idx]!
 
-            const aValue = s.isGroup
-              ? a.valueByGroupName[s.name]
-              : a.valueByColumnName[s.name]
+  //           const aValue = s.isGroup
+  //             ? a.valueByGroupName[s.name]
+  //             : a.valueByColumnName[s.name]
 
-            const bValue = s.isGroup
-              ? b.valueByGroupName[s.name]
-              : b.valueByColumnName[s.name]
+  //           const bValue = s.isGroup
+  //             ? b.valueByGroupName[s.name]
+  //             : b.valueByColumnName[s.name]
 
-            if (typeof aValue === 'string' && typeof bValue === 'string') {
-              const stringCompare = aValue.localeCompare(bValue)
+  //           if (typeof aValue === 'string' && typeof bValue === 'string') {
+  //             const stringCompare = aValue.localeCompare(bValue)
 
-              if (stringCompare) {
-                return stringCompare * SORT_MAP[s.sort || 'asc']
-              }
-            } else {
-              if (aValue > bValue) {
-                return SORT_MAP[s.sort || 'asc'] * 1
-              }
+  //             if (stringCompare) {
+  //               return stringCompare * SORT_MAP[s.sort || 'asc']
+  //             }
+  //           } else {
+  //             if (aValue > bValue) {
+  //               return SORT_MAP[s.sort || 'asc'] * 1
+  //             }
 
-              if (aValue < bValue) {
-                return SORT_MAP[s.sort || 'asc'] * -1
-              }
-            }
-          }
+  //             if (aValue < bValue) {
+  //               return SORT_MAP[s.sort || 'asc'] * -1
+  //             }
+  //           }
+  //         }
 
-          return 0
-        })
-        .map(r => r.idx)
-    },
-  )
+  //         return 0
+  //       })
+  //       .map(r => r.idx)
+  //   },
+  // )
 
   return { sortData }
 }

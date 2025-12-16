@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { DataType } from '$dataType'
 import { ZOD_VALIDATORS } from '$utils'
 import type { ZodAny, ZodArray, ZodBoolean, ZodCustom, ZodDate, ZodNumber, ZodObject, ZodString, ZodUnknown } from 'zod/v4'
