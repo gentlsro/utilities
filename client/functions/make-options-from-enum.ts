@@ -46,7 +46,7 @@ export function makeSelectorOptionsFromEnum(
     return enumKeys.map(key => {
       const value = enumObj[key]
       return {
-        [labelField]: $t(`${translationPrefix}.${transformKey(key)}`),
+        [labelField]: $t(`${translationPrefix}.${transformKey(value)}`),
         [keyField]: numericValue ? Number.parseInt(String(value)) : transformKey(String(value)),
       }
     })
@@ -56,7 +56,7 @@ export function makeSelectorOptionsFromEnum(
 
       return {
         [labelField]: $t(`${translationPrefix}.${transformKey(String(value))}`),
-        [keyField]: key,
+        [keyField]: value,
       }
     })
   }
