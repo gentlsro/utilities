@@ -36,7 +36,7 @@ export function makeSelectorOptionsFromEnum(
         }
       })
   } else {
-    return Object.keys(enumObj).map(key => {
+    return enumValues.map(key => {
       return {
         [labelField]: $t(`${translationPrefix}.${transformKey(key)}`),
         [keyField]: key,
