@@ -24,7 +24,8 @@ export function makeSelectorOptionsFromEnum(
   } = options || {}
 
   const enumValues = Object.values(enumObj)
-  const isNumberedEnum = enumValues.every(key => /^[\d.]+$/.test(key))
+  const enumKeys = Object.keys(enumObj)
+  const isNumberedEnum = enumKeys.every(key => /^[\d.]+$/.test(enumObj[key]))
 
   if (isNumberedEnum) {
     return enumValues
