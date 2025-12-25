@@ -122,7 +122,8 @@
     "useSelection": "Použít výběr ({ selectedCount })",
     "item": "Položka | Položky",
     "you": "Vy",
-    "deleteItemConfirmation": "Opravdu chcete smazat tuto položku?"
+    "deleteItemConfirmation": "Opravdu chcete smazat tuto položku?",
+    "activate": "Aktivovat"
   },
   "zod": {
     "errors": {

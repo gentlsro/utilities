@@ -122,7 +122,8 @@
     "useSelection": "Use selection ({ selectedCount })",
     "item": "item | items",
     "you": "You",
-    "deleteItemConfirmation": "Are you sure you want to delete this item?"
+    "deleteItemConfirmation": "Are you sure you want to delete this item?",
+    "activate": "Activate"
   },
   "zod": {
     "errors": {
