@@ -123,7 +123,8 @@
     "item": "Položka | Položky",
     "you": "Vy",
     "deleteItemConfirmation": "Opravdu chcete smazat tuto položku?",
-    "activate": "Aktivovat"
+    "activate": "Aktivovat",
+    "description": "Popis"
   },
   "zod": {
     "errors": {
