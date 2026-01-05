@@ -1,8 +1,37 @@
 // @unocss-include
+import { get, uniq } from 'lodash-es'
 import utilsConfig from '$utilsConfig'
+import type { IZodValidationOutput } from '$utils'
 
-// Types
-import type { IZodValidationOutput } from '../types/zod'
+const memoizedRequests = new Map<string, Promise<any>>()
+
+/**
+ * Executes a request with optional memoization
+ */
+async function executeRequest<T>(payload: {
+  fnc: AsyncFunction<T>
+  requestId?: string
+  createAbortController?: () => AbortController
+}): Promise<T> {
+  const { fnc, requestId, createAbortController } = payload
+
+  // If no requestId is provided, execute directly without memoization
+  if (!requestId) {
+    return fnc(createAbortController!)
+  }
+
+  // Check if we already have a memoized request
+  const existingRequest = memoizedRequests.get(requestId)
+  if (existingRequest) {
+    return existingRequest
+  }
+
+  // Create and store new memoized request
+  const newRequest = fnc(createAbortController!)
+  memoizedRequests.set(requestId, newRequest)
+
+  return newRequest
+}
 
 type AsyncFunction<T> = (abortController: () => AbortController) => Promise<T>
 
@@ -13,6 +42,7 @@ class CustomError extends Error {
 }
 
 type UseRequestOptions<T = any> = {
+  requestId?: string
   payloadKey?: string
   $z?: IZodValidationOutput<any>
 
@@ -97,16 +127,17 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
 
   async function handleRequest<T = any>(
     fnc: AsyncFunction<T>,
-    options?: UseRequestOptions,
+    options?: UseRequestOptions<T>,
   ): Promise<T> {
     const {
-      errorGetter,
+      requestId,
       payloadKey,
       noResolve = true,
       merge: _merge,
       $z,
       onNotify,
       onComplete,
+      errorGetter,
     } = options || {}
 
     try {
@@ -119,13 +150,15 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
         const isValid = await $z.value.$validate()
 
         if (!isValid) {
-          throw new Error('general.invalidForm')
+          throw new Error($t('general.invalidForm'))
         }
       }
 
       isLoading.value = true
 
-      const res = (await fnc(createAbortController)) as any
+      // Handle memoized requests
+      const res = await executeRequest({ fnc, requestId, createAbortController })
+
       const resPayload = get(res, payloadKey || utilsConfig.request.payloadKey)
 
       temporaryResPayload = resPayload
@@ -215,6 +248,10 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
 
       if (options?.onError && temporaryErrors.length) {
         await options.onError(temporaryErrors, temporaryResPayload)
+      }
+
+      if (requestId) {
+        memoizedRequests.delete(requestId)
       }
 
       isLoading.value = false
