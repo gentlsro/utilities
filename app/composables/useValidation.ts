@@ -15,7 +15,7 @@ function getScopeName(scope?: string | false | null) {
   return scope ? `__r$${scope}` : '__r$'
 }
 
-export function useR<T>(
+export function useValidation<T>(
   regle?: () => T,
   options?: { scope?: string },
 ) {
