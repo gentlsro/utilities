@@ -135,18 +135,18 @@ export function useDateUtils(localeIso: string) {
     } = payload
 
     let periodStart = period?.periodStart || date
-    periodStart = $date(periodStart).startOf(unit)
+    const periodStartObj = $date(periodStart)?.startOf(unit)
 
     if (unit === 'isoWeek' || unit.startsWith('w')) {
-      const firstDayOfWeekIdx = periodStart.day() < firstDayOfWeek
+      const firstDayOfWeekIdx = periodStartObj.day() < firstDayOfWeek
         ? firstDayOfWeek - 7
         : firstDayOfWeek
-      periodStart = periodStart.day(firstDayOfWeekIdx)
+      periodStart = periodStartObj.day(firstDayOfWeekIdx)
     }
 
     return {
-      periodStart,
-      periodEnd: periodStart.add(1, unit as ManipulateType).subtract(1),
+      periodStart: periodStartObj,
+      periodEnd: periodStartObj.add(1, unit as ManipulateType).subtract(1),
     }
   }
 
@@ -156,20 +156,19 @@ export function useDateUtils(localeIso: string) {
       period = undefined,
       firstDayOfWeek = DayEnum.MONDAY,
       unit = 'isoWeek' as ManipulateType,
-      minCountOfWeeks = 6
+      minCountOfWeeks = 6,
     } = payload
 
+    const periodStart = period?.periodStart || date
+    const periodEnd = period?.periodEnd || date
 
-    let periodStart = period?.periodStart || date
-    let periodEnd = period?.periodEnd || date
-
-    periodStart = $date(periodStart).startOf(unit)
-    periodEnd = $date(periodEnd).endOf(unit)
+    const periodStartObj = $date(periodStart)?.startOf(unit)
+    const periodEndObj = $date(periodEnd)?.endOf(unit)
 
     const periodStartExtendedDayIdx
-      = periodStart.day() < firstDayOfWeek ? firstDayOfWeek - 7 : firstDayOfWeek
-    const periodStartExtended = periodStart.day(periodStartExtendedDayIdx)
-    let periodEndExtended = periodEnd.day() ? periodEnd.day(7) : periodEnd
+      = periodStartObj.day() < firstDayOfWeek ? firstDayOfWeek - 7 : firstDayOfWeek
+    const periodStartExtended = periodStartObj.day(periodStartExtendedDayIdx)
+    let periodEndExtended = periodEndObj.day() ? periodEndObj.day(7) : periodEndObj
     const diff = periodEndExtended.diff(periodStartExtended, 'day')
 
     minCountOfWeeks = Math.max(minCountOfWeeks, Math.ceil(diff / 7))
