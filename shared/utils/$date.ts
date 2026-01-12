@@ -46,4 +46,6 @@ export function $date(
   return dayjs(date, format, strict)
 }
 
+export const $duration = dayjs.duration
+
 export type Dayjs = ReturnType<typeof dayjs>
