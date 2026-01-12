@@ -1,16 +1,18 @@
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration.js'
-import customParseFormat from 'dayjs/plugin/customParseFormat.js'
-import isBetween from 'dayjs/plugin/isBetween.js'
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter.js'
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore.js'
-import isoWeek from 'dayjs/plugin/isoWeek.js'
-import dayOfYear from 'dayjs/plugin/dayOfYear.js'
-import utc from 'dayjs/plugin/utc.js'
-import timezone from 'dayjs/plugin/timezone.js'
-import quarterOfYear from 'dayjs/plugin/quarterOfYear.js'
-import 'dayjs/locale/en-gb.js'
-import 'dayjs/locale/cs.js'
+// Using dayjs/esm build for proper ESM support in Nuxt layers
+// https://github.com/iamkun/dayjs/issues/1765
+import dayjs from 'dayjs/esm'
+import duration from 'dayjs/esm/plugin/duration'
+import customParseFormat from 'dayjs/esm/plugin/customParseFormat'
+import isBetween from 'dayjs/esm/plugin/isBetween'
+import isSameOrAfter from 'dayjs/esm/plugin/isSameOrAfter'
+import isSameOrBefore from 'dayjs/esm/plugin/isSameOrBefore'
+import isoWeek from 'dayjs/esm/plugin/isoWeek'
+import dayOfYear from 'dayjs/esm/plugin/dayOfYear'
+import utc from 'dayjs/esm/plugin/utc'
+import timezone from 'dayjs/esm/plugin/timezone'
+import quarterOfYear from 'dayjs/esm/plugin/quarterOfYear'
+import 'dayjs/esm/locale/en-gb'
+import 'dayjs/esm/locale/cs'
 
 dayjs.extend(duration)
 dayjs.extend(customParseFormat)

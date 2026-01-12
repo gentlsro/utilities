@@ -96,18 +96,4 @@ export default defineNuxtConfig({
     ],
   },
 
-  // Dayjs ESM workaround: https://github.com/iamkun/dayjs/issues/1765
-  // Force dayjs to be bundled (not externalized) during SSR to avoid CJS/ESM issues
-  vite: {
-    optimizeDeps: {
-      include: ['dayjs'],
-    },
-    ssr: {
-      noExternal: ['dayjs'],
-    },
-  },
-
-  build: {
-    transpile: ['dayjs'],
-  },
 })
