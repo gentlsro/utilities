@@ -40,7 +40,7 @@ export function $date(
 
   if (isUtc) {
     // @ts-expect-error - dayjs.utc() is not typed
-    return dayjs.utc(date, format, strict)
+    return dayjs.utc(date, format, strict) as Dayjs
   }
 
   return dayjs(date, format, strict)

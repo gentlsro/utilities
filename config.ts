@@ -11,7 +11,7 @@ import type { ComparatorEnum as MergedComparatorEnum } from '$comparatorEnum'
 import { uploadFile } from './app/utils/upload-file'
 import { deleteFile } from './app/utils/delete-file'
 
-const environment = (import.meta.env as any).NUXT_PUBLIC_ENV
+const environment = (import.meta as any).env.NUXT_PUBLIC_ENV
 
 type IComponent = {
   component: string
