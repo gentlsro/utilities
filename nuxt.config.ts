@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxt/test-utils/module',
     '@nuxt/scripts',
-    '@nuxt/hints',
     '@nuxt/eslint',
   ],
 
