@@ -1,8 +1,3 @@
-type Without<T, U> = {
-  [P in Exclude<keyof T, keyof U>]?: never;
-}
-type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U
-
 export type OpenWindowFeatures = {
   popup?: boolean
   noopener?: boolean
@@ -10,20 +5,20 @@ export type OpenWindowFeatures = {
 } & XOR<{
   width?: number
 }, {
-    innerWidth?: number
-  }> & XOR<{
-    height?: number
-  }, {
-      innerHeight?: number
-    }> & XOR<{
-      left?: number
-    }, {
-        screenX?: number
-      }> & XOR<{
-        top?: number
-      }, {
-          screenY?: number
-        }>
+  innerWidth?: number
+}> & XOR<{
+  height?: number
+}, {
+  innerHeight?: number
+}> & XOR<{
+  left?: number
+}, {
+  screenX?: number
+}> & XOR<{
+  top?: number
+}, {
+  screenY?: number
+}>
 
 type OpenOptions = {
   target: '_blank' | '_parent' | '_self' | '_top' | (string & {})

@@ -1,5 +1,5 @@
 // Models
-import { GroupItem } from '../../shared/models/group-item.model'
+import type { GroupItem } from '../../shared/models/group-item.model'
 
 // Functions
 import { useGrouping as useGroupingShared } from '../../shared/composables/useGrouping'

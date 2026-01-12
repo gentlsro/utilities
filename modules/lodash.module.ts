@@ -1,4 +1,4 @@
-import { addImports, createResolver, defineNuxtModule } from 'nuxt/kit'
+import { addImports, defineNuxtModule } from 'nuxt/kit'
 import * as lodash from 'lodash-es'
 
 const EXCLUDED_KEYS = [
@@ -24,6 +24,7 @@ const EXCLUDED_KEYS = [
   'default',
   'commit',
   'head',
+  'mergeWith',
 ]
 
 export default defineNuxtModule({

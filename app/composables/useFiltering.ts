@@ -1,7 +1,7 @@
 import { useFiltering as useFilteringShared } from '../../shared/composables/useFiltering'
 
 // Models
-import type { FilterItem } from '../../shared/models/filter-item'
+import type { FilterItem } from '../../shared/models/filter-item.model'
 
 type IFilter<T> = Pick<
   FilterItem<T>,

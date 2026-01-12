@@ -17,7 +17,7 @@ type IZodInstanceValidationItem = {
   errors: IZodValidationItem[]
   validateFn: (
     validateNested?: boolean,
-    resumeWatch?: boolean
+    resumeWatch?: boolean,
   ) => Promise<boolean>
   resetFn: (shouldPause?: boolean, resetNested?: boolean) => void
 }
@@ -88,11 +88,11 @@ function getScopeName(scope?: string | false | null) {
 export function useZod<T extends ZodSchemaObject>(
   schemas: T,
   data: ZodDataObject<T>,
-  options?: IZodValidationOptions
+  options?: IZodValidationOptions,
 ): IZodValidationOutput<T>
 
 export function useZod<T extends ZodSchemaObject>(
-  options?: IZodValidationOptions
+  options?: IZodValidationOptions,
 ): IZodValidationOutput<T>
 
 export function useZod<T extends ZodSchemaObject>(

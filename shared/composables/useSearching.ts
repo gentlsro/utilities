@@ -1,5 +1,7 @@
+// TODO: Fix worker version
 import utilsConfig from '$utilsConfig'
-import Fuse, { type FuseResult } from 'fuse.js'
+import Fuse from 'fuse.js'
+import type { FuseResult } from 'fuse.js'
 import { klona } from 'klona/full'
 import type { Required } from 'utility-types'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
@@ -162,7 +164,6 @@ export function useSearching() {
     return fuse.search(pattern, options)
   }
 
-  // TODO: Fix worker
   // const { workerFn, workerTerminate } = useWebWorkerFn(handleSearchInWorker, {
   //   dependencies: ['https://cdn.jsdelivr.net/npm/fuse.js@7.0.0'],
   //   timeout: 1e5, // 100 sec

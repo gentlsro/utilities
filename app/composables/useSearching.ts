@@ -1,6 +1,6 @@
 import type { FuseResult } from 'fuse.js'
 import type { Required } from 'utility-types'
-import type { FuseOptions } from '@vueuse/integrations/useFuse.js'
+import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Functions
 import { useSearching as useSearchingShared } from '../../shared/composables/useSearching'

@@ -1,4 +1,7 @@
-export function getElementSize(el: HTMLElement, options?: { includeMargin?: boolean, includeBorder?: boolean, includePadding?: boolean }) {
+export function getElementSize(
+  el: HTMLElement,
+  options?: { includeMargin?: boolean, includeBorder?: boolean, includePadding?: boolean },
+) {
   const {
     includeMargin = true,
     includeBorder = false,

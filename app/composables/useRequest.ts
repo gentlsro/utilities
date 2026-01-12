@@ -1,93 +1,75 @@
-// @unocss-include
-import utilsConfig from '$utilsConfig'
+import { utilsConfig } from '$utilsConfig'
+import type { NonUndefined } from 'utility-types'
 
 // Types
-import type { IZodValidationOutput } from '../types/zod'
+import type { UseRequestOptions } from '../types/use-request-options.type'
 
-type AsyncFunction<T> = (abortController: () => AbortController) => Promise<T>
+const memoizedRequests = new Map<string, Promise<any>>()
 
-class CustomError extends Error {
-  constructor(public errors: any[], public warnings?: any[], message?: string) {
-    super(message)
+export type AsyncFunction<T> = (abortController: () => AbortController) => Promise<T>
+
+function mergeResponseWithOriginalObject<T>(payload: {
+  merge: NonUndefined<UseRequestOptions<T>['merge']>
+  result: T
+}) {
+  const { merge, result } = payload
+
+  const newData = merge?.payloadKey ? get(result, merge.payloadKey) : result
+  const modifyFnc = merge?.modifyFnc ?? (utilsConfig.request?.modifyFnc || ((obj: any) => obj))
+  const newDataModified = modifyFnc(newData)
+
+  if (newData) {
+    // When `merge.override` is true, we sync the original object with the new data
+    // essentially replacing the original object
+    if (merge?.override) {
+      merge.originalObj.syncToParent?.(newDataModified)
+    }
+
+    // Otherwise, we merge the new data with the original object
+    else {
+      const originalObj = toValue(merge.originalObj)
+      const resultObj = Object.assign(originalObj, newDataModified)
+
+      merge.originalObj.syncToParent?.(resultObj)
+    }
   }
 }
 
-type UseRequestOptions<T = any> = {
-  payloadKey?: string
-  $z?: IZodValidationOutput<any>
+/**
+ * Executes a request with optional memoization
+ */
+async function executeRequest<T>(payload: {
+  fnc: AsyncFunction<T>
+  requestId?: string
+  createAbortController?: () => AbortController
+}): Promise<T> {
+  const { fnc, requestId, createAbortController } = payload
 
-  /**
-   * When true, the `payloadKey` will be ignored -> the actual result will be
-   * returned instead of the resolved payload
-   */
-  noResolve?: boolean
-
-  /**
-   * We can merge the response with the original object
-   */
-  merge?: {
-    /**
-     * The key for the payload object
-     */
-    payloadKey?: string
-
-    /**
-     * The original object
-     */
-    originalObj: MaybeRefOrGetter<any>
-
-    /**
-     * Override the original object with the modified object
-     */
-    override?: boolean
-
-    /**
-     * The function to modify the response object
-     */
-    modifyFnc?: (obj: any) => any
+  // If no requestId is provided, execute directly without memoization
+  if (!requestId) {
+    return fnc(createAbortController!)
   }
 
-  /**
-   * For custom error handling, we can inject our own function to handle the error
-   * The function should return an array of strings of errors
-   */
-  errorGetter?: (error: any) => string[]
+  // Check if we already have a memoized request
+  const existingRequest = memoizedRequests.get(requestId)
+  if (existingRequest) {
+    return existingRequest
+  }
 
-  /**
-   * When valid request is done, we call this function
-   */
-  onComplete?: (res: T) => void
+  // Create and store new memoized request
+  const newRequest = fnc(createAbortController!)
+  memoizedRequests.set(requestId, newRequest)
 
-  /**
-   * When the request is done, the `onNotify` function will be called
-   */
-  onNotify?: (payload: {
-    payload: any
-    errorMessages?: string[]
-    type?: 'positive' | 'negative'
-  }) => void
-
-  /**
-   * The function to handle the error
-   */
-  onError?: (error: any, res: any) => Promise<any> | any
+  return newRequest
 }
 
 export function useRequest(options?: { loadingInitialState?: boolean }) {
   const { loadingInitialState } = options ?? {}
 
-  // Utils
-  const { $i18n } = tryUseNuxtApp() ?? {}
-  const $t = $i18n?.t ?? ((...args: any[]) => args[0])
-
-  // Layout
-  const errors = ref<string[]>([])
+  // State
+  const error = ref<any>()
   const isLoading = ref(loadingInitialState ?? false)
   const abortController = ref<AbortController>()
-
-  // Logging
-  let temporaryResPayload: any
-  let temporaryErrors: any[]
 
   function createAbortController() {
     abortController.value = new AbortController()
@@ -97,124 +79,66 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
 
   async function handleRequest<T = any>(
     fnc: AsyncFunction<T>,
-    options?: UseRequestOptions,
+    options?: UseRequestOptions<T>,
   ): Promise<T> {
     const {
-      errorGetter,
-      payloadKey,
-      noResolve = true,
-      merge: _merge,
+      requestId,
+      merge,
       $z,
-      onNotify,
       onComplete,
-    } = options || {}
+    } = options ?? {}
+
+    let response: any
+    let result: any
 
     try {
       // Initialize
-      temporaryErrors = []
-      temporaryResPayload = undefined
+      error.value = undefined
+      response = undefined
+      result = undefined
+
+      const payloadKey = options?.payloadKey
+        ? options.payloadKey
+        : isNull(options?.payloadKey) ? undefined : utilsConfig.request?.payloadKey
 
       // Validate
       if ($z) {
         const isValid = await $z.value.$validate()
 
         if (!isValid) {
-          throw new Error('general.invalidForm')
+          throw new Error($t('general.invalidForm'))
         }
       }
 
       isLoading.value = true
 
-      const res = (await fnc(createAbortController)) as any
-      const resPayload = get(res, payloadKey || utilsConfig.request.payloadKey)
-
-      temporaryResPayload = resPayload
-
-      // If response is an array and includes some errors, we throw an error
-      const isResponseArray = Array.isArray(resPayload)
-      const hasArrayResponseError = isResponseArray && resPayload.some((item: any) => item.error)
-
-      // Custom error handling
-      if (errorGetter) {
-        temporaryErrors = errorGetter(res)
-
-        if (temporaryErrors.length) {
-          throw new CustomError(temporaryErrors)
-        }
-      }
-
-      // When we get an array response with some errors
-      if (hasArrayResponseError) {
-        throw new CustomError(resPayload.map((item: any) => item.error))
-      }
-
-      // NOTE: We shouldn't need to handle a case for a error response, because that
-      // should come as an actual error code, so it should automatically be handled
-      // in the `catch` block
+      // Handle memoized requests
+      response = await executeRequest({ fnc, requestId, createAbortController })
+      result = payloadKey ? get(response, payloadKey) : response
 
       // When `merge` is used, we merge the response with the original object
-      if (_merge) {
-        const newData = _merge.payloadKey ? get(res, _merge.payloadKey) : res
-        const modifyFnc = _merge.modifyFnc ?? (utilsConfig.request.modifyFnc || ((obj: any) => obj))
-        const newDataModified = modifyFnc(newData)
-
-        if (newData) {
-          // When `merge.override` is true, we sync the original object with the new data
-          // essentially replacing the original object
-          if (_merge.override) {
-            _merge.originalObj.syncToParent(newDataModified)
-          }
-
-          // Otherwise, we merge the new data with the original object
-          else {
-            const originalObj = toValue(_merge.originalObj)
-            const resultObj = Object.assign(originalObj, newDataModified)
-
-            _merge.originalObj.syncToParent?.(resultObj)
-          }
-        }
+      if (merge) {
+        mergeResponseWithOriginalObject({ merge, result })
       }
 
-      // Notify about success
-      onNotify?.({ payload: resPayload, type: 'positive' })
-
-      onComplete?.(res)
       $z?.value.$reset()
 
-      return (noResolve ? res : resPayload) as T
-    } catch (error: any) {
-      let errors: string[] = []
-
-      const errorHandler = utilsConfig.request.errorHandler ?? ((err: any, _t: any) => err)
-
-      if (Array.isArray(error.errors) && error.errors.length) {
-        const errorsFlat = error.errors.flatMap((err: any) => err)
-
-        errors = errorsFlat.flatMap((err: any) => errorHandler(err, $t))
-      } else {
-        errors = errorHandler(error, $t)
-      }
-
-      temporaryErrors = errors
+      return result as T
+    } catch (_error: any) {
+      error.value = _error
 
       return new Promise((_resolve, reject) => reject(error))
     } finally {
       isLoading.value = false
 
-      if (onNotify) {
-        const uniqueErrors = uniq(temporaryErrors)
-
-        if (uniqueErrors.length) {
-          onNotify({
-            payload: temporaryResPayload,
-            errorMessages: uniqueErrors,
-            type: 'negative',
-          })
-        }
+      if (error && options?.onError) {
+        await options.onError({ error: error.value, response })
+      } else if (onComplete) {
+        onComplete({ response, result })
       }
 
-      if (options?.onError && temporaryErrors.length) {
-        await options.onError(temporaryErrors, temporaryResPayload)
+      if (requestId) {
+        memoizedRequests.delete(requestId)
       }
 
       isLoading.value = false
@@ -222,7 +146,6 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
   }
 
   return {
-    errors,
     isLoading,
     abortController,
     handleRequest,

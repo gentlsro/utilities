@@ -1,69 +1,42 @@
-import { createResolver } from '@nuxt/kit'
 import { join } from 'pathe'
+import { createResolver } from '@nuxt/kit'
 
 const { resolve } = createResolver(import.meta.url)
-const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  extends: [],
-
-  // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
-    'dayjs-nuxt',
+    '@nuxt/test-utils/module',
+    '@nuxt/scripts',
+    '@nuxt/hints',
+    '@nuxt/eslint',
   ],
 
-  // Layer meta
   $meta: {
     name: 'utilities',
   },
 
-  // Imports https://nuxt.com/docs/api/configuration/nuxt-config#imports
   imports: {
     imports: [
       { name: 'z', from: 'zod/v4' },
-
-      // Client
-      { name: 'getComponentName', from: resolve('./app/functions/get-component-name.ts') },
-      { name: '$t', from: resolve('./app/functions/$t.ts') },
-      { name: '$p', from: resolve('./app/functions/$p.ts') },
-      { name: '$nav', from: resolve('./app/functions/$nav.ts') },
-      { name: 'injectStrict', from: resolve('./app/functions/inject-strict.ts') },
-      { name: 'initRef', from: resolve('./app/functions/init-ref.ts') },
-
-      // Shared
-      { name: 'generateUUID', from: resolve('./shared/functions/generate-uuid.ts') },
-      { name: '$date', from: resolve('./app/functions/dayjs.ts') },
-      { name: '$duration', from: resolve('./app/functions/dayjs.ts') },
-      { name: '$log', from: resolve('./shared/functions/$log.ts') },
-      { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
-      { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
-      { name: 'Datetime', from: resolve('./shared/types/datetime.type.ts'), type: true },
-      { name: 'isDev', from: resolve('./shared/functions/is-dev.ts') },
-      { name: 'resolveComponentByName', from: resolve('./app/functions/resolve-component-by-name.ts') },
-
-      // Config
-      { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
+      { name: 'ClassType', from: resolve('./app/types/class-type.type.ts'), type: true },
     ],
   },
 
-  // Devtools https://nuxt.com/docs/api/configuration/nuxt-config#devtools
-  devtools: {
-    enabled: isMonorepo,
+  runtimeConfig: {
+    public: {
+      env: 'local',
+      filesHost: '/api/files',
+    },
   },
 
-  // Alias
   alias: {
-    $utils: join(process.cwd(), 'generated', 'utils.ts'),
     $utilsConfig: join(process.cwd(), 'generated', 'utilsConfig.ts'),
     $comparatorEnum: join(process.cwd(), 'generated', 'comparator-enum.ts'),
     $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
-    $components: join(process.cwd(), 'generated', 'components-by-name.ts'),
   },
 
-  // Nitro https://nuxt.com/docs/api/configuration/nuxt-config#nitro
   nitro: {
     imports: {
       imports: [
@@ -78,48 +51,23 @@ export default defineNuxtConfig({
         { name: 'isEmpty', from: 'lodash-es' },
         { name: 'isEqual', from: 'lodash-es' },
 
-        // Server
-        { name: '$t', from: resolve('./server/functions/$t.ts') },
-
-        // Shared
-        { name: 'generateUUID', from: resolve('./shared/functions/generate-uuid.ts') },
-        { name: '$date', from: resolve('./server/functions/dayjs.ts') },
-        { name: '$duration', from: resolve('./server/functions/dayjs.ts') },
-        { name: '$log', from: resolve('./shared/functions/$log.ts') },
-        { name: 'IItem', from: resolve('./shared/types/item.type.ts'), type: true },
-        { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
-        { name: 'Datetime', from: resolve('./shared/types/datetime.type.ts'), type: true },
-        { name: 'isDev', from: resolve('./shared/functions/is-dev.ts') },
-
-        // Config
-        { name: 'extendUtilitiesConfig', from: resolve('./config.ts') },
       ],
-    },
-
-    alias: {
-      $utils: join(process.cwd(), 'generated', 'utils.ts'),
-      $utilsConfig: join(process.cwd(), 'generated', 'utilsConfig.ts'),
-      $comparatorEnum: join(process.cwd(), 'generated', 'comparator-enum.ts'),
-      $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
     },
   },
 
-  // Dayjs
-  dayjs: {
-    defaultLocale: 'en-gb',
-    locales: ['en-gb', 'sr', 'cs'],
-    plugins: [
-      'duration',
-      'customParseFormat',
-      'isBetween',
-      'isSameOrAfter',
-      'isSameOrBefore',
-      'isoWeek',
-      'dayOfYear',
-      'utc',
-      'timezone',
-      'quarterOfYear',
-    ],
+  typescript: {
+    includeWorkspace: true,
+
+    tsConfig: {
+      compilerOptions: {
+        paths: {
+          $utils: [join(process.cwd(), 'generated', 'utils.ts')],
+          $dataType: [join(process.cwd(), 'generated', 'data-type.type.ts')],
+          $utilsConfig: [join(process.cwd(), 'generated', 'utilsConfig.ts')],
+          $comparatorEnum: [join(process.cwd(), 'generated', 'comparator-enum.ts')],
+        },
+      },
+    },
   },
 
   i18n: {

@@ -1,8 +1,9 @@
+// TODO: Fix worker version
+// TODO: Initial collapse does not work for nested groups
+
 // Models
 import type { GroupItem } from '../models/group-item.model'
 
-// TODO: Initial collapse does not work in worker
-// TODO: Initial collapse does not work for nested groups
 export function useGrouping() {
   const groupData = <T>(
     rows: T[],
@@ -16,10 +17,6 @@ export function useGrouping() {
     const { collapsed = {}, useWorker, isInitialized } = options ?? {}
 
     return handleGroupData(rows, groups, collapsed, isInitialized)
-
-    // return useWorker
-    //   ? handleGroupDataInWorker<any>(rowsRef, groupsRef, collapsed)
-    //   : handleGroupData(rowsRef, groupsRef, collapsed, isInitialized)
   }
 
   const handleGroupData = <T>(
@@ -106,7 +103,6 @@ export function useGrouping() {
     return arr
   }
 
-  // TODO: Fix worker
   // const handleGroupDataInWorker = async <T>(
   //   rowsRef: MaybeRefOrGetter<Array<T>>,
   //   groupsRef: MaybeRefOrGetter<Array<GroupItem<T>>>,

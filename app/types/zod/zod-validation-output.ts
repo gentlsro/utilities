@@ -12,12 +12,12 @@ export type IZodValidationOutput<T extends ZodSchemaObject> = ComputedRef<
     $allErrorsByPath: Record<string, IZodValidationItem[]>
     $validate: (
       validateNested?: boolean,
-      resumeWatch?: boolean
+      resumeWatch?: boolean,
     ) => Promise<boolean>
     $createEmptyErrorStructure: () => IZodShape<T>
     $reset: (shouldPause?: boolean) => void
     $getValidationForField: (
-      field: string
+      field: string,
     ) => IZodValidationItem | Array<IZodValidationItem | undefined> | undefined
     $isFieldRequired: (field: string) => boolean
   }

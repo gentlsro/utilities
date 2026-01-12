@@ -1,19 +1,13 @@
 import utilsConfig from '$utilsConfig'
-
-// Types
+import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
 // Models
-import { ComparatorEnum } from '$comparatorEnum'
-import type { FilterItem } from '../models/filter-item'
+import type { FilterItem } from '../models/filter-item.model'
 
 // Functions
 import { useText } from './useText'
-import { parseValue } from '../functions/parse-value'
 import { transliterate } from '../functions/transliterate'
-
-// Constants
-import { DATE_TYPES } from '../types/datetime.type'
 
 type IFilter<T> = Pick<
   FilterItem<T>,

@@ -1,5 +1,4 @@
 import type { Required } from 'utility-types'
-import type { ObjectKey } from '../types/object-key.type'
 
 export class GroupItem<T = any> {
   name: string | ObjectKey<T>
@@ -13,7 +12,7 @@ export class GroupItem<T = any> {
   style?: Record<string, string> | string
   class?: (
     row?: T,
-    val?: string | number
+    val?: string | number,
   ) => Record<string, boolean> | string | string[]
 
   constructor(obj: Required<Partial<GroupItem<T>>, 'field'>) {

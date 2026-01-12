@@ -1,8 +1,10 @@
 import { SummaryEnum } from '../../shared/enums/summary.enum'
 
+// Types
+import type { INumberOptions } from '../../shared/composables/useNumber'
+
 // Functions
-import { useLocale } from './useLocale'
-import { useNumber as useNumberShared, type INumberOptions } from '../../shared/composables/useNumber'
+import { useNumber as useNumberShared } from '../../shared/composables/useNumber'
 
 function getSeparators(localeRef?: MaybeRefOrGetter<string>) {
   const locale = toValue(localeRef)
@@ -27,7 +29,6 @@ export function useNumber(options?: { localeIso?: string }) {
 
     ...other
   } = useNumberShared({ localeIso: currentLocale.value.code })
-
 
   const separators = computed(() => getSeparators(localeIso ?? currentLocale.value.code))
 

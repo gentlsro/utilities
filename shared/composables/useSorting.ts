@@ -1,5 +1,4 @@
-// Types
-import type { IOrderBy } from '../types/order-by.type'
+// TODO: Fix worker version
 
 // Models
 import type { GroupItem } from '../models/group-item.model'
@@ -57,7 +56,6 @@ export function useSorting() {
         return agg
       }, {}),
     }))
-
 
     // if (useWorker) {
     //   workerTerminate()
@@ -129,7 +127,6 @@ export function useSorting() {
     return values.map(({ idx }) => rows[idx]) as T[]
   }
 
-  // TODO: Implement worker on server
   // const { workerFn, workerTerminate } = useWebWorkerFn(
   //   (
   //     rows: any,

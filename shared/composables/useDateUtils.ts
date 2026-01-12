@@ -1,4 +1,3 @@
-import { removeDatetimeSpaces } from '$utils'
 import type { ManipulateType, OpUnitType } from 'dayjs'
 
 // Types
@@ -7,6 +6,9 @@ import type { Period } from '../types/period.type'
 // Models
 import { Day } from '../models/day.model'
 import { DayEnum } from '../enums/day.enum'
+
+// Functions
+import { removeDatetimeSpaces } from '../functions/remove-datetime-spaces'
 
 // Constants
 import { datetimeFormats } from '../i18n'

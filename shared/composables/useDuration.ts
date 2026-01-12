@@ -1,6 +1,6 @@
 // Functions
-import type { INumberOptions } from './useNumber'
 import { useNumber } from './useNumber'
+import type { INumberOptions } from './useNumber'
 
 export type DurationUnit
   = | 'millisecond'

@@ -57,7 +57,7 @@ export function useOverflow() {
   const onOverflow = (
     elRef: MaybeElementRef,
     handler: (
-      isOverflown: boolean | { xDiff?: number, yDiff?: number }
+      isOverflown: boolean | { xDiff?: number, yDiff?: number },
     ) => void,
     options?: IOverflowOptions,
   ) => {

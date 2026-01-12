@@ -1,3 +1,1 @@
-const pattern = / {2,}/g
-
-export const consecutiveSpacesRegex = new RegExp(pattern)
+export const consecutiveSpacesRegex = / {2,}/g

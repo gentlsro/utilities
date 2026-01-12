@@ -4,10 +4,9 @@ import type { ManipulateType, OpUnitType } from 'dayjs'
 import { DayEnum } from '../../shared/enums/day.enum'
 
 // Functions
-import { useLocale } from './useLocale'
 import {
+  getDateSimpleValue as getDateSimpleValueShared,
   useDateUtils as useDateUtilsShared,
-  getDateSimpleValue as getDateSimpleValueShared
 } from '../../shared/composables/useDateUtils'
 
 export type IExtendedPeriodOptions = {
@@ -37,7 +36,7 @@ export function useDateUtils() {
     getExtendedPeriod: getExtendedPeriodShared,
     isValidRange: isValidRangeShared,
     getDaysInPeriod: getDaysInPeriodShared,
-    
+
     ...other
   } = useDateUtilsShared(currentLocale.value.code)
 
@@ -74,7 +73,7 @@ export function useDateUtils() {
 
     return parseDateShared(
       date,
-      { ...options, format: (usedLocale as any)?.dateFormat }
+      { ...options, format: (usedLocale as any)?.dateFormat },
     )
   }
 
@@ -83,7 +82,7 @@ export function useDateUtils() {
       dateRef = undefined,
       periodRef = undefined,
       firstDayOfWeek = DayEnum.MONDAY,
-      unit = 'isoWeek'
+      unit = 'isoWeek',
     } = payload ?? {}
 
     const date = toValue(dateRef)
@@ -109,7 +108,7 @@ export function useDateUtils() {
       period,
       firstDayOfWeek,
       minCountOfWeeks,
-      unit
+      unit,
     })
   }
 

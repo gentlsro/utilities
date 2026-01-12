@@ -1,15 +1,10 @@
-// Types
-import type { IFile } from '../../shared/types/file.type'
-
 // Models
-import { FileModel } from '../../shared/models/file.model'
+import { FileModel } from '../models/file.model'
 
 // Provide/Inject
 export const filesKey = Symbol('__files')
 
 export function useFiles(name?: string) {
-  const { handleRequest } = useRequest()
-
   const componentName = name ?? (getComponentName(getCurrentInstance()) || generateUUID())
   const localFiles = ref<Array<FileModel | IFile>>([])
   const injectedFiles = inject(
@@ -36,7 +31,7 @@ export function useFiles(name?: string) {
   function clearFiles() {
     localFiles.value.forEach(file => {
       if (file instanceof FileModel && file.isUploaded) {
-        file.delete(handleRequest)
+        file.delete()
       }
     })
   }

@@ -1,6 +1,8 @@
+// Types
+import type { IDurationOptions } from '../../shared/composables/useDuration'
+
 // Functions
-import { useLocale } from './useLocale'
-import { useDuration as useDurationShared, type IDurationOptions } from '../../shared/composables/useDuration'
+import { useDuration as useDurationShared } from '../../shared/composables/useDuration'
 
 export function useDuration() {
   const { currentLocale } = useLocale()

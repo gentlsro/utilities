@@ -7,7 +7,7 @@ export function traverseChildren<T extends IItem>(
   callback: (
     parentNode: IItem<T> | null,
     currentNode: IItem<T>,
-    idx: number
+    idx: number,
   ) => void,
   options: { childrenField?: string, childIdx?: number } = {},
   parentNode?: IItem<T>,

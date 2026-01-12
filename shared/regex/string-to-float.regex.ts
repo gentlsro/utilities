@@ -1,5 +1,5 @@
 export function stringToFloat(str: string) {
-  const stringToFloatRegex = /[-+]?\d+(?:.\d+)?/
+  const stringToFloatRegex = /[-+]?(\d+\.?\d*|\.\d+)/
 
   return stringToFloatRegex.exec(str)?.[0]
 }

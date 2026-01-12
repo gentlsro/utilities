@@ -13,7 +13,17 @@ function extractComparatorEnum(text: string): string | null {
 }
 
 function extractTypeContent(content: string, typeName: string) {
-  const typeRegex = new RegExp(`type\\s+${typeName}\\s*=([\\s\\S]*?)(\\n(?=\\w)|$)`, 'g')
+  // Match type definition that can span multiple lines, including cases where
+  // the type name and = are on different lines (e.g., "type DataType\n  = | 'string'")
+  // Stop when we encounter another type definition or end of file
+  // Pattern breakdown:
+  // - type\s+DataType - matches "type DataType"
+  // - (?:...|...) - matches either:
+  //   - \s*=\s* - equals on same line
+  //   - \s*\n[^=]*=\s* - equals on later line (with optional comments/content before =)
+  // - ([\\s\\S]*?) - captures the type content (non-greedy)
+  // - (?=\n\s*type\s+\w|$) - stops at next type definition or end of file
+  const typeRegex = new RegExp(`type\\s+${typeName}(?:\\s*=\\s*|\\s*\\n[^=]*=\\s*)([\\s\\S]*?)(?=\\n\\s*type\\s+\\w|$)`, 'g')
   const match = typeRegex.exec(content)
 
   if (match?.[1]) {
@@ -47,10 +57,9 @@ export default defineNuxtModule({
       .filter(({ path }) => existsSync(`${path}.ts`))
 
     // Merge the utility configs
-    const codeUtilityConfigs = `import { customDefu } from '#layers/utilities/shared/functions/custom-defu'
-${configPaths.map(({ path }, idx) => {
-  return `import config${idx} from '${path}'`
-}).join('\n')}
+    const codeUtilityConfigs = `${configPaths.map(({ path }, idx) => {
+      return `import config${idx} from '${path}'`
+    }).join('\n')}
 
 export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
 
@@ -114,11 +123,11 @@ export type ExtendedDataType = DataType | SimpleDataType`
 
     const base = configPaths.find(({ isBase }) => isBase)
 
-    // Expose index
+    // Exposed utilities
     addTemplate({
       filename: `${nuxt.options.rootDir}/generated/utils.ts`,
       write: true,
-      getContents: () => `export * from '${base?.cwd}/index'
+      getContents: () => `export * from '${base?.cwd}/exposed'
 `,
     })
 
