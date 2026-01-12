@@ -23,6 +23,8 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(quarterOfYear)
 
+export { dayjs }
+
 export function $date(
   date?: Datetime,
   format?: dayjs.OptionType,
