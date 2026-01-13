@@ -18,7 +18,7 @@ export default defineNuxtConfig({
 
   imports: {
     imports: [
-      { name: 'z', from: 'zod/v4' },
+      { name: 'z', from: 'zod' },
       { name: 'ClassType', from: resolve('./app/types/class-type.type.ts'), type: true },
     ],
   },
@@ -36,10 +36,14 @@ export default defineNuxtConfig({
     $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
   },
 
+  future: {
+    compatibilityVersion: 4,
+  },
+
   nitro: {
     imports: {
       imports: [
-        { name: 'z', from: 'zod/v4' },
+        { name: 'z', from: 'zod' },
 
         // Lodash
         { name: 'get', from: 'lodash-es' },
@@ -93,9 +97,5 @@ export default defineNuxtConfig({
         icon: 'i-emojione:flag-for-czechia',
       },
     ],
-  },
-
-  future: {
-    compatibilityVersion: 4,
   },
 })

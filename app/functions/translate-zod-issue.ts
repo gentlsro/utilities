@@ -1,6 +1,6 @@
-import type { $ZodErrorMap, $ZodIssue } from 'zod/v4/core'
+import type { z } from 'zod'
 
-export const translateZodIssue: $ZodErrorMap<$ZodIssue> = issue => {
+export const translateZodIssue: z.core.$ZodErrorMap<z.core.$ZodIssue> = issue => {
   const { $i18n } = tryUseNuxtApp() ?? {}
   const $t = $i18n?.t ?? ((...args: any[]) => args[0])
 
