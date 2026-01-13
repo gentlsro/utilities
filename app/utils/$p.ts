@@ -7,5 +7,5 @@ import type { RouteLocationRaw } from 'vue-router'
 export function $p(route: RouteLocationRaw, locale?: Locale | undefined) {
   const localePath = useLocalePath()
 
-  return localePath(route, locale || undefined)
+  return localePath(route as any, locale || undefined)
 }
