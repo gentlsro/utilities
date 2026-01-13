@@ -43,7 +43,7 @@ export class FileModel {
     return this.uploadedFile?.filepath
   }
 
-  async upload(payload: {
+  async upload(payload?: {
     additionalData?: IItem
     requestHandler?: any
     onComplete?: (res: any) => void
