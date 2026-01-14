@@ -36,10 +36,6 @@ export default defineNuxtConfig({
     $dataType: join(process.cwd(), 'generated', 'data-type.type.ts'),
   },
 
-  future: {
-    compatibilityVersion: 4,
-  },
-
   nitro: {
     imports: {
       imports: [
