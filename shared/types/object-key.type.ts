@@ -38,6 +38,10 @@ export type ObjectKey<T> = PathKeys<T>
 export type ValidationNodeBase<TError = unknown> = {
   readonly $path: string
   readonly $errors: TError[]
+  /** First translated error message (or empty string if valid) */
+  readonly $message: string
+  /** All translated error messages */
+  readonly $messages: string[]
   readonly $invalid: boolean
   readonly $required: boolean
   $validate: (payload?: { shouldResume?: boolean }) => void

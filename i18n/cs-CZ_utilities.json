@@ -223,6 +223,35 @@
       "set": "set"
     }
   },
+  "ark": {
+    "errors": {
+      "required": "Povinné",
+      "invalid": "Neplatný vstup",
+      "type": "Musí být {expected}",
+      "constraint": "Musí splňovat: {constraint}",
+      "minLength": "Musí obsahovat alespoň {min} znaků",
+      "maxLength": "Musí obsahovat nejvýše {max} znaků",
+      "min": "Musí být alespoň {min}",
+      "max": "Musí být nejvýše {max}",
+      "email": "Neplatná e-mailová adresa",
+      "url": "Neplatná URL",
+      "uuid": "Neplatný UUID",
+      "date": "Neplatné datum",
+      "pattern": "Musí odpovídat vzoru: {pattern}",
+      "union": "Neplatný vstup",
+      "integer": "Musí být celé číslo",
+      "positive": "Musí být kladné",
+      "negative": "Musí být záporné",
+      "divisibleBy": "Musí být dělitelné {divisor}",
+      "unrecognizedKey": "Nerozpoznaný klíč: {key}",
+      "passwordMatch": "Hesla se neshodují",
+      "array": {
+        "atLeastLength": "Musí obsahovat alespoň {min} prvek/prvků",
+        "atMostLength": "Musí obsahovat nejvýše {max} prvek/prvků",
+        "exactlyLength": "Musí obsahovat přesně {length} prvek/prvků"
+      }
+    }
+  },
   "mimetype": {
     "text/plain": "Textový soubor",
     "text/html": "HTML soubor",

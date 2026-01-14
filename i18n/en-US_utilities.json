@@ -223,6 +223,35 @@
       "set": "set"
     }
   },
+  "ark": {
+    "errors": {
+      "required": "Required",
+      "invalid": "Invalid input",
+      "type": "Must be {expected}",
+      "constraint": "Must satisfy: {constraint}",
+      "minLength": "Must be at least {min} characters",
+      "maxLength": "Must be at most {max} characters",
+      "min": "Must be at least {min}",
+      "max": "Must be at most {max}",
+      "email": "Invalid email address",
+      "url": "Invalid URL",
+      "uuid": "Invalid UUID",
+      "date": "Invalid date",
+      "pattern": "Must match pattern: {pattern}",
+      "union": "Invalid input",
+      "integer": "Must be an integer",
+      "positive": "Must be positive",
+      "negative": "Must be negative",
+      "divisibleBy": "Must be divisible by {divisor}",
+      "unrecognizedKey": "Unrecognized key: {key}",
+      "passwordMatch": "Passwords do not match",
+      "array": {
+        "atLeastLength": "Must contain at least {min} item(s)",
+        "atMostLength": "Must contain at most {max} item(s)",
+        "exactlyLength": "Must contain exactly {length} item(s)"
+      }
+    }
+  },
   "mimetype": {
     "text/plain": "Text file",
     "text/html": "HTML file",
