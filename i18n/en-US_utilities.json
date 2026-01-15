@@ -250,6 +250,16 @@
         "atMostLength": "Must contain at most {max} item(s)",
         "exactlyLength": "Must contain exactly {length} item(s)"
       }
+    },
+    "types": {
+      "number": "a number",
+      "string": "a string",
+      "boolean": "a boolean",
+      "object": "an object",
+      "array": "an array",
+      "null": "null",
+      "undefined": "undefined",
+      "integer": "an integer"
     }
   },
   "mimetype": {

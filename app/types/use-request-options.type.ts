@@ -1,4 +1,5 @@
 // Types
+import type { ArkError } from 'arktype'
 import type { IZodValidationOutput } from './zod'
 
 export type UseRequestOptions<T = any> = {
@@ -21,9 +22,9 @@ export type UseRequestOptions<T = any> = {
   modifyFnc?: (obj: any) => any
 
   /**
-   * Zod validation output (the result from `useZod`)
+   * Ark validation output (the result from `useArk`)
    */
-  $z?: IZodValidationOutput<any>
+  validation?: IValidation
 
   /**
    * We can merge the response with the original object

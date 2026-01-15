@@ -84,7 +84,7 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
     const {
       requestId,
       merge,
-      $z,
+      validation,
       onComplete,
     } = options ?? {}
 
@@ -102,10 +102,12 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
         : isNull(options?.payloadKey) ? undefined : utilsConfig.request?.payloadKey
 
       // Validate
-      if ($z) {
-        const isValid = await $z.value.$validate()
+      if (validation) {
+        const { isValid, errors } = validation.validate()
 
         if (!isValid) {
+          console.log('💀', errors)
+
           throw new Error($t('general.invalidForm'))
         }
       }
@@ -121,7 +123,7 @@ export function useRequest(options?: { loadingInitialState?: boolean }) {
         mergeResponseWithOriginalObject({ merge, result })
       }
 
-      $z?.value.$reset()
+      validation?.reset()
 
       return result as T
     } catch (_error: any) {

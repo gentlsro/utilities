@@ -250,6 +250,16 @@
         "atMostLength": "Musí obsahovat nejvýše {max} prvek/prvků",
         "exactlyLength": "Musí obsahovat přesně {length} prvek/prvků"
       }
+    },
+    "types": {
+      "number": "číslo",
+      "string": "text",
+      "boolean": "boolean",
+      "object": "objekt",
+      "array": "pole",
+      "null": "null",
+      "undefined": "undefined",
+      "integer": "celé číslo"
     }
   },
   "mimetype": {
