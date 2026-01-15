@@ -15,15 +15,15 @@ function extractComparatorEnum(text: string): string | null {
 function extractTypeContent(content: string, typeName: string) {
   // Match type definition that can span multiple lines, including cases where
   // the type name and = are on different lines (e.g., "type DataType\n  = | 'string'")
-  // Stop when we encounter another type definition or end of file
+  // Stop when we encounter another type/enum/interface/const/function/class definition or end of file
   // Pattern breakdown:
   // - type\s+DataType - matches "type DataType"
   // - (?:...|...) - matches either:
   //   - \s*=\s* - equals on same line
   //   - \s*\n[^=]*=\s* - equals on later line (with optional comments/content before =)
   // - ([\\s\\S]*?) - captures the type content (non-greedy)
-  // - (?=\n\s*type\s+\w|$) - stops at next type definition or end of file
-  const typeRegex = new RegExp(`type\\s+${typeName}(?:\\s*=\\s*|\\s*\\n[^=]*=\\s*)([\\s\\S]*?)(?=\\n\\s*type\\s+\\w|$)`, 'g')
+  // - (?=\n\s*(?:type|enum|interface|const|function|class|export)\s+\w|$) - stops at next declaration or end of file
+  const typeRegex = new RegExp(`type\\s+${typeName}(?:\\s*=\\s*|\\s*\\n[^=]*=\\s*)([\\s\\S]*?)(?=\\n\\s*(?:type|enum|interface|const|function|class|export)\\s+\\w|$)`, 'g')
   const match = typeRegex.exec(content)
 
   if (match?.[1]) {
