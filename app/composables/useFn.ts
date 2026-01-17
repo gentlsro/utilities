@@ -152,9 +152,9 @@ export function useFn(options?: IUseFnOptions) {
       isLoading.value = false
 
       if (error && onError) {
-        await onError({ error: error.value, response })
+        await onError({ error: error.value, response, fnPayload: options ?? {} })
       } else if (onComplete) {
-        onComplete({ response, result })
+        onComplete({ response, result, fnPayload: options ?? {} })
       }
 
       if (fnId) {

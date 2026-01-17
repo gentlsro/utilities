@@ -2,6 +2,7 @@ import type { Locale } from '#i18n'
 
 // Types
 import type { ExtendedDataType } from '$dataType'
+import type { UseFnPayload } from './app/types/use-fn-payload.type'
 
 // Models
 import type { FileModel } from './app/models/file.model'
@@ -178,8 +179,8 @@ export type IUtilitiesConfig = {
   // Fn handling
   fn: {
     modifyResultFn?: (obj: any) => any
-    onComplete?: (payload: { response: any, result: any }) => void
-    onError?: (payload: { error: any, response: any }) => Promise<any> | any
+    onComplete?: (payload: { response: any, result: any, fnPayload: Omit<UseFnPayload<any>, 'onComplete' | 'onError'> }) => void
+    onError?: (payload: { error: any, response: any, fnPayload: Omit<UseFnPayload<any>, 'onComplete' | 'onError'> }) => Promise<any> | any
   }
 }
 

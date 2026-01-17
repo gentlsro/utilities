@@ -1,3 +1,5 @@
+import type { MaybeRefOrGetter } from '@vueuse/core'
+
 export type UseFnPayload<T = any> = {
   /**
    * The fn ID
@@ -44,10 +46,10 @@ export type UseFnPayload<T = any> = {
   /**
    * When valid fn is done, we call this function
    */
-  onComplete?: (payload: { response: any, result: T }) => void
+  onComplete?: (payload: { response: any, result: T, fnPayload: Omit<UseFnPayload<T>, 'onComplete' | 'onError'> }) => void
 
   /**
    * The function to handle the error
    */
-  onError?: (payload: { error: any, response: any }) => Promise<any> | any
+  onError?: (payload: { error: any, response: any, fnPayload: Omit<UseFnPayload<T>, 'onComplete' | 'onError'> }) => Promise<any> | any
 }
