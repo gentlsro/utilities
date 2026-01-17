@@ -15,6 +15,11 @@ export type AsyncFunction<T> = (
   source?: ISource,
 ) => Promise<T>
 
+export type IUseFnOptions = {
+  loadingInitialState?: boolean
+  source?: ISource
+}
+
 const memoizedFns = new Map<string, Promise<any>>()
 
 function mergeResponseWithOriginalObject<T>(payload: {
@@ -77,10 +82,7 @@ async function executeFn<T>(payload: {
   return newFn
 }
 
-export function useFn(options?: {
-  loadingInitialState?: boolean
-  source?: ISource
-}) {
+export function useFn(options?: IUseFnOptions) {
   const { loadingInitialState } = options ?? {}
 
   // State
