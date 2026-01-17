@@ -4,17 +4,32 @@ import type { NonUndefined } from 'utility-types'
 // Types
 import type { UseFnPayload } from '../types/use-fn-payload.type'
 
+type ISource = {
+  type: 'component' | 'composable' | 'store'
+  name: string
+  id?: string
+}
+
+export type AsyncFunction<T> = (
+  abortController: () => AbortController,
+  source?: ISource,
+) => Promise<T>
+
 const memoizedFns = new Map<string, Promise<any>>()
 
 function mergeResponseWithOriginalObject<T>(payload: {
   merge: NonUndefined<UseFnPayload<T>['merge']>
+  response: any
   result: T
 }) {
-  const { merge, result } = payload
+  const { merge, response, result } = payload
 
   const newData = merge?.payloadKey ? get(result, merge.payloadKey) : result
-  const modifyFnc = merge?.modifyResultFn ?? utilsConfig.fn?.modifyResultFn ?? ((obj: any) => obj)
-  const newDataModified = modifyFnc(newData)
+  let newDataModified = result
+
+  if (merge?.modifyResultFn) {
+    newDataModified = merge?.modifyResultFn(response)
+  }
 
   if (newData) {
     // When `merge.override` is true, we sync the original object with the new data
@@ -39,13 +54,14 @@ function mergeResponseWithOriginalObject<T>(payload: {
 async function executeFn<T>(payload: {
   fnc: AsyncFunction<T>
   fnId?: string
-  createAbortController?: () => AbortController
+  source?: ISource
+  createAbortController: () => AbortController
 }): Promise<T> {
-  const { fnc, fnId, createAbortController } = payload
+  const { fnc, fnId, createAbortController, source } = payload
 
   // If no fnId is provided, execute directly without memoization
   if (!fnId) {
-    return fnc(createAbortController!)
+    return fnc(createAbortController, source)
   }
 
   // Check if we already have a memoized fn
@@ -55,19 +71,23 @@ async function executeFn<T>(payload: {
   }
 
   // Create and store new memoized fn
-  const newFn = fnc(createAbortController!)
+  const newFn = fnc(createAbortController, source)
   memoizedFns.set(fnId, newFn)
 
   return newFn
 }
 
-export function useFn(options?: { loadingInitialState?: boolean }) {
+export function useFn(options?: {
+  loadingInitialState?: boolean
+  source?: ISource
+}) {
   const { loadingInitialState } = options ?? {}
 
   // State
   const error = ref<any>()
   const isLoading = ref(loadingInitialState ?? false)
   const abortController = ref<AbortController>()
+  const source = options?.source
 
   function createAbortController() {
     abortController.value = new AbortController()
@@ -83,7 +103,9 @@ export function useFn(options?: { loadingInitialState?: boolean }) {
       fnId,
       merge,
       validation,
-      onComplete,
+      modifyResultFn = utilsConfig.fn.modifyResultFn ?? ((response: any) => response),
+      onComplete = utilsConfig.fn.onComplete,
+      onError = utilsConfig.fn.onError,
     } = options ?? {}
 
     let response: any
@@ -95,10 +117,6 @@ export function useFn(options?: { loadingInitialState?: boolean }) {
       response = undefined
       result = undefined
 
-      const payloadKey = options?.payloadKey
-        ? options.payloadKey
-        : isNull(options?.payloadKey) ? undefined : utilsConfig.fn?.payloadKey
-
       // Validate
       if (validation) {
         const { isValid, errors } = validation.validate()
@@ -106,19 +124,19 @@ export function useFn(options?: { loadingInitialState?: boolean }) {
         if (!isValid) {
           console.log('💀', errors)
 
-          throw new Error($t('general.invalidForm'))
+          throw new Error($t('general.errorOccured'))
         }
       }
 
       isLoading.value = true
 
       // Handle memoized fns
-      response = await executeFn({ fnc, fnId, createAbortController })
-      result = payloadKey ? get(response, payloadKey) : response
+      response = await executeFn({ fnc, fnId, createAbortController, source })
+      result = modifyResultFn(response)
 
       // When `merge` is used, we merge the response with the original object
       if (merge) {
-        mergeResponseWithOriginalObject({ merge, result })
+        mergeResponseWithOriginalObject({ merge, response, result })
       }
 
       validation?.reset()
@@ -131,8 +149,8 @@ export function useFn(options?: { loadingInitialState?: boolean }) {
     } finally {
       isLoading.value = false
 
-      if (error && options?.onError) {
-        await options.onError({ error: error.value, response })
+      if (error && onError) {
+        await onError({ error: error.value, response })
       } else if (onComplete) {
         onComplete({ response, result })
       }

@@ -177,7 +177,6 @@ export type IUtilitiesConfig = {
 
   // Fn handling
   fn: {
-    payloadKey?: string
     modifyResultFn?: (obj: any) => any
     onComplete?: (payload: { response: any, result: any }) => void
     onError?: (payload: { error: any, response: any }) => Promise<any> | any
@@ -226,7 +225,6 @@ export const defaultUtilitiesConfig = {
 
   // Fn handling
   fn: {
-    payloadKey: undefined,
     modifyResultFn: undefined,
     onComplete: undefined,
     onError: undefined,

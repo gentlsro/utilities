@@ -1,7 +1,4 @@
 // Types
-import type { ArkError } from 'arktype'
-import type { IZodValidationOutput } from './zod'
-
 export type UseRequestOptions<T = any> = {
   /**
    * The request ID

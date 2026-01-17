@@ -5,14 +5,6 @@ export type UseFnPayload<T = any> = {
   fnId?: string
 
   /**
-   * The key for the payload object
-   *
-   * Falls back to the `utilsConfig.fn.payloadKey` if not provided
-   * Provide `null` to ignore the payload key
-   */
-  payloadKey?: string | null
-
-  /**
    * The function to modify the response object
    */
   modifyResultFn?: (obj: any) => any
