@@ -6,8 +6,6 @@ import type { UseFnPayload } from '../types/use-fn-payload.type'
 
 const memoizedFns = new Map<string, Promise<any>>()
 
-export type AsyncFunction<T> = (abortController: () => AbortController) => Promise<T>
-
 function mergeResponseWithOriginalObject<T>(payload: {
   merge: NonUndefined<UseFnPayload<T>['merge']>
   result: T
