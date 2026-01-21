@@ -1,6 +1,3 @@
-// Regex
-import { stringToFloat } from '../regex/string-to-float.regex'
-
 /**
  * Escapes special regex characters in a string
  */
