@@ -66,6 +66,7 @@ export default defineNuxtConfig({
         resolve('./shared/regex'),
         resolve('./shared/constants'),
         resolve('./shared/functions'),
+        resolve('./shared/composables'),
       ],
     },
   },
