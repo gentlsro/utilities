@@ -41,7 +41,7 @@ function extractTypeContent(content: string, typeName: string) {
 
 export default defineNuxtModule({
   setup: async (_, nuxt) => {
-    console.log('✔ Creating utilities virtual file...')
+    console.log('✔ Process Utilities...')
     const componentPaths: string[] = []
 
     const configPaths = nuxt.options._layers
