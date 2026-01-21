@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { isUrl } from '../../../shared/regex/url.regex'
 
 describe('isUrl', () => {
-  describe('URLs with protocol', () => {
+  describe('uRLs with protocol', () => {
     it('should return true for http URL', () => {
       expect(isUrl('http://example.com')).toBe(true)
     })
@@ -40,7 +39,7 @@ describe('isUrl', () => {
     })
   })
 
-  describe('URLs without protocol', () => {
+  describe('uRLs without protocol', () => {
     it('should return true for www URL', () => {
       expect(isUrl('www.example.com')).toBe(true)
     })
