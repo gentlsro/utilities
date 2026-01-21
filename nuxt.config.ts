@@ -26,6 +26,10 @@ export default defineNuxtConfig({
       resolve('./app/models'),
       resolve('./shared/models'),
       resolve('./shared/enums'),
+      resolve('./shared/regex'),
+      resolve('./shared/constants'),
+      resolve('./shared/functions'),
+      resolve('./shared/composables'),
     ],
   },
 
@@ -56,6 +60,14 @@ export default defineNuxtConfig({
         { name: 'isEmpty', from: 'lodash-es' },
         { name: 'isEqual', from: 'lodash-es' },
 
+      ],
+      dirs: [
+        resolve('./shared/models'),
+        resolve('./shared/enums'),
+        resolve('./shared/regex'),
+        resolve('./shared/constants'),
+        resolve('./shared/functions'),
+        resolve('./shared/composables'),
       ],
     },
   },

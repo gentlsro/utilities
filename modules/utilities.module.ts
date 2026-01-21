@@ -121,16 +121,6 @@ export type ExtendedDataType = DataType | SimpleDataType`
       getContents: () => dataTypes,
     })
 
-    const base = configPaths.find(({ isBase }) => isBase)
-
-    // Exposed utilities
-    addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/utils.ts`,
-      write: true,
-      getContents: () => `export * from '${base?.cwd}/exposed'
-`,
-    })
-
     // Map components by name
     addTemplate({
       filename: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
@@ -201,11 +191,9 @@ export const componentsImportByName: Record<string, AsyncComponentLoader<Compone
 
         config.resolve.alias = {
           ...config.resolve.alias,
-          $utils: `${nuxt.options.rootDir}/generated/utils.ts`,
           $utilsConfig: `${nuxt.options.rootDir}/generated/utilsConfig.ts`,
           $comparatorEnum: `${nuxt.options.rootDir}/generated/comparator-enum.ts`,
           $dataType: `${nuxt.options.rootDir}/generated/data-type.type.ts`,
-          $components: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
         }
       }
     })
