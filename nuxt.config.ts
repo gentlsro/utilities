@@ -21,6 +21,12 @@ export default defineNuxtConfig({
       { name: 'z', from: 'zod' },
       { name: 'ClassType', from: resolve('./app/types/class-type.type.ts'), type: true },
     ],
+
+    dirs: [
+      resolve('./app/models'),
+      resolve('./shared/models'),
+      resolve('./shared/enums'),
+    ],
   },
 
   runtimeConfig: {
