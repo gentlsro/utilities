@@ -6,6 +6,7 @@
     "prepare": "nuxt prepare"
   },
   "dependencies": {
+    "arktype": "2.1.29",
     "axios": "1.13.2",
     "change-case": "5.4.4",
     "dayjs": "1.11.19",
