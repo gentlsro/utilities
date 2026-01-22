@@ -58,7 +58,6 @@ export default defineNuxtConfig({
         { name: 'omit', from: 'lodash-es' },
         { name: 'isEmpty', from: 'lodash-es' },
         { name: 'isEqual', from: 'lodash-es' },
-
       ],
       dirs: [
         resolve('./shared/models'),
@@ -77,7 +76,6 @@ export default defineNuxtConfig({
     tsConfig: {
       compilerOptions: {
         paths: {
-          $utils: [join(process.cwd(), 'generated', 'utils.ts')],
           $dataType: [join(process.cwd(), 'generated', 'data-type.type.ts')],
           $utilsConfig: [join(process.cwd(), 'generated', 'utilsConfig.ts')],
           $comparatorEnum: [join(process.cwd(), 'generated', 'comparator-enum.ts')],
