@@ -101,6 +101,8 @@ export function useFn(options?: IUseFnOptions) {
     fnc: AsyncFunction<T>,
     options?: UseFnPayload<T>,
   ): Promise<T> {
+    console.log('👀 From utilities')
+
     const {
       fnId,
       merge,
