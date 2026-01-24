@@ -7,7 +7,6 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/i18n',
-    '@nuxt/test-utils/module',
     '@nuxt/scripts',
     '@nuxt/eslint',
   ],
