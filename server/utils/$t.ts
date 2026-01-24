@@ -7,5 +7,7 @@ export function $t(key: string, pluralOrNamed?: NamedValue, options?: TranslateO
 export function $t(key: string, pluralOrNamed?: string | number, options?: TranslateOptions): string
 export function $t(key: string, pluralOrNamed?: string | number | NamedValue, options?: TranslateOptions): string {
   // NOTE: This is a dummy function that just returns the key for server usage
-  return `$t(${key}, ${pluralOrNamed}, ${options})`
+  // return `$t(${key}, ${pluralOrNamed}, ${options})`
+
+  return key
 }
