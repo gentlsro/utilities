@@ -38,6 +38,13 @@ export type UseFnPayload<T = any> = {
     override?: boolean
 
     /**
+     * When true, once the merge is done, we sync the data from the parent object
+     *
+     * NOTE: This requires the `originalObj` to be a result from the `useRefReset` composable
+     */
+    syncOnMerge?: boolean
+
+    /**
      * The function to modify the response object
      */
     modifyResultFn?: (obj: any) => any

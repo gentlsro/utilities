@@ -152,6 +152,7 @@ export type IUtilitiesConfig = {
       file: FileModel
       requestHandler?: any
       additionalData?: IItem
+      headers?: IItem
       onError?: (error: any) => void
       onComplete?: (res: any) => void
     }) => Promise<any> | any

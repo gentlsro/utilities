@@ -5,8 +5,10 @@ import type { FileModel } from '../models/file.model'
 
 export function uploadFile(payload: {
   file: FileModel
+  additionalData?: IItem
+  headers?: IItem
 }) {
-  const { file } = payload
+  const { file, headers } = payload
 
   const rC = useRuntimeConfig()
   const filesHost = rC.public.filesHost
@@ -18,6 +20,7 @@ export function uploadFile(payload: {
   formData.append('files', payload.file.file)
 
   return axios.post(filesHost, formData, {
+    headers,
     onUploadProgress: progressEvent => {
       const { loaded, total } = progressEvent
 

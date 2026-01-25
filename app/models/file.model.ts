@@ -46,15 +46,17 @@ export class FileModel {
   async upload(payload?: {
     additionalData?: IItem
     requestHandler?: any
+    headers?: IItem
     onComplete?: (res: any) => void
     onError?: (error: any) => void
   }) {
-    const { additionalData, requestHandler, onComplete, onError } = payload ?? {}
+    const { additionalData, requestHandler, headers, onComplete, onError } = payload ?? {}
 
     return utilsConfig.files.uploadHandler({
       file: this,
       additionalData,
       requestHandler,
+      headers,
       onComplete,
       onError,
     })

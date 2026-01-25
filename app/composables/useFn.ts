@@ -50,6 +50,13 @@ function mergeResponseWithOriginalObject<T>(payload: {
 
       merge.originalObj.syncToParent?.(resultObj)
     }
+
+    // When `syncOnMerge` is true, we sync the data from the parent object
+    if (merge?.syncOnMerge) {
+      nextTick(() => {
+        merge.originalObj.syncFromParent?.()
+      })
+    }
   }
 }
 
