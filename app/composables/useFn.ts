@@ -40,21 +40,21 @@ function mergeResponseWithOriginalObject<T>(payload: {
     // When `merge.override` is true, we sync the original object with the new data
     // essentially replacing the original object
     if (merge?.override) {
-      merge.originalObj.syncToParent?.(newDataModified)
+      merge.originalObj?.syncToParent?.(newDataModified)
     }
 
     // Otherwise, we merge the new data with the original object
     else {
-      const originalObj = toValue(merge.originalObj)
+      const originalObj = toValue(merge.originalObj ?? {})
       const resultObj = Object.assign(originalObj, newDataModified)
 
-      merge.originalObj.syncToParent?.(resultObj)
+      merge.originalObj?.syncToParent?.(resultObj)
     }
 
     // When `syncOnMerge` is true, we sync the data from the parent object
     if (merge?.syncOnMerge) {
       nextTick(() => {
-        merge.originalObj.syncFromParent?.()
+        merge.originalObj?.syncFromParent?.()
       })
     }
   }
