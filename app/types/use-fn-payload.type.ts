@@ -9,7 +9,7 @@ export type UseFnPayload<T = any> = {
   /**
    * The function to modify the response object
    */
-  modifyResultFn?: (obj: any) => any
+  modifyResultFn?: (response: any) => any
 
   /**
    * Ark validation output (the result from `useArk`)
@@ -47,7 +47,7 @@ export type UseFnPayload<T = any> = {
     /**
      * The function to modify the response object
      */
-    modifyResultFn?: (obj: any) => any
+    modifyResultFn?: (response: any) => any
   }
 
   /**
