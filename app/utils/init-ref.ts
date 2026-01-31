@@ -44,12 +44,12 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
   const dynamicProps = (instance.vnode?.dynamicProps ?? [])
     .map((propName: string) => camelCase(propName)) as Array<keyof T>
 
-  const providedProps = Object.keys(instance.vnode?.props ?? {})
-    .map(propName => camelCase(propName)) as Array<keyof T>
+  // const providedProps = Object.keys(instance.vnode?.props ?? {})
+  //   .map(propName => camelCase(propName)) as Array<keyof T>
 
   let _defaultValue = defaultValue
 
-  if (providedProps.includes(propName) && props?.[propName] !== undefined) {
+  if (props?.[propName] !== undefined) {
     _defaultValue = props?.[propName]
   }
 
