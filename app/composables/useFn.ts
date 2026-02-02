@@ -45,7 +45,7 @@ function mergeResponseWithOriginalObject<T>(payload: {
 
     // Otherwise, we merge the new data with the original object
     else {
-      const originalObj = toValue(merge.originalObj ?? {})
+      const originalObj = toValue(merge.originalObj) ?? {}
       const resultObj = Object.assign(originalObj, newDataModified)
 
       merge.originalObj?.syncToParent?.(resultObj)
