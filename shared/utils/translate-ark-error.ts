@@ -88,6 +88,12 @@ export function translateArkError(
       const rawExpected = String(err.expected ?? '').replace(/^an?\s+/i, '')
       const typeKey = `ark.types.${rawExpected}`
       const translatedType = $t(typeKey)
+      const was = error.actual
+
+      if (was === 'undefined' || was === 'null') {
+        return $t('ark.errors.required')
+      }
+
       return $t('ark.errors.type', {
         expected: translatedType !== typeKey ? translatedType : rawExpected,
       })
