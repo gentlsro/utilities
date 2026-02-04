@@ -44,6 +44,7 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
     validationParts,
     errorsStructure,
     validate: validateStore,
+    reset: resetStore,
   } = useValidationStore()
 
   // Add validation part
@@ -80,7 +81,7 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
   }
 
   function reset() {
-    isValidationVisibleByScope.value[scope] = false
+    resetStore(scope)
   }
 
   function getMeta(
@@ -163,9 +164,7 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
 
       return { isValid: !errors.length, errors: messages }
     },
-    reset: () => {
-      isValidationVisibleByScope.value[scope] = false
-    },
+    reset,
     getMeta,
   }
 

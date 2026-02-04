@@ -44,6 +44,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     validationParts,
     errorsStructure,
     validate: validateStore,
+    reset: resetStore,
   } = useValidationStore()
 
   // Add validation part
@@ -80,7 +81,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   }
 
   function reset() {
-    isValidationVisibleByScope.value[scope] = false
+    resetStore(scope)
   }
 
   function getMeta(
@@ -164,9 +165,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
 
       return { isValid: !errors.length, errors: messages }
     },
-    reset: () => {
-      isValidationVisibleByScope.value[scope] = false
-    },
+    reset,
     getMeta,
   }
 
