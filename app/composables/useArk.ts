@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import type { Type } from 'arktype'
 
 // Store
 import { useValidationStore } from '../../../UI/app/stores/validation.store'
@@ -11,14 +11,14 @@ type MaybeRefsOrGetters<T> = {
   [K in keyof T]: MaybeRefOrGetter<T[K]>
 }
 
-type IPayload<Validation extends z.ZodType> = {
-  state?: MaybeRefOrGetter<z.infer<Validation>> | MaybeRefsOrGetters<z.infer<Validation>>
+type IPayload<Validation extends Type> = {
+  state?: MaybeRefOrGetter<Validation['infer']> | MaybeRefsOrGetters<Validation['infer']>
   schema?: Validation
   scope?: string
   immediate?: boolean
 }
 
-export type IZodNewResult = {
+export type IArkResult = {
   path?: string
   isRequired: boolean
   message: string
@@ -27,7 +27,7 @@ export type IZodNewResult = {
   isValidationVisible?: boolean
 }
 
-export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayload<Validation>) {
+export function useArk<Validation extends Type = any>(payload?: IPayload<Validation>) {
   const {
     state,
     schema,
@@ -84,10 +84,11 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
   }
 
   function getMeta(
-    path?: ObjectKey<z.infer<Validation>>,
+    path?: ObjectKey<Validation['infer']>,
     options?: {
       includeChildren?: boolean
       includeAncestors?: boolean
+
       /**
        * When true, the errors will be returned for the current component only
        *
@@ -95,7 +96,7 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
        */
       local?: boolean
     },
-  ): IZodNewResult {
+  ): IArkResult {
     const { includeChildren = false, includeAncestors = true, local = true } = options ?? {}
     let errors: ExtendedError[] = []
 
@@ -116,7 +117,7 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
     if (local && path) {
       if (schema) {
         errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
-          .filter(error => error.$componentName === componentName)
+          .filter(error => error.$schema === schema)
       } else {
         const lastValidationPartWithSchemaInScope = validationParts.value.findLast(part => part.scope === scope && part.schema)
 
@@ -131,7 +132,7 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
       errors = errorsStructure.value.byScope[scope] ?? []
     }
 
-    // Get schema from errors first, fallback to the schema passed to useZod,
+    // Get schema from errors first, fallback to the schema passed to useArk,
     // or try to find it in validationPartsByScope
     const resolvedSchema = errors[0]?.$schema
       ?? schema
