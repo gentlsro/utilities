@@ -23,14 +23,14 @@ export function useNumber(options?: { localeIso?: string }) {
   const { localeIso } = options ?? {}
   const { currentLocale } = useLocale()
 
+  const separators = computed(() => getSeparators(localeIso ?? currentLocale.value.code))
+
   const {
     formatNumber: formatNumberShared,
     formatCurrency: formatCurrencyShared,
 
     ...other
-  } = useNumberShared({ localeIso: currentLocale.value.code })
-
-  const separators = computed(() => getSeparators(localeIso ?? currentLocale.value.code))
+  } = useNumberShared({ localeIso: currentLocale.value.code, separators: separators.value })
 
   const summaryMetricOptions = computed(() => {
     return [
