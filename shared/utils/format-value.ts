@@ -65,9 +65,14 @@ export function formatValue(
       return formatNumber(value)
 
     case 'currency':
+    case 'currencySimple':
       return formatNumber(value, {
         intlOptions: { minimumFractionDigits: 2, maximumFractionDigits: 2 },
       })
+
+    case 'decimal':
+    case 'decimalSimple':
+      return value
 
     case 'duration':
     case 'durationSimple':

@@ -65,6 +65,7 @@ type DataType
   // Number
     | 'number'
     | 'percent'
+    | 'decimal'
 
   // Currency
     | 'currency'

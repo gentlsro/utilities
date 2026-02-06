@@ -13,6 +13,8 @@ export function getComparatorsByDataType(dataType: ExtendedDataType) {
   switch (dataType) {
     case 'string':
     case 'stringSimple':
+    case 'decimal':
+    case 'decimalSimple':
       return [
         ComparatorEnum.EQUAL,
         ComparatorEnum.NOT_EQUAL,
