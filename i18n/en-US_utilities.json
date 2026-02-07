@@ -90,7 +90,7 @@
     "relation": "Relation | Relations",
     "validate": "Validate",
     "here": "Here",
-    "atLeastCharactersToSearch": "Seach by typing at least { count } characters",
+    "atLeastCharactersToSearch": "Seach by providing at least { count } characters",
     "searchIcon": "Search icon",
     "previous": "Previous",
     "next": "Next",
