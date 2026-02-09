@@ -75,6 +75,7 @@ async function executeFn<T>(payload: {
   if (!fnId) {
     return fnc(createAbortController, source)
   }
+  console.log('boi')
 
   // Check if we already have a memoized fn
   const existingFn = memoizedFns.get(fnId)
