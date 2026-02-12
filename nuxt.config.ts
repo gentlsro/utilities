@@ -1,5 +1,5 @@
 import { join } from 'pathe'
-import { createResolver } from '@nuxt/kit'
+import { createResolver } from 'nuxt/kit'
 
 const { resolve } = createResolver(import.meta.url)
 
