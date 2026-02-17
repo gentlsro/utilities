@@ -87,7 +87,7 @@ export default defineNuxtConfig({
     langDir: '../i18n',
     compilation: {
       strictMessage: false,
-      escapeHtml: true,
+      escapeHtml: false,
     },
     locales: [
       {
