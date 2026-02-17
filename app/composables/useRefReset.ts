@@ -1,10 +1,11 @@
 import { klona } from 'klona/full'
+import type { NonUndefined } from 'utility-types'
 import type { UnwrapRef } from 'vue'
 
 type IOptions<T, Transformed = T> = {
   autoSyncFromParent?: boolean
   emitName?: string
-  modifyFnc?: (value: T) => Transformed
+  modifyFnc?: (value: T, currentValue?: Transformed) => NonUndefined<Transformed>
 }
 
 export function useRefReset<T, Transformed = T>(
@@ -19,7 +20,7 @@ export function useRefReset<T, Transformed = T>(
 
   const model = ref(
     klona(toValue(modifyFnc?.(_initialValue) || _initialValue)),
-  ) as Ref<Transformed>
+  ) as Ref<NonUndefined<Transformed>>
 
   const extendedModel = extendRef(model, {
     /**
@@ -57,7 +58,7 @@ export function useRefReset<T, Transformed = T>(
      */
     syncFromParent: () => {
       _initialValue = toValue(initialValue)
-      originalValue.value = klona(toValue(modifyFnc?.(_initialValue) || _initialValue) as UnwrapRef<T>)
+      originalValue.value = klona(toValue(modifyFnc?.(_initialValue, extendedModel.value) || _initialValue) as UnwrapRef<T>)
 
       reset()
     },
@@ -66,12 +67,12 @@ export function useRefReset<T, Transformed = T>(
      * Reset the value to the original value
      */
     reset: () => {
-      model.value = klona(originalValueModified.value) as Transformed
+      model.value = klona(originalValueModified.value) as NonUndefined<Transformed>
     },
   })
 
   const originalValueModified = computed(() => {
-    return modifyFnc?.(originalValue.value as T) || originalValue.value
+    return modifyFnc?.(originalValue.value as T, extendedModel.value) || originalValue.value
   })
 
   /**

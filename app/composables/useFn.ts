@@ -54,7 +54,8 @@ function mergeResponseWithOriginalObject<T>(payload: {
     // When `syncOnMerge` is true, we sync the data from the parent object
     if (merge?.syncOnMerge) {
       nextTick(() => {
-        merge.originalObj?.syncFromParent?.()
+        // @ts-ignore
+        merge.syncOnMerge?.syncFromParent?.()
       })
     }
   }
@@ -75,7 +76,6 @@ async function executeFn<T>(payload: {
   if (!fnId) {
     return fnc(createAbortController, source)
   }
-  console.log('boi')
 
   // Check if we already have a memoized fn
   const existingFn = memoizedFns.get(fnId)
