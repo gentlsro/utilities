@@ -125,7 +125,8 @@
     "deleteItemConfirmation": "Opravdu chcete smazat tuto položku?",
     "description": "Popis",
     "clickToCopy": "Klikněte pro zkopírování",
-    "activate": "Aktivovat"
+    "activate": "Aktivovat",
+    "documentation": "Dokumentace"
   },
   "zod": {
     "errors": {
