@@ -33,7 +33,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      env: 'local',
+      env: '',
       filesHost: '/api/files',
     },
   },
