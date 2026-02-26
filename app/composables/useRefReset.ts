@@ -86,11 +86,24 @@ export function useRefReset<T, Transformed = T>(
   function reset() {
     extendedModel.reset()
   }
+
   function syncFromParent() {
     extendedModel.syncFromParent()
   }
+
   function syncToParent(_model?: any, syncOriginalValue?: boolean) {
     extendedModel.syncToParent(_model ?? model.value, syncOriginalValue)
+  }
+
+  /**
+   * Similar to `syncFromParent`, but instead of syncing the value from the parent,
+   * it sets the value to the given value
+   */
+  function setModel(value: T) {
+    _initialValue = value
+    originalValue.value = klona(value)
+
+    reset()
   }
 
   if (autoSyncFromParent) {
@@ -104,6 +117,7 @@ export function useRefReset<T, Transformed = T>(
   return {
     model: extendedModel,
     isModified,
+    setModel,
     modifyFnc,
     reset,
     syncFromParent,
