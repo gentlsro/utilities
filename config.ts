@@ -242,6 +242,11 @@ export const defaultUtilitiesConfig = {
         file.uploadProgress = 100
         file.hasError = false
         file.uploadedFile = result
+
+        for await (const onUploadComplete of file.onUploadCompleteQueue ?? []) {
+          await onUploadComplete(result)
+        }
+
         onComplete?.(result)
 
         return result
