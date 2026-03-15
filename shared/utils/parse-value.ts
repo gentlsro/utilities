@@ -1,15 +1,18 @@
 import utilsConfig from '$utilsConfig'
+import type { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
 // Functions
 import { predictDataType } from '../functions/predict-data-type'
 
+// The default handler for parsing values
 function handleParseValue(payload: {
   value: any
   dataType?: ExtendedDataType
   options?: {
     dateFormat?: string
     timezone?: string
+    comparator?: ComparatorEnum
     predictDataType?: PredictDataTypeOptions
   }
 }) {
@@ -75,6 +78,11 @@ export function parseValue(
      * Timezone to use for the date output
      */
     timezone?: string
+
+    /**
+     * In some special cases, the parsing can be based on the comparator
+     */
+    comparator?: ComparatorEnum
 
     /**
      * When true, the function will try to guess the data type based on the value
