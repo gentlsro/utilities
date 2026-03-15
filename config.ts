@@ -94,9 +94,15 @@ type IFormatFnc = (
   formatOptions?: IFormatValueOptions & { formatFnc?: typeof formatValue },
 ) => any
 
-type IParseFnc = (
-  value: any,
-) => any
+type IParseFnc = (payload: {
+  value: any
+  dataType?: ExtendedDataType
+  options?: {
+    dateFormat?: string
+    timezone?: string
+    predictDataType?: PredictDataTypeOptions
+  }
+}) => any
 
 export type IUtilitiesConfig = {
   general: {
