@@ -100,6 +100,7 @@ type IParseFnc = (payload: {
   options?: {
     dateFormat?: string
     timezone?: string
+    comparator?: ComparatorEnum
     predictDataType?: PredictDataTypeOptions
   }
   defaultHandler?: (payload: {
@@ -108,6 +109,7 @@ type IParseFnc = (payload: {
     options?: {
       dateFormat?: string
       timezone?: string
+      comparator?: ComparatorEnum
       predictDataType?: PredictDataTypeOptions
     }
   }) => any
