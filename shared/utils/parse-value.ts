@@ -1,5 +1,4 @@
 import utilsConfig from '$utilsConfig'
-import type { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
 // Functions
@@ -12,7 +11,6 @@ function handleParseValue(payload: {
   options?: {
     dateFormat?: string
     timezone?: string
-    comparator?: ComparatorEnum
     predictDataType?: PredictDataTypeOptions
   }
 }) {
@@ -80,14 +78,15 @@ export function parseValue(
     timezone?: string
 
     /**
-     * In some special cases, the parsing can be based on the comparator
-     */
-    comparator?: ComparatorEnum
-
-    /**
      * When true, the function will try to guess the data type based on the value
      */
     predictDataType?: PredictDataTypeOptions
+
+    /**
+     * When using a custom parse function, we may also pass additional data to the function
+     * so that it can be used for the parsing
+     */
+    additionalData?: any
   },
 ) {
   const { predictDataType: _predictDataType } = options || {}
@@ -98,14 +97,14 @@ export function parseValue(
 
   // In case we have a custom format function, we use that
   const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.parseFncByDataType
-  const customFormatFnc = dataType && utilsConfig.dataTypeExtend.parseFncByDataType[_dataType]
+  const customParseFnc = dataType && utilsConfig.dataTypeExtend.parseFncByDataType[_dataType]
 
-  if (customFormatFnc) {
-    return customFormatFnc({
+  if (customParseFnc) {
+    return customParseFnc({
       value,
       dataType,
       options,
-      defaultHandler: handleParseValue,
+      defaultHandler: () => handleParseValue({ value, dataType, options }),
     })
   }
 
