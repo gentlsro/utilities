@@ -102,6 +102,15 @@ type IParseFnc = (payload: {
     timezone?: string
     predictDataType?: PredictDataTypeOptions
   }
+  defaultHandler?: (payload: {
+    value: any
+    dataType?: ExtendedDataType
+    options?: {
+      dateFormat?: string
+      timezone?: string
+      predictDataType?: PredictDataTypeOptions
+    }
+  }) => any
 }) => any
 
 export type IUtilitiesConfig = {

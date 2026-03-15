@@ -4,42 +4,17 @@ import type { ExtendedDataType } from '$dataType'
 // Functions
 import { predictDataType } from '../functions/predict-data-type'
 
-/**
- * Will parse value from string to the given data type
- */
-export function parseValue(
-  value: any,
-  dataType?: ExtendedDataType,
+function handleParseValue(payload: {
+  value: any
+  dataType?: ExtendedDataType
   options?: {
-    /**
-     * Output date format
-     */
     dateFormat?: string
-
-    /**
-     * Timezone to use for the date output
-     */
     timezone?: string
-
-    /**
-     * When true, the function will try to guess the data type based on the value
-     */
     predictDataType?: PredictDataTypeOptions
-  },
-) {
+  }
+}) {
+  let { value, dataType, options } = payload
   const { dateFormat, predictDataType: _predictDataType, timezone } = options || {}
-
-  if (isNil(value)) {
-    return value
-  }
-
-  // In case we have a custom format function, we use that
-  const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.parseFncByDataType
-  const customFormatFnc = dataType && utilsConfig.dataTypeExtend.parseFncByDataType[_dataType]
-
-  if (customFormatFnc) {
-    return customFormatFnc(value)
-  }
 
   if (!dataType && _predictDataType) {
     const predictedDataType = predictDataType(_predictDataType)
@@ -82,4 +57,49 @@ export function parseValue(
     default:
       return value
   }
+}
+
+/**
+ * Will parse value from string to the given data type
+ */
+export function parseValue(
+  value: any,
+  dataType?: ExtendedDataType,
+  options?: {
+    /**
+     * Output date format
+     */
+    dateFormat?: string
+
+    /**
+     * Timezone to use for the date output
+     */
+    timezone?: string
+
+    /**
+     * When true, the function will try to guess the data type based on the value
+     */
+    predictDataType?: PredictDataTypeOptions
+  },
+) {
+  const { predictDataType: _predictDataType } = options || {}
+
+  if (isNil(value)) {
+    return value
+  }
+
+  // In case we have a custom format function, we use that
+  const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.parseFncByDataType
+  const customFormatFnc = dataType && utilsConfig.dataTypeExtend.parseFncByDataType[_dataType]
+
+  if (customFormatFnc) {
+    return customFormatFnc({
+      value,
+      dataType,
+      options,
+      defaultHandler: handleParseValue,
+    })
+  }
+
+  return handleParseValue({ value, dataType, options })
 }
