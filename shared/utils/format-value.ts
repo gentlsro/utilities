@@ -48,7 +48,8 @@ export function formatValue(
   }
 
   // In case we have a custom format function, we use that
-  const customFormatFnc = options.dataType && utilsConfig.dataTypeExtend.formatFncByDataType[options.dataType]
+  const _dataType = options.dataType as keyof typeof utilsConfig.dataTypeExtend.formatFncByDataType
+  const customFormatFnc = _dataType && utilsConfig.dataTypeExtend.formatFncByDataType[_dataType]
 
   if (customFormatFnc) {
     return customFormatFnc(value, row, { ...options, formatFnc: formatValue })
