@@ -126,7 +126,8 @@
     "description": "Popis",
     "clickToCopy": "Klikněte pro zkopírování",
     "activate": "Aktivovat",
-    "documentation": "Dokumentace"
+    "documentation": "Dokumentace",
+    "dataLoading": "Načítání dat"
   },
   "zod": {
     "errors": {

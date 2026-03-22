@@ -126,7 +126,8 @@
     "description": "Description",
     "clickToCopy": "Click to copy",
     "activate": "Activate",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "dataLoading": "Loading data"
   },
   "zod": {
     "errors": {
