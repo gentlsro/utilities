@@ -102,6 +102,7 @@ export function useRefReset<T, Transformed = T>(
   function setModel(value: T) {
     _initialValue = value
     originalValue.value = klona(value)
+    extendedModel.value = klona(toValue(modifyFnc?.(value))) as NonUndefined<Transformed>
 
     reset()
   }
