@@ -242,6 +242,8 @@
       "url": "Neplatná URL",
       "uuid": "Neplatný UUID",
       "date": "Neplatné datum",
+      "numeric": "Pouze číselné znaky",
+      "missingId": "Vybraná hodnota musí obsahovat id",
       "pattern": "Musí odpovídat vzoru: {pattern}",
       "union": "Neplatný vstup",
       "integer": "Musí být celé číslo",

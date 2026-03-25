@@ -242,6 +242,8 @@
       "url": "Invalid URL",
       "uuid": "Invalid UUID",
       "date": "Invalid date",
+      "numeric": "Only numeric characters are allowed",
+      "missingId": "Selected value must include an id",
       "pattern": "Must match pattern: {pattern}",
       "union": "Invalid input",
       "integer": "Must be an integer",
