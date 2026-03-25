@@ -1,3 +1,5 @@
+import { utilsConfig } from '$utilsConfig'
+
 // Using dayjs/esm build for proper ESM support in Nuxt layers
 // https://github.com/iamkun/dayjs/issues/1765
 import dayjs from 'dayjs/esm'
@@ -32,7 +34,7 @@ export function $date(
   format?: dayjs.OptionType,
   strict?: boolean,
 ) {
-  let isUtc = true
+  let isUtc: boolean = utilsConfig.general.useUtc
 
   if (typeof format === 'object' && 'utc' in format) {
     isUtc = format.utc ?? true
