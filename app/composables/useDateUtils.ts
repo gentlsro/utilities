@@ -27,7 +27,7 @@ export function getDateSimpleValue(dateRef: MaybeRefOrGetter<Datetime>) {
 }
 
 export function useDateUtils() {
-  const { currentLocale } = useLocale()
+  const { currentLocale, getLocaleDateFormat } = useLocale()
   const {
     formatDate: formatDateShared,
     formatTime: formatTimeShared,
@@ -68,12 +68,14 @@ export function useDateUtils() {
 
     const { $i18n } = tryUseNuxtApp() ?? {}
     const locales = toValue($i18n?.locales) ?? []
-    const usedLocaleIso = options?.localeIso ?? $i18n?.defaultLocale
+    const usedLocaleIso = options?.localeIso ?? currentLocale.value.code
     const usedLocale = locales.find(locale => locale.code === usedLocaleIso)
+    const formatForParse = (usedLocale as { dateFormat?: string })?.dateFormat
+      ?? getLocaleDateFormat(usedLocaleIso)
 
     return parseDateShared(
       date,
-      { ...options, format: (usedLocale as any)?.dateFormat },
+      { ...options, format: formatForParse },
     )
   }
 
