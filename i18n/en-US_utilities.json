@@ -429,5 +429,10 @@
   },
   "screenSize": {
     "self": "Screen size"
+  },
+  "misc": {
+    "export": "Export",
+    "exportFormat": "Export format",
+    "useUtc": "Use UTC"
   }
 }

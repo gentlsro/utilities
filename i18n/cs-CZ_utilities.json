@@ -424,5 +424,10 @@
   },
   "screenSize": {
     "self": "Velikost obrazovky"
+  },
+  "misc": {
+    "export": "Exportovat",
+    "exportFormat": "Formát exportu",
+    "useUtc": "Použít UTC"
   }
 }
