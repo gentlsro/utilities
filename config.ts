@@ -91,7 +91,7 @@ type DataType
 type IFormatFnc = (
   value: any,
   row?: any,
-  formatOptions?: IFormatValueOptions & { formatFnc?: typeof formatValue },
+  formatOptions?: IFormatValueOptions & { formatFnc?: typeof formatValue, defaultHandler: () => any },
 ) => any
 
 type IParseFnc = (payload: {
