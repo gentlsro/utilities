@@ -127,7 +127,8 @@
     "clickToCopy": "Klikněte pro zkopírování",
     "activate": "Aktivovat",
     "documentation": "Dokumentace",
-    "dataLoading": "Načítání dat"
+    "dataLoading": "Načítání dat",
+    "detail": "Detail | Detaily"
   },
   "zod": {
     "errors": {

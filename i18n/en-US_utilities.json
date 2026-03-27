@@ -127,7 +127,8 @@
     "clickToCopy": "Click to copy",
     "activate": "Activate",
     "documentation": "Documentation",
-    "dataLoading": "Loading data"
+    "dataLoading": "Loading data",
+    "detail": "Detail | Details"
   },
   "zod": {
     "errors": {
