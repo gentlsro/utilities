@@ -1,13 +1,25 @@
 import type { NamedValue, TranslateOptions } from '#i18n'
 
 /**
- * i18n.t
+ * Server-side i18n marker. Produces a wire format that `$tFromServer` on the client parses and translates.
+ * Format: `$t|key` or `$t|key|<json>` or `$t|key|<json>|<json>`
  */
 export function $t(key: string, pluralOrNamed?: NamedValue, options?: TranslateOptions): string
 export function $t(key: string, pluralOrNamed?: string | number, options?: TranslateOptions): string
 export function $t(key: string, pluralOrNamed?: string | number | NamedValue, options?: TranslateOptions): string {
-  // NOTE: This is a dummy function that just returns the key for server usage
-  return `$t(${key}, ${pluralOrNamed}, ${options})`
+  let result = `$t|${key}`
 
-  // return key
+  if (pluralOrNamed !== undefined) {
+    result += `|${JSON.stringify(pluralOrNamed)}`
+  }
+
+  if (options !== undefined) {
+    if (pluralOrNamed === undefined) {
+      result += '|'
+    }
+
+    result += `|${JSON.stringify(options)}`
+  }
+
+  return result
 }
