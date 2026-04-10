@@ -228,7 +228,9 @@ From `libs/Core/app/pages/playground/fs.vue`:
 ```ts
 const files = ref<FileModel[]>([])
 async function handleUpload() {
-  for (const file of files.value) await file.upload()
+  for (const file of files.value) {
+    await file.upload()
+  }
 }
 ```
 

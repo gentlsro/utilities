@@ -24,7 +24,9 @@ export default extendUtilitiesConfig({
   files: {
     uploadHandler: async ({ file, requestHandler, onComplete, headers }) => {
       const handler = requestHandler ?? useFn().fn
-      if (!handler) throw new Error('Request handler not found')
+      if (!handler) {
+        throw new Error('Request handler not found')
+      }
 
       const res = await handler(async () => await uploadFile({ file, headers }))
       file.uploadProgress = 100
