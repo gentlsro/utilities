@@ -53,8 +53,20 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
     _defaultValue = props?.[propName]
   }
 
+  let isFirstAccess = true
+
   const result = dynamicProps.includes(propName)
-    ? useVModel(props, propName, undefined, { defaultValue: _defaultValue }) as Ref<T[K]>
+  // When the prop is dynamic => the prop was passed to the component (even if it's `undefined`)
+    ? computed({
+      get: () => {
+        return isFirstAccess ? (props?.[propName] ?? _defaultValue) : props?.[propName]
+      },
+      set(value) {
+        instance.emit(`update:${propName.toString()}`, value)
+      },
+    }) as Ref<T[K]>
+
+    // When the prop is not dynamic => the prop was not passed to the component at all
     : ref(_defaultValue) as Ref<T[K]>
 
   // Set the initial value if needed
@@ -62,6 +74,8 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
     const initialValue = initWith.fnc(payload)
     result.value = initialValue
   }
+
+  isFirstAccess = false
 
   return result
 }
