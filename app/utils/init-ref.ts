@@ -54,7 +54,9 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
   }
 
   const result = dynamicProps.includes(propName)
-    ? useVModel(props, propName, undefined, { defaultValue: _defaultValue }) as Ref<T[K]>
+  // The `passive: true` is necessary for `undefined` values -> when the prop is
+  // updated from some "real" value to `undefined`, this wouldn't trigger (probably some Vue reactivity shit...)
+    ? useVModel(props, propName, undefined, { defaultValue: _defaultValue, passive: true }) as Ref<T[K]>
     : ref(_defaultValue) as Ref<T[K]>
 
   // Set the initial value if needed
