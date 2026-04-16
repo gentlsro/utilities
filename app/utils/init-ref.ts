@@ -75,7 +75,9 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
     result.value = initialValue
   }
 
-  isFirstAccess = false
+  nextTick(() => {
+    isFirstAccess = false
+  })
 
   return result
 }
