@@ -27,7 +27,7 @@ export function getDateSimpleValue(dateRef: MaybeRefOrGetter<Datetime>) {
 }
 
 export function useDateUtils() {
-  const { currentLocale, getLocaleDateFormat } = useLocale()
+  const { currentLocale, currentLocaleCode, getLocaleDateFormat } = useLocale()
   const {
     formatDate: formatDateShared,
     formatTime: formatTimeShared,
@@ -38,7 +38,7 @@ export function useDateUtils() {
     getDaysInPeriod: getDaysInPeriodShared,
 
     ...other
-  } = useDateUtilsShared(currentLocale.value.code)
+  } = useDateUtilsShared(currentLocaleCode)
 
   function formatDate(
     dateRef?: MaybeRefOrGetter<Datetime>,

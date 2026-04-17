@@ -1,4 +1,6 @@
 import type { ManipulateType, OpUnitType } from 'dayjs'
+import type { MaybeRefOrGetter } from 'vue'
+import { toValue } from 'vue'
 
 // Types
 import type { Period } from '../types/period.type'
@@ -28,8 +30,12 @@ export function getDateSimpleValue(date: Datetime) {
   return $date(date).startOf('day').valueOf()
 }
 
-export function useDateUtils(localeIso: string) {
+export function useDateUtils(localeIsoRef: MaybeRefOrGetter<string>) {
+  const getLocaleIso = () => toValue(localeIsoRef)
+
   const localeUses24HourTime = () => {
+    const localeIso = getLocaleIso()
+
     return (
       new Intl.DateTimeFormat(localeIso, { hour: 'numeric' })
         .formatToParts(new Date(2020, 0, 1, 13))
@@ -49,6 +55,7 @@ export function useDateUtils(localeIso: string) {
 
     // When using a predefined format, we use the corresponding Intl API
     if (typeof options === 'string') {
+      const localeIso = getLocaleIso()
       const parsedDate = parseDate(date)
 
       if (!parsedDate.isValid()) {
@@ -67,11 +74,10 @@ export function useDateUtils(localeIso: string) {
           .replace(/(\d{2})\.\s(\d{2})\.\s(\d{4})/g, '$1.$2.$3')
       }
     }
-
     // Otherwise we use the Intl API
     else {
       const { outputIntlOptions } = options
-      const usedLocaleIso = options?.localeIso ?? localeIso
+      const usedLocaleIso = options?.localeIso ?? getLocaleIso()
       const parsedDate = parseDate(date, options)
 
       if (!parsedDate.isValid()) {
