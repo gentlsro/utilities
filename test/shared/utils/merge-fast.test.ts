@@ -35,6 +35,15 @@ describe('mergeFast', () => {
     expect(target.item).toHaveProperty('subtitle', undefined)
   })
 
+  it('should replace arrays instead of merging by index', () => {
+    const target = { items: [1, 2, 3] }
+    const patch = { items: [9] }
+
+    mergeFast(target, patch)
+
+    expect(target.items).toEqual([9])
+  })
+
   it('should keep explicit undefined on root level', () => {
     const target = {
       title: 'Old',
