@@ -24,12 +24,25 @@ function applyExplicitUndefined(target: PlainObject, patch: PlainObject) {
 }
 
 /**
- * Deep merge `patch` into `target`, but keep explicit `undefined` values from `patch`.
+ * Deep merge one or more sources into `target`, but keep explicit `undefined` values from
+ * each plain-object source.
  * Mutates and returns `target`.
  */
-export function mergeFast<T extends object, U extends object>(target: T, patch: U): T & U {
-  merge(target, patch)
-  applyExplicitUndefined(target as PlainObject, patch as PlainObject)
+function mergeFastBase(...args: Parameters<typeof merge>): ReturnType<typeof merge> {
+  const result = merge(...args)
+  const [target, ...patches] = args
 
-  return target as T & U
+  if (!isPlainObject(target)) {
+    return result
+  }
+
+  for (const patch of patches) {
+    if (isPlainObject(patch)) {
+      applyExplicitUndefined(target, patch)
+    }
+  }
+
+  return result
 }
+
+export const mergeFast = mergeFastBase as typeof merge
