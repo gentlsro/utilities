@@ -128,7 +128,8 @@
     "activate": "Activate",
     "documentation": "Documentation",
     "dataLoading": "Loading data",
-    "detail": "Detail | Details"
+    "detail": "Detail | Details",
+    "basic": "Basic"
   },
   "zod": {
     "errors": {

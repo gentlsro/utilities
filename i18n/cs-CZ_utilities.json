@@ -128,7 +128,8 @@
     "activate": "Aktivovat",
     "documentation": "Dokumentace",
     "dataLoading": "Načítání dat",
-    "detail": "Detail | Detaily"
+    "detail": "Detail | Detaily",
+    "basic": "Základní"
   },
   "zod": {
     "errors": {
