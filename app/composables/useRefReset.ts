@@ -3,16 +3,26 @@ import type { NonUndefined } from 'utility-types'
 import type { UnwrapRef } from 'vue'
 
 type IOptions<T, Transformed = T> = {
+  /**
+   * When true, watch `initialValue` and run `syncFromOrigin` on deep changes.
+   */
+  autoSyncFromOrigin?: boolean
   autoSyncFromParent?: boolean
   emitName?: string
   modifyFnc?: (value: T, currentValue?: Transformed) => NonUndefined<Transformed>
+
+  /**
+   * @deprecated Use `autoSyncFromOrigin`
+   */
 }
 
 export function useRefReset<T, Transformed = T>(
   initialValue: MaybeRefOrGetter<T>,
   options?: IOptions<T, Transformed>,
 ) {
-  const { autoSyncFromParent, emitName, modifyFnc } = options ?? {}
+  const opts = options ?? {}
+  const autoSyncFromOrigin = opts.autoSyncFromOrigin ?? opts.autoSyncFromParent ?? false
+  const { emitName, modifyFnc } = opts
 
   const instance = getCurrentInstance()
   let _initialValue = toValue(initialValue)
@@ -22,46 +32,60 @@ export function useRefReset<T, Transformed = T>(
     klona(toValue(modifyFnc?.(_initialValue) || _initialValue)),
   ) as Ref<NonUndefined<Transformed>>
 
+  function runSyncToOrigin(modelArg: any, syncOriginalValue = true) {
+    const isModelArray = Array.isArray(toValue(initialValue))
+
+    if (typeof _initialValue === 'object' && !isModelArray) {
+      Object.assign(toValue(initialValue) as IItem, modelArg)
+    } else if (isModelArray) {
+      ;(toValue(initialValue) as any[]).splice(
+        0,
+        (toValue(initialValue) as any[]).length,
+        ...(modelArg || []),
+      )
+    } else if (isRef(initialValue)) {
+      (initialValue as Ref<any>).value = modelArg
+    }
+
+    // In some cases, we also need to emit the event for Vue to see the changes
+    if (emitName) {
+      instance?.emit(emitName, toValue(initialValue))
+    }
+
+    // When syncing to origin, we don't necessarily want to also overwrite the original value
+    // to eventually be able to reset the model to the actual original value
+    if (syncOriginalValue) {
+      originalValue.value = klona(toValue(initialValue) as any)
+    }
+  }
+
+  function runSyncFromOrigin() {
+    _initialValue = toValue(initialValue)
+    originalValue.value = klona(toValue(modifyFnc?.(_initialValue, extendedModel.value) || _initialValue) as UnwrapRef<T>)
+
+    reset()
+  }
+
   const extendedModel = extendRef(model, {
     /**
-     * Sync the value to the parent
+     * Sync the value to the origin (`initialValue` source: ref, getter, or plain value).
      */
-    syncToParent: (model: any, syncOriginalValue = true) => {
-      const isModelArray = Array.isArray(toValue(initialValue))
-
-      if (typeof _initialValue === 'object' && !isModelArray) {
-        Object.assign(toValue(initialValue) as IItem, model)
-      } else if (isModelArray) {
-        ;(toValue(initialValue) as any[]).splice(
-          0,
-          (toValue(initialValue) as any[]).length,
-          ...(model || []),
-        )
-      } else if (isRef(initialValue)) {
-        (initialValue as Ref<any>).value = model
-      }
-
-      // In some cases, we also need to emit the event for Vue to see the changes
-      if (emitName) {
-        instance?.emit(emitName, toValue(initialValue))
-      }
-
-      // When syncing to parent, we don't necessarily want to also overwrite the original value
-      // to eventually be able to reset the model to the actual original value
-      if (syncOriginalValue) {
-        originalValue.value = klona(toValue(initialValue) as any)
-      }
-    },
+    syncToOrigin: runSyncToOrigin,
 
     /**
-     * Sync the value from the parent
+     * @deprecated Use `syncToOrigin`.
      */
-    syncFromParent: () => {
-      _initialValue = toValue(initialValue)
-      originalValue.value = klona(toValue(modifyFnc?.(_initialValue, extendedModel.value) || _initialValue) as UnwrapRef<T>)
+    syncToParent: runSyncToOrigin,
 
-      reset()
-    },
+    /**
+     * Sync the value from the origin (`initialValue`).
+     */
+    syncFromOrigin: runSyncFromOrigin,
+
+    /**
+     * @deprecated Use `syncFromOrigin`.
+     */
+    syncFromParent: runSyncFromOrigin,
 
     /**
      * Reset the value to the original value
@@ -87,16 +111,30 @@ export function useRefReset<T, Transformed = T>(
     extendedModel.reset()
   }
 
-  function syncFromParent() {
-    extendedModel.syncFromParent()
-  }
-
-  function syncToParent(_model?: any, syncOriginalValue?: boolean) {
-    extendedModel.syncToParent(_model ?? model.value, syncOriginalValue)
+  function syncFromOrigin() {
+    extendedModel.syncFromOrigin()
   }
 
   /**
-   * Similar to `syncFromParent`, but instead of syncing the value from the parent,
+   * @deprecated Use `syncFromOrigin`.
+   */
+  function syncFromParent() {
+    syncFromOrigin()
+  }
+
+  function syncToOrigin(_model?: any, syncOriginalValue?: boolean) {
+    extendedModel.syncToOrigin(_model ?? model.value, syncOriginalValue)
+  }
+
+  /**
+   * @deprecated Use `syncToOrigin`.
+   */
+  function syncToParent(_model?: any, syncOriginalValue?: boolean) {
+    syncToOrigin(_model, syncOriginalValue)
+  }
+
+  /**
+   * Similar to `syncFromOrigin`, but instead of syncing from `initialValue`,
    * it sets the value to the given value
    */
   function setModel(value: T) {
@@ -107,10 +145,10 @@ export function useRefReset<T, Transformed = T>(
     reset()
   }
 
-  if (autoSyncFromParent) {
+  if (autoSyncFromOrigin) {
     watch(
       () => toValue(initialValue),
-      () => syncFromParent(),
+      () => syncFromOrigin(),
       { deep: true },
     )
   }
@@ -121,7 +159,11 @@ export function useRefReset<T, Transformed = T>(
     setModel,
     modifyFnc,
     reset,
+    syncFromOrigin,
+    syncToOrigin,
+    /** @deprecated Use `syncFromOrigin`. */
     syncFromParent,
+    /** @deprecated Use `syncToOrigin`. */
     syncToParent,
   }
 }

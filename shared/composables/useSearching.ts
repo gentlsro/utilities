@@ -3,8 +3,6 @@ import utilsConfig from '$utilsConfig'
 import Fuse from 'fuse.js'
 import type { FuseResult } from 'fuse.js'
 import { klona } from 'klona/full'
-import type { Required } from 'utility-types'
-import type { FuseOptions } from '@vueuse/integrations/useFuse'
 
 // Functions
 import { useText } from './useText'
@@ -29,7 +27,7 @@ export function useSearching() {
     search?: string
     rows: T[]
     columns?: IItem[]
-    fuseOptions: Required<FuseOptions<any>, 'keys'>
+    fuseOptions: IFuseOptions
     useWorker?: boolean
     normalizeFnc?: (val: string) => string
 
@@ -142,7 +140,7 @@ export function useSearching() {
   // const handleSearchInWorker = <T extends IItem>(
   //   pattern: string,
   //   rowsRelevantData: T[],
-  //   options: Required<FuseOptions<any>, 'keys'>,
+  //   options: IFuseOptions,
   // ) => {
   //   options = { threshold: 0.4, ...options, includeScore: true }
   //   const fuse = new Fuse(rowsRelevantData, options)
@@ -154,7 +152,7 @@ export function useSearching() {
   const handleSearch = <T extends IItem>(
     pattern: string,
     items: T[],
-    options: Required<FuseOptions<any>, 'keys'>,
+    options: IFuseOptions,
   ) => {
     options = { threshold: 0.4, ...options, includeScore: true }
 

@@ -1,6 +1,4 @@
 import type { FuseResult } from 'fuse.js'
-import type { Required } from 'utility-types'
-import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Functions
 import { useSearching as useSearchingShared } from '../../shared/composables/useSearching'
@@ -12,7 +10,7 @@ export function useSearching() {
     searchRef?: MaybeRefOrGetter<string>
     rowsRef: MaybeRefOrGetter<Array<T>>
     columnsRef?: MaybeRefOrGetter<Array<IItem>>
-    fuseOptions: Required<FuseOptions<any>, 'keys'>
+    fuseOptions: IFuseOptions
     useWorker?: boolean
     normalizeFnc?: (val: string) => string
 
