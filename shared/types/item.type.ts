@@ -1,6 +1,3 @@
-// Types
-import type { ObjectKey } from './object-key.type'
-
 export type IItem<T extends object = object> = T & Record<string, any>
 
 export type IItemBase<T = IItem> = {
