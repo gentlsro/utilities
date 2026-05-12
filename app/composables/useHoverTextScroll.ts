@@ -98,6 +98,7 @@ export function useHoverTextScroll(
     const el = getEl()
     if (!el) {
       isOverflowing.value = false
+
       return
     }
 
@@ -161,6 +162,7 @@ export function useHoverTextScroll(
 
     if (prefersReducedMotion.value) {
       el.scrollLeft = maxScroll
+
       return
     }
 
@@ -184,6 +186,7 @@ export function useHoverTextScroll(
       if (atEnd || atStart) {
         if (mode === 'once' && atEnd) {
           rafId = null
+
           return
         }
 
@@ -207,6 +210,7 @@ export function useHoverTextScroll(
   function animateScrollBack(el: HTMLElement, onDone?: () => void) {
     if (el.scrollLeft <= 0) {
       onDone?.()
+
       return
     }
 
@@ -225,6 +229,7 @@ export function useHoverTextScroll(
       if (el.scrollLeft <= 0) {
         rafId = null
         onDone?.()
+
         return
       }
 

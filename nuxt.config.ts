@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   imports: {
     imports: [
       { name: 'z', from: 'zod' },
-      { name: 'ClassType', from: resolve('./app/types/class-type.type.ts'), type: true },
+      { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
     ],
 
     dirs: [
