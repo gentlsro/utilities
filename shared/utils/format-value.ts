@@ -117,7 +117,7 @@ export function formatValue(
     format,
   } = options ?? {}
 
-  const { formatDate, formatTime } = useDateUtilsShared(localeIso)
+  const { formatDate, formatTime } = useDateUtilsShared(() => localeIso)
   const { formatNumber } = useNumberShared({ localeIso })
   const { getDuration } = useDurationShared({ localeIso })
 

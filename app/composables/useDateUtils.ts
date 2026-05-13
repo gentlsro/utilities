@@ -38,7 +38,7 @@ export function useDateUtils() {
     getDaysInPeriod: getDaysInPeriodShared,
 
     ...other
-  } = useDateUtilsShared(currentLocaleCode)
+  } = useDateUtilsShared(() => currentLocaleCode.value)
 
   function formatDate(
     dateRef?: MaybeRefOrGetter<Datetime>,

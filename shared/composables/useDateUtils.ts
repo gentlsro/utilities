@@ -1,6 +1,4 @@
 import type { ManipulateType, OpUnitType } from 'dayjs'
-import type { MaybeRefOrGetter } from 'vue'
-import { toValue } from 'vue'
 
 // Types
 import type { Period } from '../types/period.type'
@@ -30,9 +28,7 @@ export function getDateSimpleValue(date: Datetime) {
   return $date(date).startOf('day').valueOf()
 }
 
-export function useDateUtils(localeIsoRef: MaybeRefOrGetter<string>) {
-  const getLocaleIso = () => toValue(localeIsoRef)
-
+export function useDateUtils(getLocaleIso: () => string) {
   const localeUses24HourTime = () => {
     const localeIso = getLocaleIso()
 
