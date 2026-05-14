@@ -10,6 +10,7 @@ export function blurFocusedInput() {
     activeElement.value?.tagName === 'INPUT'
     || activeElement.value?.tagName === 'TEXTAREA'
     || activeElement.value?.contentEditable === 'true'
+    || activeElement.value?.role === 'textbox'
   ) {
     activeElement.value.blur()
 
