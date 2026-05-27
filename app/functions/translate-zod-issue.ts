@@ -4,6 +4,10 @@ export const translateZodIssue: z.core.$ZodErrorMap<z.core.$ZodIssue> = issue =>
   const { $i18n } = tryUseNuxtApp() ?? {}
   const $t = $i18n?.t ?? ((...args: any[]) => args[0])
 
+  if (issue.message) {
+    return Object.assign({}, issue, { message: issue.message })
+  }
+
   let message = issue.message ?? issue.code ?? 'unknown issue'
 
   switch (issue.code) {
