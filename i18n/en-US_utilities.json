@@ -411,6 +411,7 @@
     "date": "Date",
     "datetime": "Date and time",
     "time": "Time",
+    "duration": "Duration",
     "link": "Link",
     "task": "Task"
   },
