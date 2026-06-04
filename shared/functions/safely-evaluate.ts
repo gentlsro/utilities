@@ -14,7 +14,7 @@ export function safelyEvaluate(code: string, ...args: any[]) {
   return evalFunc.call(globalThis as any, ...args)
 }
 
-function transformTypescriptForEval(input: string): string {
+export function transformTypescriptForEval(input: string): string {
   let output = String(input ?? '')
 
   // Prefer full TypeScript transpilation if available globally (e.g., loaded typescript.js)
