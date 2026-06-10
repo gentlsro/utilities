@@ -1,6 +1,5 @@
 // Functions
 import { klona } from 'klona/full'
-import { toValue } from 'vue'
 
 // Types
 import type { NonUndefined } from 'utility-types'
@@ -154,8 +153,9 @@ export function useRefReset<T, Transformed = T>(
   watch(
     [() => toValue(initialValue), autoSyncFromOrigin],
     () => {
-      if (autoSyncFromOrigin.value)
+      if (autoSyncFromOrigin.value) {
         syncFromOrigin()
+      }
     },
     { deep: true },
   )
