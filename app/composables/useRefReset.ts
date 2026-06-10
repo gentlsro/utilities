@@ -151,7 +151,7 @@ export function useRefReset<T, Transformed = T>(
   }
 
   watch(
-    [() => toValue(initialValue), autoSyncFromOrigin],
+    () => toValue(initialValue),
     () => {
       if (autoSyncFromOrigin.value) {
         syncFromOrigin()
