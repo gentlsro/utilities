@@ -196,11 +196,11 @@ export function useFiltering() {
         break
 
       case ComparatorEnum.IS_EMPTY:
-        valid = valid && isNil(formattedRowValue)
+        valid = valid && (Array.isArray(formattedRowValue) ? !formattedRowValue.length : isNil(formattedRowValue))
         break
 
       case ComparatorEnum.NOT_IS_EMPTY:
-        valid = valid && !isNil(formattedRowValue)
+        valid = valid && (Array.isArray(formattedRowValue) ? !!formattedRowValue.length : !isNil(formattedRowValue))
         break
 
       case ComparatorEnum.CONTAINS:
