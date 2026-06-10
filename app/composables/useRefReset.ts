@@ -1,13 +1,16 @@
+// Functions
 import { klona } from 'klona/full'
+
+// Types
 import type { NonUndefined } from 'utility-types'
-import type { UnwrapRef } from 'vue'
+import type { UnwrapRef, MaybeRefOrGetter } from 'vue'
 
 type IOptions<T, Transformed = T> = {
   /**
    * When true, watch `initialValue` and run `syncFromOrigin` on deep changes.
    */
-  autoSyncFromOrigin?: boolean
-  autoSyncFromParent?: boolean
+  autoSyncFromOrigin?: MaybeRefOrGetter<boolean>
+  autoSyncFromParent?: MaybeRefOrGetter<boolean>
   emitName?: string
   modifyFnc?: (value: T, currentValue?: Transformed) => NonUndefined<Transformed>
 
@@ -21,7 +24,9 @@ export function useRefReset<T, Transformed = T>(
   options?: IOptions<T, Transformed>,
 ) {
   const opts = options ?? {}
-  const autoSyncFromOrigin = opts.autoSyncFromOrigin ?? opts.autoSyncFromParent ?? false
+  const autoSyncFromOrigin = computed(() =>
+    toValue(opts.autoSyncFromOrigin) ?? toValue(opts.autoSyncFromParent) ?? false,
+  )
   const { emitName, modifyFnc } = opts
 
   const instance = getCurrentInstance()
@@ -38,7 +43,7 @@ export function useRefReset<T, Transformed = T>(
     if (typeof _initialValue === 'object' && !isModelArray) {
       Object.assign(toValue(initialValue) as IItem, modelArg)
     } else if (isModelArray) {
-      ;(toValue(initialValue) as any[]).splice(
+      ; (toValue(initialValue) as any[]).splice(
         0,
         (toValue(initialValue) as any[]).length,
         ...(modelArg || []),
@@ -145,13 +150,15 @@ export function useRefReset<T, Transformed = T>(
     reset()
   }
 
-  if (autoSyncFromOrigin) {
-    watch(
-      () => toValue(initialValue),
-      () => syncFromOrigin(),
-      { deep: true },
-    )
-  }
+  watch(
+    () => toValue(initialValue),
+    () => {
+      if (autoSyncFromOrigin.value) {
+        syncFromOrigin()
+      }
+    },
+    { deep: true },
+  )
 
   return {
     model: extendedModel,
