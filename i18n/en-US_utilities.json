@@ -130,7 +130,8 @@
     "dataLoading": "Loading data",
     "detail": "Detail | Details",
     "basic": "Basic",
-    "example": "Example"
+    "example": "Example",
+    "configuration": "Configuration"
   },
   "zod": {
     "errors": {

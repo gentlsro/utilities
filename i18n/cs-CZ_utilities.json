@@ -130,7 +130,8 @@
     "dataLoading": "Načítání dat",
     "detail": "Detail | Detaily",
     "basic": "Základní",
-    "example": "Příklad"
+    "example": "Příklad",
+    "configuration": "Konfigurace"
   },
   "zod": {
     "errors": {
