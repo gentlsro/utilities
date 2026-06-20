@@ -62,6 +62,12 @@ export function transformTypescriptForEval(input: string): string {
     return `${start}${strippedParams}${end}`
   })
 
+  // Strip arrow function parameter type annotations
+  // e.g. (payload: SomeType) =>, async (a: A, b: B) =>
+  output = output.replace(/(\basync\s+)?\(([^)]*)\)(\s*=>)/g, (_m, asyncKw, params, arrow) => {
+    return `${asyncKw ?? ''}(${stripParamTypes(params)})${arrow}`
+  })
+
   // Remove generics after function name: function fn<T>(...) => function fn(...)
   output = output.replace(/(\bfunction\s+[A-Z_$][\w$]*\s*)<[^>]*>(\s*\()/gi, '$1$2')
   output = output.replace(/(\basync\s+function\s+[A-Z_$][\w$]*\s*)<[^>]*>(\s*\()/gi, '$1$2')
