@@ -33,8 +33,7 @@ export function transformTypescriptForEval(input: string): string {
         reportDiagnostics: false,
       })
       output = res?.outputText ?? output
-    }
-    catch {
+    } catch {
       // fall through to lightweight transforms
     }
   }
@@ -47,26 +46,27 @@ export function transformTypescriptForEval(input: string): string {
   // e.g., function fn(payload: SomeType) => function fn(payload)
   output = output.replace(/(\bfunction\s+[A-Z_$][\w$]*\s*\()(.*?)(\))/gis, (_m, start, params, end) => {
     const strippedParams = stripParamTypes(params)
+
     return `${start}${strippedParams}${end}`
   })
 
   // Strip simple function parameter type annotations for async functions
   output = output.replace(/(\basync\s+function\s+[A-Z_$][\w$]*\s*\()(.*?)(\))/gis, (_m, start, params, end) => {
     const strippedParams = stripParamTypes(params)
+
     return `${start}${strippedParams}${end}`
   })
 
   // Strip parameter types in named function expressions if any slipped through (rare in our templates)
   output = output.replace(/(\bfunction\s*\()(.*?)(\))/gs, (_m, start, params, end) => {
     const strippedParams = stripParamTypes(params)
+
     return `${start}${strippedParams}${end}`
   })
 
   // Strip arrow function parameter type annotations
-  // e.g. (payload: SomeType) =>, async (a: A, b: B) =>
-  output = output.replace(/(\basync\s+)?\(([^)]*)\)(\s*=>)/g, (_m, asyncKw, params, arrow) => {
-    return `${asyncKw ?? ''}(${stripParamTypes(params)})${arrow}`
-  })
+  // e.g. (payload: SomeType) =>, async (a: A, b: B) =>, (payload?: any): Promise<any> =>
+  output = stripArrowParamTypes(output)
 
   // Remove generics after function name: function fn<T>(...) => function fn(...)
   output = output.replace(/(\bfunction\s+[A-Z_$][\w$]*\s*)<[^>]*>(\s*\()/gi, '$1$2')
@@ -88,20 +88,32 @@ export function transformTypescriptForEval(input: string): string {
   // Case 3: Multiple declarators: let a: A, b: B;
   output = output.replace(/(\b(?:let|const|var)\s+(?:[^\s;=][^=;\n]*|[\t\v\f\r \xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]))([;=,])/gi, (_m, decl, tail) => {
     const cleaned = decl.replace(/([A-Z_$][\w$]*)\s*:[^,=;\n]+/gi, '$1')
+
     return `${cleaned}${tail}`
   })
 
   return output
 }
 
+function stripArrowParamTypes(input: string): string {
+  return input.replace(
+    /(\basync[ \t]*)?\(([^()]*)\)[ \t]*(?::[^=\r\n]+)?=>/g,
+    (_m, asyncKeyword = '', params) => {
+      const strippedParams = stripParamTypes(params)
+
+      return `${asyncKeyword}(${strippedParams}) =>`
+    },
+  )
+}
+
 function stripParamTypes(paramsSection: string): string {
   // Remove occurrences of ": Type" or ": { ... }" within a parameter list, without touching default values or destructuring keys
   // This is intentionally conservative to match our usage patterns
   // 1) Remove type annotations for simple identifiers: foo: Type => foo
-  let result = paramsSection.replace(/([A-Z_$][\w$]*)\s*:[^,=)]+/gi, '$1')
+  let result = paramsSection.replace(/([A-Z_$][\w$]*)\??[ \t]*:[^,=)]+/gi, '$1')
 
   // 2) Remove inline type annotations within destructured objects: { foo: Type } => { foo }
-  result = result.replace(/(\{[^}]*?)\b([A-Z_$][\w$]*)\s*:[^,}]+/gi, (_m, prefix, name) => `${prefix}${name}`)
+  result = result.replace(/(\{[^}]*?)\b([A-Z_$][\w$]*)\??[ \t]*:[^,}]+/gi, (_m, prefix, name) => `${prefix}${name}`)
 
   // 3) Remove "readonly" and "?" optional markers in params if present
   result = result.replace(/\breadonly\s+/g, '')
