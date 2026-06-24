@@ -14,5 +14,5 @@ export function $nav(
 ) {
   const localePath = useLocalePath()
 
-  navigateTo(localePath(route as any, locale), options)
+  return navigateTo(localePath(route as any, locale), options)
 }
