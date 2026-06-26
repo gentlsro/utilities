@@ -129,7 +129,9 @@
     "documentation": "Dokumentace",
     "dataLoading": "Načítání dat",
     "detail": "Detail | Detaily",
-    "basic": "Základní"
+    "basic": "Základní",
+    "example": "Příklad",
+    "configuration": "Konfigurace"
   },
   "zod": {
     "errors": {
@@ -406,6 +408,7 @@
     "date": "Datum",
     "datetime": "Datum a čas",
     "time": "Čas",
+    "duration": "Doba trvání",
     "link": "Odkaz",
     "task": "Úkol"
   },

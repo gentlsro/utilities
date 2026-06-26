@@ -110,7 +110,7 @@ type IParseFnc = (payload: {
 export type IUtilitiesConfig = {
   general: {
     locale?: Locale
-    domain?: string
+    domain?: string | null
     transliterate?: boolean
     useUtc?: boolean
     environment?: string

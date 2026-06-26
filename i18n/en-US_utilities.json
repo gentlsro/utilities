@@ -99,7 +99,7 @@
     "notFilled": "Not specified",
     "additionalConfiguration": "Additional configuration",
     "use": "Use",
-    "invalidForm2": "Icorrectly filled data",
+    "invalidForm2": "Incorrectly filled data",
     "recent": "Recent",
     "rename": "Rename",
     "collapseAll": "Collapse all",
@@ -129,7 +129,9 @@
     "documentation": "Documentation",
     "dataLoading": "Loading data",
     "detail": "Detail | Details",
-    "basic": "Basic"
+    "basic": "Basic",
+    "example": "Example",
+    "configuration": "Configuration"
   },
   "zod": {
     "errors": {
@@ -411,6 +413,7 @@
     "date": "Date",
     "datetime": "Date and time",
     "time": "Time",
+    "duration": "Duration",
     "link": "Link",
     "task": "Task"
   },

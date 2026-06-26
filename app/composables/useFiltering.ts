@@ -18,7 +18,7 @@ type IFilter<T> = Pick<
 export function useFiltering() {
   const { filterData: filterDataShared, handleFilter } = useFilteringShared()
 
-  function filterData<T = IItem>(
+  function filterData<T extends IItem = IItem>(
     dataRef: MaybeRefOrGetter<T[]>,
     filtersRef: MaybeRefOrGetter<IFilter<T>[]>,
     rowKey = 'id',

@@ -7,7 +7,7 @@ import type { FilterItem } from '../models/filter-item.model'
 
 // Functions
 import { useText } from './useText'
-import { transliterate } from '../functions/transliterate'
+import { filterData as filterDataCore } from '../functions/filter-data'
 
 type IFilter<T> = Pick<
   FilterItem<T>,
@@ -21,12 +21,10 @@ type IFilter<T> = Pick<
   | 'format'
 >
 
-// TODO: Create worker version
 export function useFiltering() {
-  // Utils
   const { normalizeText } = useText()
 
-  const filterData = <T = IItem>(
+  const filterData = <T extends IItem = IItem>(
     data: T[],
     filters: IFilter<T>[],
     rowKey = 'id',
@@ -45,69 +43,14 @@ export function useFiltering() {
   ) => {
     const { runAll = false, onInvalid } = options ?? {}
 
-    return data.filter(row => {
-      let valid = true
-
-      filters.forEach(f => {
-        // Prevent cycle from running unnecessarily
-        if (!valid && !runAll) {
-          return
-        }
-
-        if ('filteredKeys' in f && !isEmpty(f.filteredKeys)) {
-          valid = !!f.filteredKeys?.[get(row, rowKey) as any]
-
-          return
-        }
-
-        // let rowValue: any
-        let rowValue: any = get(row, f.field)
-
-        if ('filterFormat' in f && f.filterFormat) {
-          rowValue = f.filterFormat(row)
-        } else if ('format' in f && f.format) {
-          rowValue = f.format(row, rowValue)
-        }
-
-        if (Array.isArray(f.value)) {
-          const isAndCondition = f.comparator === ComparatorEnum.IN_EVERY || f.comparator === ComparatorEnum.IN_NONE
-          let validInArray = false
-
-          if (!isAndCondition) {
-            f.value.forEach(cVal => {
-              const isFilterValid = handleFilter(f.comparator, rowValue, cVal, f.dataType)
-
-              if (!isFilterValid) {
-                onInvalid?.(f, row)
-              }
-
-              validInArray = validInArray || isFilterValid
-            })
-          } else {
-            const isFilterValid = handleFilter(f.comparator, rowValue, f.value, f.dataType)
-
-            if (!isFilterValid) {
-              onInvalid?.(f, row)
-            }
-
-            validInArray = validInArray || isFilterValid
-          }
-
-          valid = valid && validInArray
-        } else {
-          const isFilterValid = handleFilter(f.comparator, rowValue, f.value, f.dataType)
-
-          if (!isFilterValid) {
-            onInvalid?.(f, row)
-          }
-
-          valid = valid && isFilterValid
-        }
-
-        return valid
-      })
-
-      return valid
+    return filterDataCore({
+      data,
+      filters,
+      rowKey,
+      normalizeText,
+      transliterate: utilsConfig.general.transliterate,
+      runAll,
+      onInvalid,
     })
   }
 
@@ -117,6 +60,10 @@ export function useFiltering() {
     value: any,
     dataType?: ExtendedDataType,
   ) => {
+    const textFnc = utilsConfig.general.transliterate
+      ? transliterate
+      : normalizeText
+
     let valid = true
     let formattedRowValue = rowValue
     let formattedValue = value
@@ -126,11 +73,6 @@ export function useFiltering() {
       formattedValue = parseValue(value, dataType, { dateFormat: 'YYYY-MM-DD' })
     }
 
-    const textFnc = utilsConfig.general.transliterate
-      ? transliterate
-      : normalizeText
-
-    // Transliteration
     if (dataType === 'string' || dataType === 'stringSimple') {
       formattedRowValue = textFnc(formattedRowValue ?? '') || undefined
       formattedValue = textFnc(formattedValue ?? '') || undefined
@@ -196,11 +138,11 @@ export function useFiltering() {
         break
 
       case ComparatorEnum.IS_EMPTY:
-        valid = valid && isNil(formattedRowValue)
+        valid = valid && (Array.isArray(formattedRowValue) ? !formattedRowValue.length : isNil(formattedRowValue))
         break
 
       case ComparatorEnum.NOT_IS_EMPTY:
-        valid = valid && !isNil(formattedRowValue)
+        valid = valid && (Array.isArray(formattedRowValue) ? !!formattedRowValue.length : !isNil(formattedRowValue))
         break
 
       case ComparatorEnum.CONTAINS:
