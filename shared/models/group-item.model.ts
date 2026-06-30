@@ -1,5 +1,8 @@
 import type { Required } from 'utility-types'
 
+// Types
+import type { ObjectKey } from '../types/object-key.type'
+
 export class GroupItem<T = any> {
   name: string | ObjectKey<T>
   label?: string | ((value: any, group: GroupItem<T>) => string)

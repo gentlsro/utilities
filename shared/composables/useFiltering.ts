@@ -2,6 +2,9 @@ import utilsConfig from '$utilsConfig'
 import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
+// Types
+import type { IItem } from '../types/item.type'
+
 // Models
 import type { FilterItem } from '../models/filter-item.model'
 

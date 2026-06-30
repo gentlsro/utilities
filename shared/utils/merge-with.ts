@@ -1,3 +1,6 @@
+// Types
+import type { IItem } from '../types/item.type'
+
 export function mergeWith<T extends IItem>(payload: {
   rootItems: T[]
   nestedItems: T[]

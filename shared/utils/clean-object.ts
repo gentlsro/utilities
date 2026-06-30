@@ -1,3 +1,6 @@
+// Types
+import type { IItem } from '../types/item.type'
+
 /**
  * Will remove all `null` and `undefined` values from the object
  */

@@ -3,6 +3,10 @@ import { get, isEmpty, isNil } from 'lodash-es'
 import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
+// Types
+import type { IItem } from '../types/item.type'
+import type { ObjectKey } from '../types/object-key.type'
+
 // Functions
 import { transliterate } from './transliterate'
 

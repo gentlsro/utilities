@@ -1,3 +1,6 @@
+// Types
+import type { IItem } from '../types/item.type'
+
 /**
  * Extracts all "leaf" keys present in an object
  *

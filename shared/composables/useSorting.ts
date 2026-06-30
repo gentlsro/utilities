@@ -1,5 +1,8 @@
 // TODO: Fix worker version
 
+// Types
+import type { IItem } from '../types/item.type'
+
 // Models
 import type { GroupItem } from '../models/group-item.model'
 import type { SortItem } from '../models/sort-item.model'

@@ -3,6 +3,10 @@ import type { Required } from 'utility-types'
 import type { ExtendedDataType } from '$dataType'
 import { ComparatorEnum } from '$comparatorEnum'
 
+// Types
+import type { IItem } from '../types/item.type'
+import type { ObjectKey } from '../types/object-key.type'
+
 export class FilterItem<T = IItem> {
   id: number | string
   name: string | number | Extract<keyof T, string | number>

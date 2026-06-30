@@ -1,5 +1,8 @@
 import type { Required } from 'utility-types'
 
+// Types
+import type { ObjectKey } from '../types/object-key.type'
+
 export class SortItem<T = any> {
   name: string | Extract<keyof T, string | number>
   field: ObjectKey<T>

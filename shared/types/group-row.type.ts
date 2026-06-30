@@ -1,3 +1,6 @@
+// Types
+import type { IItem } from './item.type'
+
 export type IGroupRow = {
   class?: Record<string, boolean> | string | string[]
   groupIdx: number

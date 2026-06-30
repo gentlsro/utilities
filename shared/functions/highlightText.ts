@@ -1,5 +1,8 @@
 import type * as Fuse from 'fuse.js'
 
+// Types
+import type { IItem } from '../types/item.type'
+
 /**
  *
  * @param fuseSearchResult result you get from useFuse (fuzzy search)
