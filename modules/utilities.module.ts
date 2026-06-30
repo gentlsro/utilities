@@ -1,6 +1,6 @@
 import { addTemplate, createResolver, defineNuxtModule } from 'nuxt/kit'
+import type { Nuxt } from 'nuxt/schema'
 import { existsSync, readFileSync } from 'node:fs'
-import { relative } from 'node:path'
 
 const { resolve } = createResolver(import.meta.url)
 const currentDir = resolve('..')
@@ -39,25 +39,43 @@ function extractTypeContent(content: string, typeName: string) {
   return null
 }
 
-export default defineNuxtModule({
-  setup: async (_, nuxt) => {
-    console.log('✔ Process Utilities...')
-    const componentPaths: string[] = []
+const CLIENT_UTILS_CONFIG = '#build/client-utilsConfig.ts'
+const SERVER_UTILS_CONFIG = '#build/server-utilsConfig.ts'
+const COMPARATOR_ENUM = '#build/comparator-enum.ts'
+const DATA_TYPE = '#build/data-type.type.ts'
 
-    const configPaths = nuxt.options._layers
-      .map(layer => {
-        const isBase = layer.cwd === currentDir
-        const configPath = isBase ? 'config' : 'utilities-config'
+function setAliasPaths(
+  nuxt: Nuxt,
+  alias: string,
+  tsClientPath: string,
+  tsServerPath = tsClientPath,
+) {
+  nuxt.options.typescript.tsConfig ??= {}
+  nuxt.options.typescript.tsConfig.compilerOptions ??= {}
+  nuxt.options.typescript.tsConfig.compilerOptions.paths ??= {}
+  nuxt.options.typescript.tsConfig.compilerOptions.paths[alias] = [tsClientPath]
 
-        componentPaths.push(relative(process.cwd(), `${layer.cwd}/app/components/**/*.vue`))
-        componentPaths.push(relative(process.cwd(), `${layer.cwd}/app/libs/**/*.vue`))
+  nuxt.options.nitro.typescript ??= {}
+  nuxt.options.nitro.typescript.tsConfig ??= {}
+  nuxt.options.nitro.typescript.tsConfig.compilerOptions ??= {}
+  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths ??= {}
+  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths[alias] = [tsServerPath]
+}
 
-        return { path: resolve(layer.cwd, configPath), isBase, cwd: layer.cwd }
-      })
-      .filter(({ path }) => existsSync(`${path}.ts`))
+function generateUtilityConfigCode(configPaths: { path: string, isBase: boolean, cwd: string }[]) {
+  return `import { createDefu } from 'defu'
 
-    // Merge the utility configs
-    const codeUtilityConfigs = `${configPaths.map(({ path }, idx) => {
+export const customDefu = createDefu((obj, key, value) => {
+  // For arrays, use the value, don't extend
+  if (Array.isArray(obj[key])) {
+    obj[key] = value ?? obj[key]
+
+    return true
+  }
+})
+
+
+  ${configPaths.map(({ path }, idx) => {
       return `import config${idx} from '${path}'`
     }).join('\n')}
 
@@ -66,12 +84,36 @@ export const utilsConfig = customDefu(${configPaths.map((_, idx) => `config${idx
 export type IIUtilitiesConfig = typeof utilsConfig
 export default utilsConfig
 `
+}
+
+export default defineNuxtModule({
+  setup: async (_, nuxt) => {
+    console.log('✔ Process Utilities...')
+
+    const configPaths = nuxt.options._layers
+      .map(layer => {
+        const isBase = layer.cwd === currentDir
+        const configPath = isBase ? 'config' : 'utilities-config'
+
+        return { path: resolve(layer.cwd, 'app', configPath), isBase, cwd: layer.cwd }
+      })
+      .filter(({ path }) => existsSync(`${path}.ts`))
+
+    const configCode = generateUtilityConfigCode(configPaths)
 
     addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/utilsConfig.ts`,
+      filename: 'client-utilsConfig.ts',
       write: true,
-      getContents: () => codeUtilityConfigs,
+      getContents: () => configCode,
     })
+
+    addTemplate({
+      filename: 'server-utilsConfig.ts',
+      write: true,
+      getContents: () => configCode,
+    })
+
+    setAliasPaths(nuxt, '$utilsConfig', './client-utilsConfig.ts', './server-utilsConfig.ts')
 
     // Merge the ComparatorEnum
     const configContents = configPaths
@@ -89,10 +131,12 @@ export default utilsConfig
       .join('\n')
 
     addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/comparator-enum.ts`,
+      filename: 'comparator-enum.ts',
       write: true,
       getContents: () => configContents,
     })
+
+    setAliasPaths(nuxt, '$comparatorEnum', './comparator-enum.ts')
 
     // Merge the data types
     let dataTypes = configPaths
@@ -116,85 +160,100 @@ type SimpleDataType = \`\${DataType}Simple\`
 export type ExtendedDataType = DataType | SimpleDataType`
 
     addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/data-type.type.ts`,
+      filename: 'data-type.type.ts',
       write: true,
       getContents: () => dataTypes,
     })
 
-    // Map components by name
-    addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
-      write: true,
-      getContents: () => `import type { AsyncComponentLoader, Component } from 'vue'
-export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {}
-`,
-      //       getContents: async () => {
-      //         const { globby } = await import('globby')
-      //         const { resolve, relative } = await import('node:path')
-      //         const fs = await import('node:fs')
+    setAliasPaths(nuxt, '$dataType', './data-type.type.ts')
 
-      //         // Create a map to store component names and their actual file paths
-      //         const componentMap = new Map()
-
-      //         // Process each layer to find components
-      //         for (const layer of nuxt.options._layers) {
-      //           const layerRoot = layer.cwd
-
-      //           // These are the patterns within each layer
-      //           const patterns = [
-      //             'client/components/**/*.vue',
-      //             'client/libs/**/*.vue',
-      //           ]
-
-      //           // For each pattern, find matching files in this layer
-      //           for (const pattern of patterns) {
-      //             const fullPattern = resolve(layerRoot, pattern)
-      //             try {
-      //               const files = await globby(fullPattern)
-
-      //               for (const file of files) {
-      //                 const componentName = file.split('/').pop()?.replace('.vue', '')
-      //                 if (componentName) {
-      //                   // Store the absolute file path
-      //                   componentMap.set(componentName, file)
-      //                 }
-      //               }
-      //             } catch (err) {
-      //               console.warn(`Failed to glob pattern ${fullPattern}:`, err)
-      //             }
-      //           }
-      //         }
-
-      //         // Generate explicit dynamic imports for each component
-      //         const imports = []
-      //         for (const [name, filePath] of componentMap.entries()) {
-      //           // We need to ensure the path is properly formatted for webpack/vite
-      //           const normalizedPath = filePath.replace(/\\/g, '/')
-      //           imports.push(`  "${name}": () => import("${normalizedPath}")`)
-      //         }
-
-      //         return `import type { AsyncComponentLoader, Component } from 'vue'
-
-      // // Component registry generated at build time
-      // export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {
-      // ${imports.join(',\n')}
-      // }
-      // `
-      //       },
+    nuxt.hook('prepare:types', ({ sharedTsConfig }) => {
+      sharedTsConfig.compilerOptions ??= {}
+      sharedTsConfig.compilerOptions.paths ??= {}
+      sharedTsConfig.compilerOptions.paths.$utilsConfig = ['./client-utilsConfig.ts']
+      sharedTsConfig.compilerOptions.paths.$comparatorEnum = ['./comparator-enum.ts']
+      sharedTsConfig.compilerOptions.paths.$dataType = ['./data-type.type.ts']
     })
 
-    nuxt.hook('vite:extendConfig', config => {
-      if (config.resolve) {
-        if (!config.resolve.alias) {
-          config.resolve.alias = {}
-        }
+    // Map components by name
+//     addTemplate({
+//       filename: `${nuxt.options.rootDir}/generated/components-by-name.ts`,
+//       write: true,
+//       getContents: () => `import type { AsyncComponentLoader, Component } from 'vue'
+// export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {}
+// `,
+//       //       getContents: async () => {
+//       //         const { globby } = await import('globby')
+//       //         const { resolve, relative } = await import('node:path')
+//       //         const fs = await import('node:fs')
 
+//       //         // Create a map to store component names and their actual file paths
+//       //         const componentMap = new Map()
+
+//       //         // Process each layer to find components
+//       //         for (const layer of nuxt.options._layers) {
+//       //           const layerRoot = layer.cwd
+
+//       //           // These are the patterns within each layer
+//       //           const patterns = [
+//       //             'client/components/**/*.vue',
+//       //             'client/libs/**/*.vue',
+//       //           ]
+
+//       //           // For each pattern, find matching files in this layer
+//       //           for (const pattern of patterns) {
+//       //             const fullPattern = resolve(layerRoot, pattern)
+//       //             try {
+//       //               const files = await globby(fullPattern)
+
+//       //               for (const file of files) {
+//       //                 const componentName = file.split('/').pop()?.replace('.vue', '')
+//       //                 if (componentName) {
+//       //                   // Store the absolute file path
+//       //                   componentMap.set(componentName, file)
+//       //                 }
+//       //               }
+//       //             } catch (err) {
+//       //               console.warn(`Failed to glob pattern ${fullPattern}:`, err)
+//       //             }
+//       //           }
+//       //         }
+
+//       //         // Generate explicit dynamic imports for each component
+//       //         const imports = []
+//       //         for (const [name, filePath] of componentMap.entries()) {
+//       //           // We need to ensure the path is properly formatted for webpack/vite
+//       //           const normalizedPath = filePath.replace(/\\/g, '/')
+//       //           imports.push(`  "${name}": () => import("${normalizedPath}")`)
+//       //         }
+
+//       //         return `import type { AsyncComponentLoader, Component } from 'vue'
+
+//       // // Component registry generated at build time
+//       // export const componentsImportByName: Record<string, AsyncComponentLoader<Component>> = {
+//       // ${imports.join(',\n')}
+//       // }
+//       // `
+//       //       },
+//     })
+
+    nuxt.hook('vite:extendConfig', (config) => {
+      if (config.resolve) {
         config.resolve.alias = {
           ...config.resolve.alias,
-          $utilsConfig: `${nuxt.options.rootDir}/generated/utilsConfig.ts`,
-          $comparatorEnum: `${nuxt.options.rootDir}/generated/comparator-enum.ts`,
-          $dataType: `${nuxt.options.rootDir}/generated/data-type.type.ts`,
+          $utilsConfig: CLIENT_UTILS_CONFIG,
+          $comparatorEnum: COMPARATOR_ENUM,
+          $dataType: DATA_TYPE,
         }
+      }
+    })
+
+    nuxt.hook('nitro:config', (nitroConfig) => {
+      nitroConfig.alias = {
+        ...nitroConfig.alias,
+        $utilsConfig: SERVER_UTILS_CONFIG,
+        $comparatorEnum: COMPARATOR_ENUM,
+        $dataType: DATA_TYPE,
       }
     })
   },

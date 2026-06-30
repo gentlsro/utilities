@@ -1,6 +1,4 @@
-import { join } from 'pathe'
 import { createResolver } from 'nuxt/kit'
-import { cwd } from 'node:process'
 
 const { resolve } = createResolver(import.meta.url)
 
@@ -39,12 +37,6 @@ export default defineNuxtConfig({
     },
   },
 
-  alias: {
-    $utilsConfig: join(cwd(), 'generated', 'utilsConfig.ts'),
-    $comparatorEnum: join(cwd(), 'generated', 'comparator-enum.ts'),
-    $dataType: join(cwd(), 'generated', 'data-type.type.ts'),
-  },
-
   nitro: {
     imports: {
       imports: [
@@ -68,18 +60,7 @@ export default defineNuxtConfig({
         // resolve('./shared/composables'),
       ],
     },
-  },
 
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        paths: {
-          $dataType: [join(cwd(), 'generated', 'data-type.type.ts')],
-          $utilsConfig: [join(cwd(), 'generated', 'utilsConfig.ts')],
-          $comparatorEnum: [join(cwd(), 'generated', 'comparator-enum.ts')],
-        },
-      },
-    },
   },
 
   i18n: {
