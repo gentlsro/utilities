@@ -65,34 +65,34 @@ const ARK_VALIDATOR_FNS = {
 export const ARK_VALIDATORS = {
   required: type('unknown').narrow((value, ctx) => {
     if (!ARK_VALIDATOR_FNS.required(value)) {
-      ctx.reject(arkError({ message: $t('ark.errors.required') }))
+      ctx.reject(arkError({ message: $tShared('ark.errors.required') }))
     }
 
     return true
   }),
   numeric: type('unknown').narrow((value, ctx) => {
     if (!ARK_VALIDATOR_FNS.numeric(value)) {
-      ctx.reject(arkError({ message: $t('ark.errors.numeric') }))
+      ctx.reject(arkError({ message: $tShared('ark.errors.numeric') }))
     }
 
     return true
   }),
   validDate: type('unknown').narrow((value, ctx) => {
     if (!value) {
-      ctx.reject(arkError({ message: $t('ark.errors.required') }))
+      ctx.reject(arkError({ message: $tShared('ark.errors.required') }))
 
       return true
     }
 
     if (!ARK_VALIDATOR_FNS.validDate(value as Datetime)) {
-      ctx.reject(arkError({ message: $t('ark.errors.date') }))
+      ctx.reject(arkError({ message: $tShared('ark.errors.date') }))
     }
 
     return true
   }),
   hasId: type('unknown').narrow((value, ctx) => {
     if (!ARK_VALIDATOR_FNS.hasId(value)) {
-      ctx.reject(arkError({ message: $t('ark.errors.missingId') }))
+      ctx.reject(arkError({ message: $tShared('ark.errors.missingId') }))
     }
 
     return true

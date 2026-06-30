@@ -1,5 +1,4 @@
-import type { Ref } from 'vue'
-import type { MaybeRefOrGetter } from '@vueuse/core'
+import type { MaybeRefOrGetter, Ref } from 'vue'
 
 export type UseFnPayload<T = any> = {
   /**

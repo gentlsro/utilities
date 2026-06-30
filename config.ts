@@ -1,5 +1,3 @@
-import type { Locale } from '#i18n'
-
 // Types
 import type { ExtendedDataType } from '$dataType'
 import type { UseFnPayload } from './app/types/use-fn-payload.type'
@@ -109,7 +107,7 @@ type IParseFnc = (payload: {
 
 export type IUtilitiesConfig = {
   general: {
-    locale?: Locale
+    locale?: string
     domain?: string | null
     transliterate?: boolean
     useUtc?: boolean

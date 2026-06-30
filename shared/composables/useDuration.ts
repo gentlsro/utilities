@@ -78,7 +78,7 @@ export function useDuration(payload: { localeIso?: string }) {
 
     const val = $duration(value).as(unit)
     const formatted = formatNumber(val)
-    const unitTranslated = $t(`general.${unit}`, Math.round(Math.abs(val)))
+    const unitTranslated = $tShared(`general.${unit}`, Math.round(Math.abs(val)))
 
     return {
       val,

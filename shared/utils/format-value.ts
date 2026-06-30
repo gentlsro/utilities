@@ -89,7 +89,7 @@ function handleDefaultFormat(payload: {
     case 'booleanSimple':
     case 'boolSimple':
       try {
-        return JSON.parse(value) ? $t('general.yes') : $t('general.no')
+        return JSON.parse(value) ? $tShared('general.yes') : $tShared('general.no')
       } catch {
         return emptyValue
       }

@@ -62,8 +62,8 @@ export default defineNuxtConfig({
       dirs: [
         resolve('./shared/regex'),
         resolve('./shared/enums'),
+        resolve('./shared/functions'),
         // resolve('./shared/constants'),
-        // resolve('./shared/functions'),
         // resolve('./shared/models'),
         // resolve('./shared/composables'),
       ],
@@ -84,6 +84,7 @@ export default defineNuxtConfig({
 
   i18n: {
     langDir: '../i18n',
+    defaultLocale: 'en-US',
     compilation: {
       strictMessage: false,
       escapeHtml: false,

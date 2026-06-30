@@ -1,5 +1,3 @@
-import type { ComputedRef } from 'vue'
-
 // Types
 import type { ZodSchemaObject } from './zod-schema-object.type'
 import type { IZodShape } from './zod-structure.type'
