@@ -4,7 +4,7 @@ import type { IUtilitiesConfig } from '../shared/types/utilities-config.type'
 // Functions
 import { deleteFile } from './utils/delete-file'
 import { uploadFile } from './utils/upload-file'
-import { extendUtilitiesConfig } from '../shared/utils/extend-utilities-config'
+import { extendUtilitiesConfig } from './utils/extend-utilities-config'
 
 // Constants
 import { defaultUtilitiesConfig } from '../shared/constants/default-config'
