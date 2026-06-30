@@ -17,7 +17,6 @@ export default defineNuxtConfig({
   imports: {
     imports: [
       { name: 'z', from: 'zod' },
-      { name: 'extendUtilitiesConfig', from: resolve('./app/utils/extend-utilities-config.ts') },
       { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
     ],
 
