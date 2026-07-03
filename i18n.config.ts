@@ -1,5 +1,5 @@
 import type { Locale } from '#i18n'
-import { datetimeFormats, messagesByLocale, pluralRules } from './shared/i18n'
+import { datetimeFormats, messagesByLocale, pluralRules } from './app/i18n'
 
 type DatetimeFormat = Record<string, Intl.DateTimeFormatOptions>
 

@@ -76,7 +76,7 @@ const { formatNumber } = useNumber()
 From `libs/UI/app/components/Inputs/DurationInput/DurationInput.vue`:
 
 ```ts
-import { MODIFIER_BY_UNIT } from '#layers/utilities/shared/composables/useDuration'
+import { MODIFIER_BY_UNIT } from '#layers/utilities/app/composables/useDuration'
 
 const { getDuration } = useDuration()
 
@@ -259,9 +259,9 @@ Returns: `files`, `allFiles`, `injectedFiles`, `clearFiles()`
 ## Source Evidence
 
 - `libs/Utilities/config.ts`, `modules/utilities.module.ts`
-- `libs/Utilities/shared/composables/useDateUtils.ts`, `useNumber.ts`, `useDuration.ts`
-- `libs/Utilities/shared/utils/format-value.ts`, `parse-value.ts`, `get-fast.ts`, `set-fast.ts`
-- `libs/Utilities/shared/models/filter-item.model.ts`, `sort-item.model.ts`, `group-item.model.ts`, `summary-item.model.ts`
+- `libs/Utilities/app/composables/useDateUtils.ts`, `useNumber.ts`, `useDuration.ts`
+- `libs/Utilities/app/utils/format-value.ts`, `parse-value.ts`, `get-fast.ts`, `set-fast.ts`
+- `libs/Utilities/app/models/filter-item.model.ts`, `sort-item.model.ts`, `group-item.model.ts`, `summary-item.model.ts`
 - `libs/Utilities/app/composables/useSearching.ts`, `useFiltering.ts`, `useSorting.ts`, `useGrouping.ts`, `useSummaries.ts`, `useFiles.ts`, `useZod.ts`
 - `libs/Utilities/app/models/file.model.ts`
 - `libs/UI/app/components/Inputs/DurationInput/DurationInput.vue`

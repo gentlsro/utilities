@@ -1,6 +1,6 @@
 // Models
-import { SummaryEnum } from '../../shared/enums/summary.enum'
-import type { SummaryItem } from '../../shared/models/summary-item.model'
+import { SummaryEnum } from '../enums/summary.enum'
+import type { SummaryItem } from '../models/summary-item.model'
 
 type IInputItem = IGroupedItem<IItem> | IGroupRow
 type IResultItem = {

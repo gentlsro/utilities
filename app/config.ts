@@ -1,13 +1,11 @@
 // Types
-import type { IUtilitiesConfig } from '../shared/types/utilities-config.type'
+import type { IUtilitiesConfig } from './types/utilities-config.type'
 
 // Functions
-import { deleteFile } from './utils/delete-file'
-import { uploadFile } from './utils/upload-file'
 import { extendUtilitiesConfig } from './utils/extend-utilities-config'
 
 // Constants
-import { defaultUtilitiesConfig } from '../shared/constants/default-config'
+import { defaultUtilitiesConfig } from './constants/default-config'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 enum ComparatorEnum {

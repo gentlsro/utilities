@@ -170,7 +170,6 @@ export type ExtendedDataType = DataType | SimpleDataType`
     nuxt.hook('prepare:types', ({ sharedTsConfig }) => {
       sharedTsConfig.compilerOptions ??= {}
       sharedTsConfig.compilerOptions.paths ??= {}
-      sharedTsConfig.compilerOptions.paths.$utilsConfig = ['./client-utilsConfig.ts']
       sharedTsConfig.compilerOptions.paths.$comparatorEnum = ['./comparator-enum.ts']
       sharedTsConfig.compilerOptions.paths.$dataType = ['./data-type.type.ts']
     })

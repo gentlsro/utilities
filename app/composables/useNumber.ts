@@ -1,10 +1,125 @@
-import { SummaryEnum } from '../../shared/enums/summary.enum'
+// Regex
+import { stringToFloat } from '../regex/string-to-float.regex'
 
-// Types
-import type { INumberOptions } from '../../shared/composables/useNumber'
+// Enums
+import { SummaryEnum } from '../enums/summary.enum'
 
-// Functions
-import { useNumber as useNumberShared } from '../../shared/composables/useNumber'
+/**
+ * Escapes special regex characters in a string
+ */
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+export type INumberOptions = {
+  localeIso?: string
+  intlOptions?: Intl.NumberFormatOptions
+}
+
+const defaultIntlOptions: Intl.NumberFormatOptions = {
+  maximumFractionDigits: 2,
+  useGrouping: true,
+}
+
+export function useNumberCore(payload: {
+  localeIso?: string
+  separators?: {
+    thousandSeparator: string
+    decimalSeparator: string
+  }
+}) {
+  const { localeIso, separators = { thousandSeparator: '', decimalSeparator: '' } } = payload ?? {}
+
+  /**
+   * Parses a number from a string
+   *
+   * Respects locale (thousand separator, decimal separator)
+   */
+  const parseNumber = (value?: string | number | null) => {
+    const val = String(value)
+    if (!val) {
+      return 0
+    }
+
+    let result = val
+      .replace(new RegExp(escapeRegExp(separators.thousandSeparator), 'g'), '')
+      .replace(new RegExp(escapeRegExp(separators.decimalSeparator)), '.')
+
+    if (separators.thousandSeparator.charCodeAt(0) === 160) {
+      result = result.replace(/ /g, '')
+    }
+    result = stringToFloat(result) || '0'
+
+    return Number.isNaN(+result) ? 0 : +result
+  }
+
+  /**
+   * Formats a number to a locale-aware string
+   */
+  const formatNumber = (
+    value?: number | string | null,
+    options: INumberOptions = {},
+  ) => {
+    if (value === null || value === undefined) {
+      return ''
+    }
+
+    const usedLocale = options.localeIso || localeIso
+    const usedIntlOptions = options.intlOptions || defaultIntlOptions
+
+    if (typeof value === 'string') {
+      return Intl.NumberFormat(usedLocale, usedIntlOptions).format(parseNumber(value))
+    }
+
+    return Intl.NumberFormat(usedLocale, usedIntlOptions).format(+value)
+  }
+
+  /**
+   * Formats currency
+   */
+  function formatCurrency(
+    value?: number | string | null,
+    currency?: string,
+    options: INumberOptions = {},
+  ) {
+    if (value === null || value === undefined) {
+      return ''
+    }
+
+    const formattedNumber = formatNumber(value, {
+      ...options,
+      intlOptions: {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    })
+
+    return currency ? `${formattedNumber} ${currency}` : formattedNumber
+  }
+
+  /**
+   * Formats bytes into more readable format
+   */
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) {
+      return '0 B'
+    }
+
+    const k = 1024
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${formatNumber(bytes / k ** i)} ${sizes[i]}`
+  }
+
+  return {
+    parseNumber,
+    formatNumber,
+    formatBytes,
+    formatCurrency,
+  }
+}
 
 function getSeparators(localeRef?: MaybeRefOrGetter<string>) {
   const locale = toValue(localeRef)
@@ -26,11 +141,11 @@ export function useNumber(options?: { localeIso?: string }) {
   const separators = computed(() => getSeparators(localeIso ?? currentLocale.value.code))
 
   const {
-    formatNumber: formatNumberShared,
-    formatCurrency: formatCurrencyShared,
+    formatNumber: formatNumberCore,
+    formatCurrency: formatCurrencyCore,
 
     ...other
-  } = useNumberShared({ localeIso: currentLocale.value.code, separators: separators.value })
+  } = useNumberCore({ localeIso: currentLocale.value.code, separators: separators.value })
 
   const summaryMetricOptions = computed(() => {
     return [
@@ -47,7 +162,7 @@ export function useNumber(options?: { localeIso?: string }) {
   ) {
     const value = toValue(valueRef)
 
-    return formatNumberShared(value, options)
+    return formatNumberCore(value, options)
   }
 
   function formatCurrency(
@@ -57,7 +172,7 @@ export function useNumber(options?: { localeIso?: string }) {
   ) {
     const value = toValue(valueRef)
 
-    return formatCurrencyShared(value, currency, options)
+    return formatCurrencyCore(value, currency, options)
   }
 
   return {

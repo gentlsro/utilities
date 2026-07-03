@@ -1,10 +1,12 @@
-import { utilsConfig } from '$utilsConfig'
 import type { ExtendedDataType } from '$dataType'
 import { ComparatorEnum } from '$comparatorEnum'
 
-export function getComparatorsByDataType(dataType: ExtendedDataType) {
-  const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.comparatorsByDataType
-  const comparators = utilsConfig.dataTypeExtend.comparatorsByDataType?.[_dataType]
+export function getComparatorsByDataType(
+  dataType: ExtendedDataType,
+  comparatorsByDataType: Partial<Record<ExtendedDataType, ComparatorEnum[]>> = {},
+) {
+  const _dataType = dataType as keyof typeof comparatorsByDataType
+  const comparators = comparatorsByDataType?.[_dataType]
 
   if (comparators) {
     return comparators

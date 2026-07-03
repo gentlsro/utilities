@@ -1,6 +1,9 @@
 import type { Required } from 'utility-types'
 import { utilsConfig } from '$utilsConfig'
 
+// Types
+import type { IUtilitiesConfig } from '../types/utilities-config.type'
+
 export class FileModel {
   file: File
   uploadProgress: number
@@ -47,12 +50,20 @@ export class FileModel {
     additionalData?: IItem
     requestHandler?: any
     headers?: IItem
+    uploadHandler?: IUtilitiesConfig['files']['uploadHandler']
     onComplete?: (res: any) => void
     onError?: (error: any) => void
   }) {
-    const { additionalData, requestHandler, headers, onComplete, onError } = payload ?? {}
+    const {
+      additionalData,
+      requestHandler,
+      headers,
+      uploadHandler = utilsConfig.files.uploadHandler,
+      onComplete,
+      onError,
+    } = payload ?? {}
 
-    return utilsConfig.files.uploadHandler({
+    return uploadHandler?.({
       file: this,
       additionalData,
       requestHandler,
@@ -65,15 +76,23 @@ export class FileModel {
   async delete(payload?: {
     additionalData?: IItem
     requestHandler?: any
+    deleteHandler?: IUtilitiesConfig['files']['deleteHandler']
     onComplete?: (res: any) => void
     onError?: (error: any) => void
   }) {
-    const { additionalData, requestHandler, onComplete, onError } = payload ?? {}
+    const {
+      additionalData,
+      requestHandler,
+      deleteHandler = utilsConfig.files.deleteHandler,
+      onComplete,
+      onError,
+    } = payload ?? {}
+
     if (!this.uploadedFile) {
       return
     }
 
-    return utilsConfig.files.deleteHandler({
+    return deleteHandler?.({
       file: this,
       additionalData,
       requestHandler,

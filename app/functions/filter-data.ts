@@ -1,4 +1,3 @@
-import dayjs from 'dayjs/esm'
 import { get, isEmpty, isNil } from 'lodash-es'
 import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
@@ -8,15 +7,8 @@ import type { IItem } from '../types/item.type'
 import type { ObjectKey } from '../types/object-key.type'
 
 // Functions
-import { transliterate } from './transliterate'
-
-const DATE_TYPES: ExtendedDataType[] = [
-  'date',
-  'datetime',
-  'yearMonth',
-  'timestamp',
-  'fullDateTime',
-]
+import { $date } from '../utils/$date'
+import { transliterate } from '../utils/transliterate'
 
 export type IFilterDataItem<T extends IItem = IItem> = {
   field: ObjectKey<T>
@@ -37,14 +29,21 @@ type IFilterDataOptions<T extends IItem> = {
   normalizeText: (text: string) => string
   runAll?: boolean
   onInvalid?: (filter: IFilterDataItem<T>, row: T) => void
+  useUtc?: boolean
+  dateTypes?: ExtendedDataType[]
 }
 
-function parseFilterValue(value: any, dataType?: ExtendedDataType) {
+function parseFilterValue(
+  value: any,
+  dataType?: ExtendedDataType,
+  options?: { useUtc?: boolean },
+) {
   if (isNil(value)) {
     return value
   }
 
   const normalizedDataType = dataType?.replace(/Simple$/, '') as ExtendedDataType | undefined
+  const { useUtc } = options ?? {}
 
   switch (normalizedDataType) {
     case 'number':
@@ -55,7 +54,7 @@ function parseFilterValue(value: any, dataType?: ExtendedDataType) {
     case 'datetime':
     case 'timestamp':
     case 'yearMonth':
-      return dayjs(value)
+      return $date(value, { utc: useUtc })
 
     case 'boolean':
       if (typeof value === 'boolean') {
@@ -90,16 +89,27 @@ function handleFilterData(
     value: any
     dataType?: ExtendedDataType
     textFnc: (text: string) => string
+    useUtc?: boolean
+    dateTypes?: ExtendedDataType[]
   },
 ) {
-  const { comparator, rowValue, value, dataType, textFnc } = payload
+  const {
+    comparator,
+    rowValue,
+    value,
+    dataType,
+    textFnc,
+    useUtc,
+    dateTypes = getDateTypes()
+  } = payload
+
   let valid = true
   let formattedRowValue = rowValue
   let formattedValue = value
 
   if (dataType) {
-    formattedRowValue = parseFilterValue(rowValue, dataType)
-    formattedValue = parseFilterValue(value, dataType)
+    formattedRowValue = parseFilterValue(rowValue, dataType, { useUtc })
+    formattedValue = parseFilterValue(value, dataType, { useUtc })
   }
 
   if (dataType === 'string' || dataType === 'stringSimple') {
@@ -149,16 +159,16 @@ function handleFilterData(
       break
 
     case ComparatorEnum.EQUAL:
-      if (dataType && DATE_TYPES.includes(dataType)) {
-        return dayjs(rowValue).isSame(dayjs(value), 'day')
+      if (dataType && dateTypes.includes(dataType)) {
+        return $date(rowValue, { utc: useUtc }).isSame($date(value, { utc: useUtc }), 'day')
       }
 
       valid = valid && formattedRowValue === formattedValue
       break
 
     case ComparatorEnum.NOT_EQUAL:
-      if (dataType && DATE_TYPES.includes(dataType)) {
-        return !dayjs(rowValue).isSame(dayjs(value), 'day')
+      if (dataType && dateTypes.includes(dataType)) {
+        return !$date(rowValue, { utc: useUtc }).isSame($date(value, { utc: useUtc }), 'day')
       }
 
       valid = valid && formattedRowValue !== formattedValue
@@ -230,6 +240,8 @@ export function filterData<T extends IItem = IItem>(options: IFilterDataOptions<
     normalizeText,
     runAll = false,
     onInvalid,
+    useUtc,
+    dateTypes,
   } = options
 
   const textFnc = useTransliterate ? transliterate : normalizeText
@@ -269,6 +281,8 @@ export function filterData<T extends IItem = IItem>(options: IFilterDataOptions<
               value: comparatorValue,
               dataType: filter.dataType,
               textFnc,
+              useUtc,
+              dateTypes,
             })
 
             if (!isFilterValid) {
@@ -284,6 +298,8 @@ export function filterData<T extends IItem = IItem>(options: IFilterDataOptions<
             value: filter.value,
             dataType: filter.dataType,
             textFnc,
+            useUtc,
+            dateTypes,
           })
 
           if (!isFilterValid) {
@@ -301,6 +317,8 @@ export function filterData<T extends IItem = IItem>(options: IFilterDataOptions<
           value: filter.value,
           dataType: filter.dataType,
           textFnc,
+          useUtc,
+          dateTypes,
         })
 
         if (!isFilterValid) {

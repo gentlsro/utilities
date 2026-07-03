@@ -1,8 +1,0 @@
-import { utilsConfig } from '$utilsConfig'
-import type { ExtendedDataType } from '$dataType'
-
-export type Datetime = Dayjs | number | string | Date | null | undefined
-export type DatetimeStrict = Dayjs | number | string | Date
-
-export const DATE_TYPES: ExtendedDataType[] = (utilsConfig.dataTypeExtend.dateTimeDataTypes ?? [])
-  .flatMap((type: ExtendedDataType) => [type, `${type}Simple`] as ExtendedDataType[])

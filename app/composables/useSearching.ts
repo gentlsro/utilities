@@ -1,10 +1,133 @@
+// TODO: Fix worker version
+import Fuse from 'fuse.js'
 import type { FuseResult } from 'fuse.js'
+import { klona } from 'klona/full'
+import utilsConfig from '$utilsConfig'
+
+// Types
+import type { IItem } from '../types/item.type'
+import type { ObjectKey } from '../types/object-key.type'
 
 // Functions
-import { useSearching as useSearchingShared } from '../../shared/composables/useSearching'
+import { useText } from './useText'
+import { transliterate } from '../utils/transliterate'
+
+export function removeDots(str: string) {
+  return str.replace(/\./g, '')
+}
+
+export function removeCommas(str: string) {
+  if (typeof str === 'string') {
+    return str.replace(/,/g, '')
+  }
+
+  return str
+}
 
 export function useSearching() {
-  const { searchData: searchDataShared } = useSearchingShared()
+  const { normalizeText } = useText()
+
+  const searchDataCore = async <T extends IItem>(payload: {
+    search?: string
+    rows: T[]
+    columns?: IItem[]
+    fuseOptions: IFuseOptions
+    useWorker?: boolean
+    normalizeFnc?: (val: string) => string
+    transliterate?: boolean
+    fuseSearchToken?: "'" | '=' | '!' | '^' | '!^' | '$' | '!$'
+    _extra?: { hasExactMatch?: boolean }
+  }): Promise<FuseResult<T>[]> => {
+    const {
+      search: searchString = '',
+      rows,
+      columns,
+      fuseOptions,
+      fuseSearchToken,
+      transliterate: shouldTransliterate = false,
+      _extra,
+    } = payload
+
+    const normalizeFnc = shouldTransliterate
+      ? transliterate
+      : normalizeText
+
+    const search = normalizeFnc(searchString)
+    const optionsClone = klona(fuseOptions)
+
+    if (!search) {
+      return rows.map((row, idx) => ({ item: row, refIndex: idx }))
+    }
+
+    const pattern = fuseOptions.useExtendedSearch && fuseSearchToken
+      ? `${fuseSearchToken}"${search}"`
+      : search
+
+    const colsByName = columns?.reduce((agg, col) => {
+      const colName = col.name as ObjectKey<T>
+      agg[colName] = col
+
+      return agg
+    }, {} as Record<ObjectKey<T> | string, IItem<T>>)
+
+    const columnsRelevant = (optionsClone.keys as unknown as string[]).map((key, idx) => {
+      const col = colsByName?.[key]
+      if (col) {
+        return col
+      }
+
+      if (typeof key === 'function') {
+        return { field: `_${idx}`, name: `_${idx}`, format: key }
+      }
+
+      return { name: key, field: key as any }
+    })
+
+    const rowsRelevantData = rows.map<Record<string, any>>(row => {
+      return columnsRelevant.reduce<Record<string, any>>((agg, col) => {
+        agg[removeDots(col.name)] = normalizeFnc(
+          removeCommas(
+            'format' in col && col.format
+              ? String(col.format(row, get(row, col.field)))
+              : String(get(row, col.field)),
+          ),
+        )
+
+        return agg
+      }, {})
+    })
+
+    optionsClone.keys = columnsRelevant.map(col => removeDots(col.name))
+
+    let result: FuseResult<T>[] = []
+
+    result = handleSearch(pattern, rowsRelevantData, optionsClone) as FuseResult<T>[]
+
+    if (_extra) {
+      _extra.hasExactMatch = result.some(item => {
+        return item.matches?.some(match => match.value === search)
+      })
+    }
+
+    return result.map(item => {
+      item.item = rows[item.refIndex] as T
+
+      return item
+    })
+  }
+
+  const handleSearch = <T extends IItem>(
+    pattern: string,
+    items: T[],
+    options: IFuseOptions,
+  ) => {
+    options = { threshold: 0.4, ...options, includeScore: true }
+
+    const fuse = new Fuse(items, options)
+
+    // @ts-expect-error Weird fuse.js typing
+    return fuse.search(pattern, options)
+  }
 
   const searchData = async <T extends IItem>(payload: {
     searchRef?: MaybeRefOrGetter<string>
@@ -13,22 +136,7 @@ export function useSearching() {
     fuseOptions: IFuseOptions
     useWorker?: boolean
     normalizeFnc?: (val: string) => string
-
-    /**
-     * The extended search token for fuse.js library
-     * https://www.fusejs.io/examples.html#extended-search
-     */
     fuseSearchToken?: "'" | '=' | '!' | '^' | '!^' | '$' | '!$'
-
-    /**
-     * For some cases, we need to know if the search result has "exact match"
-     * (~ the search value is exactly the same as the item label)
-     *
-     * We leverage usage of object reference here to mutate it in-place, so we
-     * can get the value back in the internal list function.
-     *
-     * In short, if there is an "exact match", you should set `_extra.hasExactMatch = true`
-     */
     _extra?: { hasExactMatch?: boolean }
   }): Promise<FuseResult<T>[]> => {
     const {
@@ -43,10 +151,11 @@ export function useSearching() {
     const rows = toValue(rowsRef)
     const columns = toValue(columnsRef)
 
-    return searchDataShared({
+    return searchDataCore({
       search,
       rows,
       columns,
+      transliterate: utilsConfig.general.transliterate,
       ...options,
     })
   }

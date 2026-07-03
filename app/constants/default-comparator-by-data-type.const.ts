@@ -1,20 +1,30 @@
-import utilsConfig from '$utilsConfig'
 import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
-export function getDefaultComparatorByDataType(dataType?: ExtendedDataType) {
+export function getDefaultComparatorByDataType(
+  dataType?: ExtendedDataType,
+  options: {
+    comparatorsByDataType?: Partial<Record<ExtendedDataType, ComparatorEnum[]>>
+    defaultComparatorByDataType?: Partial<Record<ExtendedDataType, ComparatorEnum>>
+  } = {},
+) {
   if (!dataType) {
     return ComparatorEnum.EQUAL
   }
 
-  let defaultComparator = utilsConfig.dataTypeExtend.defaultComparatorByDataType?.[dataType]
-  const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.comparatorsByDataType
-  const comparators = utilsConfig.dataTypeExtend.comparatorsByDataType?.[_dataType]
+  const {
+    comparatorsByDataType = {},
+    defaultComparatorByDataType = {},
+  } = options
+
+  let defaultComparator = defaultComparatorByDataType?.[dataType]
+  const _dataType = dataType as keyof typeof comparatorsByDataType
+  const comparators = comparatorsByDataType?.[_dataType]
 
   if (!defaultComparator) {
     const dt = dataType?.replace('Simple', '') as ExtendedDataType
 
-    defaultComparator = utilsConfig.dataTypeExtend.defaultComparatorByDataType?.[dt]
+    defaultComparator = defaultComparatorByDataType?.[dt]
   }
 
   if (defaultComparator) {

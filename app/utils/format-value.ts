@@ -1,13 +1,13 @@
-import { utilsConfig } from '$utilsConfig'
+import utilsConfig from '$utilsConfig'
 
 // Types
 import type { IFormatValueOptions } from '../types/format-value-options.type'
 
 // Functions
 import { predictDataType } from '../functions/predict-data-type'
-import { useDateUtils as useDateUtilsShared } from '../composables/useDateUtils'
-import { useNumber as useNumberShared } from '../composables/useNumber'
-import { useDuration as useDurationShared } from '../composables/useDuration'
+import { useDateUtilsCore } from '../composables/useDateUtils'
+import { useNumberCore } from '../composables/useNumber'
+import { useDurationCore } from '../composables/useDuration'
 
 function handleDefaultFormat(payload: {
   value: any
@@ -15,10 +15,11 @@ function handleDefaultFormat(payload: {
   dateFormat?: string
   emptyValue?: any
   predictDataType?: IFormatValueOptions['predictDataType']
-  formatNumber: ReturnType<typeof useNumberShared>['formatNumber']
-  getDuration: ReturnType<typeof useDurationShared>['getDuration']
-  formatDate: ReturnType<typeof useDateUtilsShared>['formatDate']
-  formatTime: ReturnType<typeof useDateUtilsShared>['formatTime']
+  formatNumber: ReturnType<typeof useNumberCore>['formatNumber']
+  getDuration: ReturnType<typeof useDurationCore>['getDuration']
+  formatDate: ReturnType<typeof useDateUtilsCore>['formatDate']
+  formatTime: ReturnType<typeof useDateUtilsCore>['formatTime']
+  useUtc?: boolean
 }) {
   const {
     value,
@@ -30,9 +31,9 @@ function handleDefaultFormat(payload: {
     getDuration,
     formatDate,
     formatTime,
+    useUtc,
   } = payload
 
-  // We try to predict datatype if not provided
   if (_predictDataType) {
     options.dataType = predictDataType(_predictDataType)
   }
@@ -59,7 +60,7 @@ function handleDefaultFormat(payload: {
     case 'date':
     case 'dateSimple':
       if (dateFormat) {
-        return $date(value).format(dateFormat)
+        return $date(value, { utc: useUtc }).format(dateFormat)
       } else {
         return formatDate(value, 'short')
       }
@@ -101,10 +102,7 @@ function handleDefaultFormat(payload: {
   }
 }
 
-/**
- * Formats the value from given data type to string
- */
-export function formatValue(
+export function formatValueCore(
   value: any,
   row?: any,
   options: IFormatValueOptions = {},
@@ -115,29 +113,27 @@ export function formatValue(
     emptyValue,
     predictDataType: _predictDataType,
     format,
+    formatFncByDataType = {},
+    useUtc,
   } = options ?? {}
 
-  const { formatDate, formatTime } = useDateUtilsShared(localeIso)
-  const { formatNumber } = useNumberShared({ localeIso })
-  const { getDuration } = useDurationShared({ localeIso })
+  const { formatDate, formatTime } = useDateUtilsCore(localeIso)
+  const { formatNumber } = useNumberCore({ localeIso })
+  const { getDuration } = useDurationCore({ localeIso })
 
-  // When array is provided, we format each value
   if (Array.isArray(value)) {
     return value
-      .map(val => formatValue(val, row, options))
+      .map(val => formatValueCore(val, row, options))
       .join(', ') as string
   }
 
-  // When `value` is equal to the `emptyValue`, we just return it
   if (isEqual(value, emptyValue)) {
     return emptyValue
   }
-  // When value is null or undefined, we don't bother and just return empty string
   if (isNil(value)) {
     return ''
   }
 
-  // When format function is provided, we use that
   if (format) {
     return format(row ?? {}, value, options)
   }
@@ -152,19 +148,28 @@ export function formatValue(
     getDuration,
     formatDate,
     formatTime,
+    useUtc,
   }
 
-  // In case we have a custom format function, we use that
-  const _dataType = options.dataType as keyof typeof utilsConfig.dataTypeExtend.formatFncByDataType
-  const customFormatFnc = _dataType && utilsConfig.dataTypeExtend.formatFncByDataType[_dataType]
+  const _dataType = options.dataType as keyof typeof formatFncByDataType
+  const customFormatFnc = _dataType && formatFncByDataType[_dataType]
 
   if (customFormatFnc) {
     return customFormatFnc(value, row, {
       ...options,
-      formatFnc: formatValue,
+      formatFnc: formatValueCore,
       defaultHandler: () => handleDefaultFormat(defaultFormatPayload),
     })
   }
 
   return handleDefaultFormat(defaultFormatPayload)
+}
+
+export function formatValue(...args: Parameters<typeof formatValueCore>) {
+  const [value, row, options = {}] = args
+
+  options.formatFncByDataType ??= utilsConfig.dataTypeExtend.formatFncByDataType
+  options.useUtc ??= utilsConfig.general.useUtc
+
+  return formatValueCore(value, row, options)
 }

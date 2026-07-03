@@ -1,10 +1,9 @@
-import utilsConfig from '$utilsConfig'
 import type { ExtendedDataType } from '$dataType'
+import utilsConfig from '$utilsConfig'
 
 // Functions
 import { predictDataType } from '../functions/predict-data-type'
 
-// The default handler for parsing values
 function handleParseValue(payload: {
   value: any
   dataType?: ExtendedDataType
@@ -12,10 +11,12 @@ function handleParseValue(payload: {
     dateFormat?: string
     timezone?: string
     predictDataType?: PredictDataTypeOptions
+    useUtc?: boolean
   }
 }) {
+  // eslint-disable-next-line prefer-const
   let { value, dataType, options } = payload
-  const { dateFormat, predictDataType: _predictDataType, timezone } = options || {}
+  const { dateFormat, predictDataType: _predictDataType, timezone, useUtc } = options || {}
 
   if (!dataType && _predictDataType) {
     const predictedDataType = predictDataType(_predictDataType)
@@ -36,9 +37,9 @@ function handleParseValue(payload: {
     case 'yearMonth':
       return dateFormat
         ? timezone
-          ? $date(value).tz(timezone).format(dateFormat)
-          : $date(value).format(dateFormat)
-        : $date(value)
+          ? $date(value, { utc: useUtc }).tz(timezone).format(dateFormat)
+          : $date(value, { utc: useUtc }).format(dateFormat)
+        : $date(value, { utc: useUtc })
 
     case 'boolean':
       if (typeof value === 'boolean') {
@@ -60,33 +61,21 @@ function handleParseValue(payload: {
   }
 }
 
-/**
- * Will parse value from string to the given data type
- */
-export function parseValue(
+export function parseValueCore(
   value: any,
   dataType?: ExtendedDataType,
   options?: {
-    /**
-     * Output date format
-     */
     dateFormat?: string
-
-    /**
-     * Timezone to use for the date output
-     */
     timezone?: string
-
-    /**
-     * When true, the function will try to guess the data type based on the value
-     */
     predictDataType?: PredictDataTypeOptions
-
-    /**
-     * When using a custom parse function, we may also pass additional data to the function
-     * so that it can be used for the parsing
-     */
+    useUtc?: boolean
     additionalData?: any
+    parseFncByDataType?: Partial<Record<ExtendedDataType, (payload: {
+      value: any
+      dataType?: ExtendedDataType
+      options?: any
+      defaultHandler?: () => any
+    }) => any>>
   },
 ) {
   const { predictDataType: _predictDataType } = options || {}
@@ -95,9 +84,9 @@ export function parseValue(
     return value
   }
 
-  // In case we have a custom format function, we use that
-  const _dataType = dataType as keyof typeof utilsConfig.dataTypeExtend.parseFncByDataType
-  const customParseFnc = dataType && utilsConfig.dataTypeExtend.parseFncByDataType[_dataType]
+  const parseFncByDataType = options?.parseFncByDataType ?? {}
+  const _dataType = dataType as keyof typeof parseFncByDataType
+  const customParseFnc = dataType && parseFncByDataType[_dataType]
 
   if (customParseFnc) {
     return customParseFnc({
@@ -109,4 +98,13 @@ export function parseValue(
   }
 
   return handleParseValue({ value, dataType, options })
+}
+
+export function parseValue(...args: Parameters<typeof parseValueCore>) {
+  const [value, dataType, options = {}] = args
+
+  options.parseFncByDataType ??= utilsConfig.dataTypeExtend.parseFncByDataType
+  options.useUtc ??= utilsConfig.general.useUtc
+
+  return parseValueCore(value, dataType, options)
 }

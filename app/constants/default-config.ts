@@ -1,6 +1,7 @@
-// Types
 import type { ExtendedDataType } from '$dataType'
 import type { ComparatorEnum as MergedComparatorEnum } from '$comparatorEnum'
+
+// Types
 import type { IUtilitiesConfig } from '../types/utilities-config.type'
 
 const environment = (import.meta as any).env.NUXT_PUBLIC_ENV

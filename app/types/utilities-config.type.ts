@@ -2,8 +2,8 @@ import type { ExtendedDataType } from '$dataType'
 import type { ComparatorEnum as MergedComparatorEnum } from '$comparatorEnum'
 
 // Types
-import type { FileModel } from '../../app/models/file.model'
-import type { UseFnPayload } from '../../app/types/use-fn-payload.type'
+import type { FileModel } from '../models/file.model'
+import type { UseFnPayload } from './use-fn-payload.type'
 
 type IComponent = {
   component: string

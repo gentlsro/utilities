@@ -46,8 +46,7 @@ enum ComparatorEnum {
 
 ## What is auto-imported
 
-- `app/models`, `shared/models`, `shared/enums`, `shared/regex`, `shared/constants`, `shared/functions`
-- Nitro: `shared/composables`
+- `app/models`, `app/enums`, `app/regex`, `app/constants`, `app/functions`, `app/composables`
 
 ## Common first APIs
 
@@ -69,6 +68,6 @@ enum ComparatorEnum {
 
 - `libs/Utilities/config.ts`, `modules/utilities.module.ts`, `nuxt.config.ts`
 - `libs/Core/utilities-config.ts`
-- `libs/Utilities/shared/utils/format-value.ts`, `parse-value.ts`
+- `libs/Utilities/app/utils/format-value.ts`, `parse-value.ts`
 - `libs/Utilities/app/composables/useFiles.ts`, `useSummaries.ts`, `useZod.ts`
 - `libs/Utilities/app/models/file.model.ts`, `app/utils/upload-file.ts`, `delete-file.ts`

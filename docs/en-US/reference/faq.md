@@ -10,7 +10,7 @@ order: 2
 
 ## Does Utilities auto-import helpers?
 
-Yes. Nuxt config auto-imports `shared/models`, `shared/enums`, `shared/regex`, `shared/constants`, `shared/functions`, `app/models`. Nitro imports `shared/composables`.
+Yes. Nuxt config auto-imports `app/models`, `app/enums`, `app/regex`, `app/constants`, `app/functions`, `app/composables`.
 
 ## How do I extend Utilities configuration?
 
@@ -56,8 +56,8 @@ No single default: `config.ts` uses `en-US`; `locales.constant.ts` has `LOCALE_D
 
 - `libs/Utilities/nuxt.config.ts`, `config.ts`, `modules/utilities.module.ts`
 - `libs/Utilities/app/utils/upload-file.ts`, `delete-file.ts`
-- `libs/Utilities/shared/composables/useSearching.ts`, `useFiltering.ts`, `useSorting.ts`, `useGrouping.ts`
-- `libs/Utilities/shared/functions/predict-data-type.ts`
+- `libs/Utilities/app/composables/useSearching.ts`, `useFiltering.ts`, `useSorting.ts`, `useGrouping.ts`
+- `libs/Utilities/app/functions/predict-data-type.ts`
 - `libs/Utilities/app/composables/useSummaries.ts`
-- `libs/Utilities/shared/enums/summary.enum.ts`
-- `libs/Utilities/shared/i18n/locales.constant.ts`
+- `libs/Utilities/app/enums/summary.enum.ts`
+- `libs/Utilities/app/i18n/locales.constant.ts`

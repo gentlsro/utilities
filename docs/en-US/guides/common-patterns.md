@@ -97,8 +97,8 @@ async function handleUpload() {
 
 ## Source Evidence
 
-- `libs/Utilities/shared/functions/predict-data-type.ts`, `shared/utils/parse-value.ts`, `format-value.ts`
-- `libs/Utilities/shared/composables/useSearching.ts`, `useFiltering.ts`, `useSorting.ts`, `useGrouping.ts`
+- `libs/Utilities/app/functions/predict-data-type.ts`, `app/utils/parse-value.ts`, `format-value.ts`
+- `libs/Utilities/app/composables/useSearching.ts`, `useFiltering.ts`, `useSorting.ts`, `useGrouping.ts`
 - `libs/Utilities/app/composables/useSummaries.ts`, `useFiles.ts`
 - `libs/Utilities/app/models/file.model.ts`
 - `libs/DynamicGrid/app/composables/useDynamicGridElementsSearch.ts`

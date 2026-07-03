@@ -14,8 +14,7 @@ order: 1
 
 ### Nuxt integration and generated aliases
 
-- Nuxt config auto-imports: `app/models`, `shared/models`, `shared/enums`, `shared/regex`, `shared/constants`, `shared/functions`
-- Nitro imports `shared/composables` on the server
+- Nuxt config auto-imports: `app/models`, `app/enums`, `app/regex`, `app/constants`, `app/functions`, `app/composables`
 - Module generates: `$utilsConfig`, `$comparatorEnum`, `$dataType` (merged from all layers)
 
 ### Runtime areas
@@ -41,7 +40,7 @@ order: 1
 ## Source Evidence
 
 - `libs/Utilities/nuxt.config.ts`, `config.ts`, `modules/utilities.module.ts`
-- `libs/Utilities/shared/composables/useFiltering.ts`, `useSearching.ts`, `useSorting.ts`, `useGrouping.ts`
+- `libs/Utilities/app/composables/useFiltering.ts`, `useSearching.ts`, `useSorting.ts`, `useGrouping.ts`
 - `libs/Utilities/app/composables/useSummaries.ts`, `useFiles.ts`, `useZod.ts`
 - `libs/Utilities/app/models/file.model.ts`, `app/utils/upload-file.ts`, `delete-file.ts`
 - `libs/Core/utilities-config.ts`, `utilities-config.ts`
