@@ -1,4 +1,5 @@
 import { uniq } from 'lodash-es'
+import utilsConfig from '$utilsConfig'
 import { ComparatorEnum } from '$comparatorEnum'
 
 const NON_VALUE_COMPARATORS = [
@@ -17,13 +18,25 @@ const SELECTOR_COMPARATORS = [
 ]
 
 export function getNonValueComparators(extraComparators: ComparatorEnum[] = []) {
-  return uniq([...NON_VALUE_COMPARATORS, ...extraComparators])
+  return uniq([
+    ...NON_VALUE_COMPARATORS,
+    ...utilsConfig.dataTypeExtend.nonValueComparators,
+    ...extraComparators,
+  ])
 }
 
 export function getBooleanishComparators(extraComparators: ComparatorEnum[] = []) {
-  return uniq([...BOOLEANISH_COMPARATORS, ...extraComparators])
+  return uniq([
+    ...BOOLEANISH_COMPARATORS,
+    ...utilsConfig.dataTypeExtend.booleanishComparators,
+    ...extraComparators,
+  ])
 }
 
 export function getSelectorComparators(extraComparators: ComparatorEnum[] = []) {
-  return uniq([...SELECTOR_COMPARATORS, ...extraComparators])
+  return uniq([
+    ...SELECTOR_COMPARATORS,
+    ...utilsConfig.dataTypeExtend.selectorComparators,
+    ...extraComparators,
+  ])
 }

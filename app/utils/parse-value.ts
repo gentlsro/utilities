@@ -61,7 +61,7 @@ function handleParseValue(payload: {
   }
 }
 
-export function parseValueCore(
+export function parseValue(
   value: any,
   dataType?: ExtendedDataType,
   options?: {
@@ -78,13 +78,15 @@ export function parseValueCore(
     }) => any>>
   },
 ) {
-  const { predictDataType: _predictDataType } = options || {}
+  options ??= {}
+  options.parseFncByDataType ??= utilsConfig.dataTypeExtend.parseFncByDataType
+  options.useUtc ??= utilsConfig.general.useUtc
 
   if (isNil(value)) {
     return value
   }
 
-  const parseFncByDataType = options?.parseFncByDataType ?? {}
+  const parseFncByDataType = options.parseFncByDataType ?? {}
   const _dataType = dataType as keyof typeof parseFncByDataType
   const customParseFnc = dataType && parseFncByDataType[_dataType]
 
@@ -98,13 +100,4 @@ export function parseValueCore(
   }
 
   return handleParseValue({ value, dataType, options })
-}
-
-export function parseValue(...args: Parameters<typeof parseValueCore>) {
-  const [value, dataType, options = {}] = args
-
-  options.parseFncByDataType ??= utilsConfig.dataTypeExtend.parseFncByDataType
-  options.useUtc ??= utilsConfig.general.useUtc
-
-  return parseValueCore(value, dataType, options)
 }

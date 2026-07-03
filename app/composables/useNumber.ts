@@ -21,7 +21,20 @@ const defaultIntlOptions: Intl.NumberFormatOptions = {
   useGrouping: true,
 }
 
-export function useNumberCore(payload: {
+function getSeparators(localeRef?: MaybeRefOrGetter<string>) {
+  const locale = toValue(localeRef)
+
+  const helperVal = Intl.NumberFormat(locale).formatToParts(1111.1)
+  const thousandSeparator = helperVal[1]!.value
+  const decimalSeparator = helperVal[3]!.value
+
+  return {
+    thousandSeparator,
+    decimalSeparator,
+  }
+}
+
+function createNumberUtils(payload: {
   localeIso?: string
   separators?: {
     thousandSeparator: string
@@ -57,9 +70,11 @@ export function useNumberCore(payload: {
    * Formats a number to a locale-aware string
    */
   const formatNumber = (
-    value?: number | string | null,
+    valueRef?: MaybeRefOrGetter<number | string | null>,
     options: INumberOptions = {},
   ) => {
+    const value = toValue(valueRef)
+
     if (value === null || value === undefined) {
       return ''
     }
@@ -78,10 +93,12 @@ export function useNumberCore(payload: {
    * Formats currency
    */
   function formatCurrency(
-    value?: number | string | null,
+    valueRef?: MaybeRefOrGetter<number | string | null>,
     currency?: string,
     options: INumberOptions = {},
   ) {
+    const value = toValue(valueRef)
+
     if (value === null || value === undefined) {
       return ''
     }
@@ -121,31 +138,24 @@ export function useNumberCore(payload: {
   }
 }
 
-function getSeparators(localeRef?: MaybeRefOrGetter<string>) {
-  const locale = toValue(localeRef)
-
-  const helperVal = Intl.NumberFormat(locale).formatToParts(1111.1)
-  const thousandSeparator = helperVal[1]!.value
-  const decimalSeparator = helperVal[3]!.value
-
-  return {
-    thousandSeparator,
-    decimalSeparator,
-  }
-}
-
 export function useNumber(options?: { localeIso?: string }) {
-  const { localeIso } = options ?? {}
+  const { localeIso: providedLocaleIso } = options ?? {}
+
+  if (providedLocaleIso) {
+    const separators = computed(() => getSeparators(providedLocaleIso))
+
+    return {
+      ...createNumberUtils({
+        localeIso: providedLocaleIso,
+        separators: separators.value,
+      }),
+      separators,
+      getSeparators,
+    }
+  }
+
   const { currentLocale } = useLocale()
-
-  const separators = computed(() => getSeparators(localeIso ?? currentLocale.value.code))
-
-  const {
-    formatNumber: formatNumberCore,
-    formatCurrency: formatCurrencyCore,
-
-    ...other
-  } = useNumberCore({ localeIso: currentLocale.value.code, separators: separators.value })
+  const separators = computed(() => getSeparators(currentLocale.value.code))
 
   const summaryMetricOptions = computed(() => {
     return [
@@ -156,30 +166,11 @@ export function useNumber(options?: { localeIso?: string }) {
     ]
   })
 
-  function formatNumber(
-    valueRef?: MaybeRefOrGetter<number | string | null>,
-    options: INumberOptions = {},
-  ) {
-    const value = toValue(valueRef)
-
-    return formatNumberCore(value, options)
-  }
-
-  function formatCurrency(
-    valueRef?: MaybeRefOrGetter<number | string | null>,
-    currency?: string,
-    options: INumberOptions = {},
-  ) {
-    const value = toValue(valueRef)
-
-    return formatCurrencyCore(value, currency, options)
-  }
-
   return {
-    ...other,
-
-    formatNumber,
-    formatCurrency,
+    ...createNumberUtils({
+      localeIso: currentLocale.value.code,
+      separators: separators.value,
+    }),
     separators,
     summaryMetricOptions,
     getSeparators,

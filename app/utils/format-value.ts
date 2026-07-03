@@ -5,9 +5,9 @@ import type { IFormatValueOptions } from '../types/format-value-options.type'
 
 // Functions
 import { predictDataType } from '../functions/predict-data-type'
-import { useDateUtilsCore } from '../composables/useDateUtils'
-import { useNumberCore } from '../composables/useNumber'
-import { useDurationCore } from '../composables/useDuration'
+import { useDateUtils } from '../composables/useDateUtils'
+import { useNumber } from '../composables/useNumber'
+import { useDuration } from '../composables/useDuration'
 
 function handleDefaultFormat(payload: {
   value: any
@@ -15,10 +15,10 @@ function handleDefaultFormat(payload: {
   dateFormat?: string
   emptyValue?: any
   predictDataType?: IFormatValueOptions['predictDataType']
-  formatNumber: ReturnType<typeof useNumberCore>['formatNumber']
-  getDuration: ReturnType<typeof useDurationCore>['getDuration']
-  formatDate: ReturnType<typeof useDateUtilsCore>['formatDate']
-  formatTime: ReturnType<typeof useDateUtilsCore>['formatTime']
+  formatNumber: ReturnType<typeof useNumber>['formatNumber']
+  getDuration: ReturnType<typeof useDuration>['getDuration']
+  formatDate: ReturnType<typeof useDateUtils>['formatDate']
+  formatTime: ReturnType<typeof useDateUtils>['formatTime']
   useUtc?: boolean
 }) {
   const {
@@ -102,11 +102,14 @@ function handleDefaultFormat(payload: {
   }
 }
 
-export function formatValueCore(
+export function formatValue(
   value: any,
   row?: any,
   options: IFormatValueOptions = {},
 ): any {
+  options.formatFncByDataType ??= utilsConfig.dataTypeExtend.formatFncByDataType
+  options.useUtc ??= utilsConfig.general.useUtc
+
   const {
     dateFormat,
     localeIso = 'en-US',
@@ -115,15 +118,15 @@ export function formatValueCore(
     format,
     formatFncByDataType = {},
     useUtc,
-  } = options ?? {}
+  } = options
 
-  const { formatDate, formatTime } = useDateUtilsCore(localeIso)
-  const { formatNumber } = useNumberCore({ localeIso })
-  const { getDuration } = useDurationCore({ localeIso })
+  const { formatDate, formatTime } = useDateUtils({ localeIso })
+  const { formatNumber } = useNumber({ localeIso })
+  const { getDuration } = useDuration({ localeIso })
 
   if (Array.isArray(value)) {
     return value
-      .map(val => formatValueCore(val, row, options))
+      .map(val => formatValue(val, row, options))
       .join(', ') as string
   }
 
@@ -157,19 +160,10 @@ export function formatValueCore(
   if (customFormatFnc) {
     return customFormatFnc(value, row, {
       ...options,
-      formatFnc: formatValueCore,
+      formatFnc: formatValue,
       defaultHandler: () => handleDefaultFormat(defaultFormatPayload),
     })
   }
 
   return handleDefaultFormat(defaultFormatPayload)
-}
-
-export function formatValue(...args: Parameters<typeof formatValueCore>) {
-  const [value, row, options = {}] = args
-
-  options.formatFncByDataType ??= utilsConfig.dataTypeExtend.formatFncByDataType
-  options.useUtc ??= utilsConfig.general.useUtc
-
-  return formatValueCore(value, row, options)
 }

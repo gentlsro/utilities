@@ -1,5 +1,6 @@
 import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
+import utilsConfig from '$utilsConfig'
 
 export function getDefaultComparatorByDataType(
   dataType?: ExtendedDataType,
@@ -12,10 +13,8 @@ export function getDefaultComparatorByDataType(
     return ComparatorEnum.EQUAL
   }
 
-  const {
-    comparatorsByDataType = {},
-    defaultComparatorByDataType = {},
-  } = options
+  const comparatorsByDataType = options.comparatorsByDataType ?? utilsConfig.dataTypeExtend.comparatorsByDataType ?? {}
+  const defaultComparatorByDataType = options.defaultComparatorByDataType ?? utilsConfig.dataTypeExtend.defaultComparatorByDataType ?? {}
 
   let defaultComparator = defaultComparatorByDataType?.[dataType]
   const _dataType = dataType as keyof typeof comparatorsByDataType

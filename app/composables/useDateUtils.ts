@@ -21,14 +21,15 @@ export type IExtendedPeriodOptions = {
   date?: Datetime
 }
 
-/**
- * Works the same way as `.valueOf()` but ignores the time part of the date
- */
-export function getDateSimpleValueCore(date: Datetime) {
-  return $date(date).startOf('day').valueOf()
+export type IExtendedPeriodOptionsApp = {
+  unit?: OpUnitType | ManipulateType | 'isoWeek'
+  firstDayOfWeek?: DayEnum
+  minCountOfWeeks?: number
+  periodRef?: MaybeRefOrGetter<Period>
+  dateRef?: MaybeRefOrGetter<Datetime>
 }
 
-export function useDateUtilsCore(localeIso: string) {
+function createDateUtils(localeIso: string) {
   const localeUses24HourTime = () => {
     return (
       new Intl.DateTimeFormat(localeIso, { hour: 'numeric' })
@@ -40,9 +41,11 @@ export function useDateUtilsCore(localeIso: string) {
   }
 
   const formatDate = (
-    date?: Datetime,
+    dateRef?: MaybeRefOrGetter<Datetime>,
     options: IDateOptions | DateFormatPreset = 'short',
   ) => {
+    let date = toValue(dateRef)
+
     if (typeof date === 'string') {
       date = date.trim()
     }
@@ -106,11 +109,12 @@ export function useDateUtilsCore(localeIso: string) {
   }
 
   const formatTime = (
-    time: string,
+    timeRef: MaybeRefOrGetter<string>,
     options: {
       appendString?: string
     } = {},
   ) => {
+    const time = toValue(timeRef)
     const { appendString = '' } = options
 
     return formatDate(
@@ -120,9 +124,11 @@ export function useDateUtilsCore(localeIso: string) {
   }
 
   const parseDate = (
-    date: Datetime,
+    dateRef: MaybeRefOrGetter<Datetime>,
     options?: IDateOptions,
   ) => {
+    const date = toValue(dateRef)
+
     return options?.isLocalString
       ? $date(date, options?.format)
       : $date(date)
@@ -136,14 +142,15 @@ export function useDateUtilsCore(localeIso: string) {
       unit = 'isoWeek' as ManipulateType,
     } = payload
 
-    let periodStart = period?.periodStart || date
-    const periodStartObj = $date(periodStart)?.startOf(unit)
+    const periodStart = period?.periodStart || date
+    let periodStartObj = $date(periodStart)?.startOf(unit)
 
     if (unit === 'isoWeek' || unit.startsWith('w')) {
       const firstDayOfWeekIdx = periodStartObj.day() < firstDayOfWeek
         ? firstDayOfWeek - 7
         : firstDayOfWeek
-      periodStart = periodStartObj.day(firstDayOfWeekIdx)
+
+      periodStartObj = periodStartObj.day(firstDayOfWeekIdx)
     }
 
     return {
@@ -153,12 +160,12 @@ export function useDateUtilsCore(localeIso: string) {
   }
 
   const getExtendedPeriod = (payload: IExtendedPeriodOptions = {}): Period => {
-    let {
+    const {
       date = undefined,
       period = undefined,
       firstDayOfWeek = DayEnum.MONDAY,
       unit = 'isoWeek' as ManipulateType,
-      minCountOfWeeks = 6,
+      minCountOfWeeks: minCountOfWeeksArg = 6,
     } = payload
 
     const periodStart = period?.periodStart || date
@@ -173,7 +180,7 @@ export function useDateUtilsCore(localeIso: string) {
     let periodEndExtended = periodEndObj.day() ? periodEndObj.day(7) : periodEndObj
     const diff = periodEndExtended.diff(periodStartExtended, 'day')
 
-    minCountOfWeeks = Math.max(minCountOfWeeks, Math.ceil(diff / 7))
+    const minCountOfWeeks = Math.max(minCountOfWeeksArg, Math.ceil(diff / 7))
     periodEndExtended = periodEndExtended.add(
       minCountOfWeeks * 7 - 1 - diff,
       'day',
@@ -183,9 +190,10 @@ export function useDateUtilsCore(localeIso: string) {
   }
 
   const getDaysInPeriod = (
-    period: Period,
+    periodRef: MaybeRefOrGetter<Period>,
     options: { excludedDays?: DayEnum[], currentPeriod?: Period, utc?: boolean } = {},
   ) => {
+    const period = toValue(periodRef)
     const { excludedDays, currentPeriod, utc } = options
     const days: Day[] = []
     let current = period.periodStart
@@ -208,9 +216,12 @@ export function useDateUtilsCore(localeIso: string) {
    * before `toRef` and both must be before the current date.
    */
   const isValidRange = (
-    from: Datetime,
-    to?: Datetime,
+    fromRef: MaybeRefOrGetter<Datetime>,
+    toRef?: MaybeRefOrGetter<Datetime>,
   ) => {
+    const from = toValue(fromRef)
+    const to = toValue(toRef)
+
     // If no `to` date is provided, we assume that the `from` date is valid
     if (!to) {
       return true
@@ -231,56 +242,24 @@ export function useDateUtilsCore(localeIso: string) {
   }
 }
 
-export type IExtendedPeriodOptionsApp = {
-  unit?: OpUnitType | ManipulateType | 'isoWeek'
-  firstDayOfWeek?: DayEnum
-  minCountOfWeeks?: number
-  periodRef?: MaybeRefOrGetter<Period>
-  dateRef?: MaybeRefOrGetter<Datetime>
-}
-
 /**
  * Works the same way as `.valueOf()` but ignores the time part of the date
  */
 export function getDateSimpleValue(dateRef: MaybeRefOrGetter<Datetime>) {
   const date = toValue(dateRef)
 
-  return getDateSimpleValueCore(date)
+  return $date(date).startOf('day').valueOf()
 }
 
-export function useDateUtils() {
+export function useDateUtils(options?: { localeIso?: string }) {
+  const { localeIso: providedLocaleIso } = options ?? {}
+
+  if (providedLocaleIso) {
+    return createDateUtils(providedLocaleIso)
+  }
+
   const { currentLocale, getLocaleDateFormat } = useLocale()
-  const {
-    formatDate: formatDateCore,
-    formatTime: formatTimeCore,
-    parseDate: parseDateCore,
-    getPeriod: getPeriodCore,
-    getExtendedPeriod: getExtendedPeriodCore,
-    isValidRange: isValidRangeCore,
-    getDaysInPeriod: getDaysInPeriodCore,
-
-    ...other
-  } = useDateUtilsCore(currentLocale.value.code)
-
-  function formatDate(
-    dateRef?: MaybeRefOrGetter<Datetime>,
-    options: IDateOptions | DateFormatPreset = 'short',
-  ) {
-    const date = toValue(dateRef)
-
-    return formatDateCore(date, options)
-  }
-
-  function formatTime(
-    timeRef: MaybeRefOrGetter<string>,
-    options: {
-      appendString?: string
-    } = {},
-  ) {
-    const time = toValue(timeRef)
-
-    return formatTimeCore(time, options)
-  }
+  const dateUtils = createDateUtils(currentLocale.value.code)
 
   function parseDate(
     dateRef: MaybeRefOrGetter<Datetime>,
@@ -295,7 +274,7 @@ export function useDateUtils() {
     const formatForParse = (usedLocale as { dateFormat?: string })?.dateFormat
       ?? getLocaleDateFormat(usedLocaleIso)
 
-    return parseDateCore(
+    return dateUtils.parseDate(
       date,
       { ...options, format: formatForParse },
     )
@@ -312,7 +291,7 @@ export function useDateUtils() {
     const date = toValue(dateRef)
     const period = toValue(periodRef)
 
-    return getPeriodCore({ date, period, firstDayOfWeek, unit })
+    return dateUtils.getPeriod({ date, period, firstDayOfWeek, unit })
   }
 
   function getExtendedPeriod(payload: IExtendedPeriodOptionsApp) {
@@ -327,7 +306,7 @@ export function useDateUtils() {
     const date = toValue(dateRef)
     const period = toValue(periodRef)
 
-    return getExtendedPeriodCore({
+    return dateUtils.getExtendedPeriod({
       date,
       period,
       firstDayOfWeek,
@@ -336,34 +315,10 @@ export function useDateUtils() {
     })
   }
 
-  function isValidRange(
-    fromRef: MaybeRefOrGetter<Datetime>,
-    toRef?: MaybeRefOrGetter<Datetime>,
-  ) {
-    const from = toValue(fromRef)
-    const to = toValue(toRef)
-
-    return isValidRangeCore(from, to)
-  }
-
-  function getDaysInPeriod(
-    periodRef: MaybeRefOrGetter<Period>,
-    options: { excludedDays?: DayEnum[], currentPeriod?: Period, utc?: boolean } = {},
-  ) {
-    const period = toValue(periodRef)
-
-    return getDaysInPeriodCore(period, options)
-  }
-
   return {
-    ...other,
-
-    formatDate,
-    formatTime,
+    ...dateUtils,
     parseDate,
     getPeriod,
     getExtendedPeriod,
-    isValidRange,
-    getDaysInPeriod,
   }
 }

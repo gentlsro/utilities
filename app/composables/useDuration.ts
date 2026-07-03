@@ -1,5 +1,5 @@
 // Functions
-import { useNumberCore } from './useNumber'
+import { useNumber } from './useNumber'
 import type { INumberOptions } from './useNumber'
 
 export type DurationUnit
@@ -25,16 +25,16 @@ export const MODIFIER_BY_UNIT: Record<DurationUnit, number> = {
   year: $duration(1, 'year').as('ms'),
 }
 
-export function useDurationCore(payload: { localeIso?: string }) {
+function createDurationUtils(payload: { localeIso?: string }) {
   const { localeIso } = payload ?? {}
 
-  const { parseNumber, formatNumber } = useNumberCore({ localeIso })
+  const { parseNumber, formatNumber } = useNumber({ localeIso })
 
   const formatDuration = (
-    value?: number | string | null,
+    valueRef?: MaybeRefOrGetter<number | string | null>,
     options: IDurationOptions = {},
   ): { val: number, unit: IDurationOptions['unit'], formatted: string } => {
-    let val = value
+    let val = toValue(valueRef)
 
     if (isNil(val) || val === '') {
       return {
@@ -94,25 +94,14 @@ export function useDurationCore(payload: { localeIso?: string }) {
   }
 }
 
-export function useDuration() {
+export function useDuration(options?: { localeIso?: string }) {
+  const { localeIso: providedLocaleIso } = options ?? {}
+
+  if (providedLocaleIso) {
+    return createDurationUtils({ localeIso: providedLocaleIso })
+  }
+
   const { currentLocale } = useLocale()
 
-  const {
-    formatDuration: formatDurationCore,
-    ...other
-  } = useDurationCore({ localeIso: currentLocale.value.code })
-
-  function formatDuration(
-    valueRef?: MaybeRefOrGetter<number | string | null>,
-    options: IDurationOptions = {},
-  ) {
-    const value = toValue(valueRef)
-
-    return formatDurationCore(value, options)
-  }
-
-  return {
-    ...other,
-    formatDuration,
-  }
+  return createDurationUtils({ localeIso: currentLocale.value.code })
 }
