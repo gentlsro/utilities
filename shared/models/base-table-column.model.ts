@@ -2,6 +2,10 @@ import { get } from 'lodash-es'
 import type { Required } from 'utility-types'
 import type { ExtendedDataType } from '$dataType'
 
+// Types
+import type { IItem } from '../types/item.type'
+import type { ObjectKey } from '../types/object-key.type'
+
 export class BaseTableColumn<T = IItem> {
   /**
    * The field to use for the column

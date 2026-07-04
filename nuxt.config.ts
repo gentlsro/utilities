@@ -23,6 +23,10 @@ export default defineNuxtConfig({
     },
   },
 
+  future: {
+    compatibilityVersion: 5,
+  },
+
   nitro: {
     imports: {
       imports: [
