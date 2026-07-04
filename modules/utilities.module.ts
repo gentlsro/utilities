@@ -57,6 +57,7 @@ function setAliasPaths(
   nuxt.options.nitro.typescript.tsConfig ??= {}
   nuxt.options.nitro.typescript.tsConfig.compilerOptions ??= {}
   nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths ??= {}
+  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths[alias] = [tsClientPath]
 }
 
 function generateUtilityConfigCode(configPaths: { path: string, isBase: boolean, cwd: string }[]) {
