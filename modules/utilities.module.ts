@@ -52,6 +52,11 @@ function setAliasPaths(
   nuxt.options.typescript.tsConfig.compilerOptions ??= {}
   nuxt.options.typescript.tsConfig.compilerOptions.paths ??= {}
   nuxt.options.typescript.tsConfig.compilerOptions.paths[alias] = [tsClientPath]
+
+  nuxt.options.nitro.typescript ??= {}
+  nuxt.options.nitro.typescript.tsConfig ??= {}
+  nuxt.options.nitro.typescript.tsConfig.compilerOptions ??= {}
+  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths ??= {}
 }
 
 function generateUtilityConfigCode(configPaths: { path: string, isBase: boolean, cwd: string }[]) {
@@ -236,6 +241,14 @@ export type ExtendedDataType = DataType | SimpleDataType`
           $comparatorEnum: COMPARATOR_ENUM,
           $dataType: DATA_TYPE,
         }
+      }
+    })
+
+    nuxt.hook('nitro:config', (nitroConfig) => {
+      nitroConfig.alias = {
+        ...nitroConfig.alias,
+        $comparatorEnum: COMPARATOR_ENUM,
+        $dataType: DATA_TYPE,
       }
     })
   },
