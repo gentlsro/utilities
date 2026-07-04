@@ -40,7 +40,6 @@ function extractTypeContent(content: string, typeName: string) {
 }
 
 const CLIENT_UTILS_CONFIG = '#build/client-utilsConfig.ts'
-const SERVER_UTILS_CONFIG = '#build/server-utilsConfig.ts'
 const COMPARATOR_ENUM = '#build/comparator-enum.ts'
 const DATA_TYPE = '#build/data-type.type.ts'
 
@@ -48,18 +47,11 @@ function setAliasPaths(
   nuxt: Nuxt,
   alias: string,
   tsClientPath: string,
-  tsServerPath = tsClientPath,
 ) {
   nuxt.options.typescript.tsConfig ??= {}
   nuxt.options.typescript.tsConfig.compilerOptions ??= {}
   nuxt.options.typescript.tsConfig.compilerOptions.paths ??= {}
   nuxt.options.typescript.tsConfig.compilerOptions.paths[alias] = [tsClientPath]
-
-  nuxt.options.nitro.typescript ??= {}
-  nuxt.options.nitro.typescript.tsConfig ??= {}
-  nuxt.options.nitro.typescript.tsConfig.compilerOptions ??= {}
-  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths ??= {}
-  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths[alias] = [tsServerPath]
 }
 
 function generateUtilityConfigCode(configPaths: { path: string, isBase: boolean, cwd: string }[]) {
@@ -113,7 +105,7 @@ export default defineNuxtModule({
       getContents: () => configCode,
     })
 
-    setAliasPaths(nuxt, '$utilsConfig', './client-utilsConfig.ts', './server-utilsConfig.ts')
+    setAliasPaths(nuxt, '$utilsConfig', './client-utilsConfig.ts')
 
     // Merge the ComparatorEnum
     const configContents = configPaths
@@ -244,15 +236,6 @@ export type ExtendedDataType = DataType | SimpleDataType`
           $comparatorEnum: COMPARATOR_ENUM,
           $dataType: DATA_TYPE,
         }
-      }
-    })
-
-    nuxt.hook('nitro:config', (nitroConfig) => {
-      nitroConfig.alias = {
-        ...nitroConfig.alias,
-        $utilsConfig: SERVER_UTILS_CONFIG,
-        $comparatorEnum: COMPARATOR_ENUM,
-        $dataType: DATA_TYPE,
       }
     })
   },
