@@ -1,7 +1,7 @@
 // TODO: Fix worker version
 
 // Types
-import type { IItem } from '../types/item.type'
+import type { IItem } from '../../shared/types/item.type'
 
 // Models
 import type { GroupItem } from '../models/group-item.model'

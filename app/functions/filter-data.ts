@@ -3,8 +3,8 @@ import { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
 // Types
-import type { IItem } from '../types/item.type'
-import type { ObjectKey } from '../types/object-key.type'
+import type { IItem } from '../../shared/types/item.type'
+import type { ObjectKey } from '../../shared/types/object-key.type'
 
 // Functions
 import { $date } from '../utils/$date'

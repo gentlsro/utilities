@@ -1,5 +1,5 @@
 // Types
-import type { IItem } from './item.type'
+import type { IItem } from '../../shared/types/item.type'
 
 export type IGroupedItem<T = IItem> = {
   groupIdx: number

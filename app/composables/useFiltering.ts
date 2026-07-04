@@ -3,7 +3,7 @@ import type { ExtendedDataType } from '$dataType'
 import utilsConfig from '$utilsConfig'
 
 // Types
-import type { IItem } from '../types/item.type'
+import type { IItem } from '../../shared/types/item.type'
 
 // Models
 import type { FilterItem } from '../models/filter-item.model'

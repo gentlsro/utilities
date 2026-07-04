@@ -1,7 +1,7 @@
 import type { Required } from 'utility-types'
 
 // Types
-import type { ObjectKey } from '../types/object-key.type'
+import type { ObjectKey } from '../../shared/types/object-key.type'
 
 // Models
 import { SummaryEnum } from '../enums/summary.enum'
