@@ -21,11 +21,12 @@ export default defineNuxtConfig({
     ],
 
     dirs: [
-      resolve('./app/types'),
-      resolve('./app/enums'),
-      resolve('./app/models'),
       resolve('./app/constants'),
+      resolve('./app/enums'),
       resolve('./app/functions'),
+      resolve('./app/models'),
+      resolve('./app/regex'),
+      resolve('./app/types'),
     ],
   },
 
@@ -52,6 +53,12 @@ export default defineNuxtConfig({
       ],
     },
 
+  },
+
+  eslint: {
+    config: {
+      standalone: false,
+    },
   },
 
   i18n: {
