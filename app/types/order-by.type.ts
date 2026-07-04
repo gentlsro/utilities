@@ -1,4 +1,4 @@
-import type { ObjectKey } from './object-key.type'
+import type { ObjectKey } from '../../shared/types/object-key.type'
 
 export type IOrderBy<T> = {
   field: ObjectKey<T>

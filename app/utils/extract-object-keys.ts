@@ -1,5 +1,5 @@
 // Types
-import type { IItem } from '../types/item.type'
+import type { IItem } from '../../shared/types/item.type'
 
 /**
  * Extracts all "leaf" keys present in an object

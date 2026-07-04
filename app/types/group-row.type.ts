@@ -1,5 +1,5 @@
 // Types
-import type { IItem } from './item.type'
+import type { IItem } from '../../shared/types/item.type'
 
 export type IGroupRow = {
   class?: Record<string, boolean> | string | string[]

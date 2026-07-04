@@ -1,7 +1,3 @@
-import { createResolver } from 'nuxt/kit'
-
-const { resolve } = createResolver(import.meta.url)
-
 export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
@@ -17,16 +13,6 @@ export default defineNuxtConfig({
   imports: {
     imports: [
       { name: 'z', from: 'zod' },
-      { name: 'ClassType', from: resolve('./app/types/class.type.ts'), type: true },
-    ],
-
-    dirs: [
-      resolve('./app/constants'),
-      resolve('./app/enums'),
-      resolve('./app/functions'),
-      resolve('./app/models'),
-      resolve('./app/regex'),
-      resolve('./app/types'),
     ],
   },
 

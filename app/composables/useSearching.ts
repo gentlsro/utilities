@@ -5,8 +5,8 @@ import { klona } from 'klona/full'
 import utilsConfig from '$utilsConfig'
 
 // Types
-import type { IItem } from '../types/item.type'
-import type { ObjectKey } from '../types/object-key.type'
+import type { IItem } from '../../shared/types/item.type'
+import type { ObjectKey } from '../../shared/types/object-key.type'
 
 // Functions
 import { useText } from './useText'

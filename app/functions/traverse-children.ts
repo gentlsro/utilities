@@ -1,5 +1,5 @@
 // Types
-import type { IItem } from '../types/item.type'
+import type { IItem } from '../../shared/types/item.type'
 
 /**
  * Goes through the tree via `children` property, for each node, callback is
