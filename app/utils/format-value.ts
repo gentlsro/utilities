@@ -107,8 +107,9 @@ export function formatValue(
   row?: any,
   options: IFormatValueOptions = {},
 ): any {
+  const rC = useRuntimeConfig()
   options.formatFncByDataType ??= utilsConfig.dataTypeExtend.formatFncByDataType
-  options.useUtc ??= utilsConfig.general.useUtc
+  options.useUtc ??= rC.public.useUtc === 'true'
 
   const {
     dateFormat,

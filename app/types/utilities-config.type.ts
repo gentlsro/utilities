@@ -17,7 +17,7 @@ type IFormatFnc = (
   formatOptions?: IFormatValueOptions & {
     formatFnc?: typeof formatValue
     defaultHandler: () => any
-  }
+  },
 ) => any
 
 type IParseFnc = (payload: {
@@ -34,14 +34,6 @@ type IParseFnc = (payload: {
 }) => any
 
 export type IUtilitiesConfig = {
-  general: {
-    locale?: 'en-US' | 'cs-CZ'
-    domain?: string | null
-    transliterate?: boolean
-    useUtc?: boolean
-    environment?: string
-  }
-
   /**
    * We can extend the data types for the application with our own, and map
    * them to the components we want to use for them

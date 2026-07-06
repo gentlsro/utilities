@@ -1,10 +1,9 @@
-import utilsConfig from '$utilsConfig'
-
 export function useTheme() {
+  const rC = useRuntimeConfig()
   const prefersDark = usePreferredDark()
   const themeCookie = useCookie('theme', {
     default: getColor,
-    domain: utilsConfig.general.domain ?? undefined,
+    domain: rC.public.domain ?? undefined,
   })
 
   const isDark = computed(() => {

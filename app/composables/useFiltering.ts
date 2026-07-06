@@ -26,6 +26,7 @@ type IFilter<T> = Pick<
 >
 
 export function useFiltering() {
+  const rC = useRuntimeConfig()
   const { normalizeText } = useText()
 
   const filterDataCoreFn = <T extends IItem = IItem>(
@@ -229,8 +230,8 @@ export function useFiltering() {
 
     return filterDataCoreFn(data, filters, rowKey, {
       ...options,
-      transliterate: utilsConfig.general.transliterate,
-      useUtc: utilsConfig.general.useUtc,
+      transliterate: rC.public.transliterate === 'true',
+      useUtc: rC.public.useUtc === 'true',
       dateTypes,
     })
   }
@@ -244,8 +245,8 @@ export function useFiltering() {
 
     return handleFilter(comparator, rowValue, value, dataType, {
       ...options,
-      transliterate: utilsConfig.general.transliterate,
-      useUtc: utilsConfig.general.useUtc,
+      transliterate: rC.public.transliterate === 'true',
+      useUtc: rC.public.useUtc === 'true',
       dateTypes,
     })
   }

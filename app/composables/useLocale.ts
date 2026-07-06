@@ -1,8 +1,8 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
-import { utilsConfig } from '$utilsConfig'
 
 export function useLocale() {
-  const localeCookie = useCookie('lang', { domain: utilsConfig.general.domain ?? undefined })
+  const rC = useRuntimeConfig()
+  const localeCookie = useCookie('lang', { domain: rC.public.domain ?? undefined })
   const { locale, locales, defaultLocale, loadLocaleMessages, setLocale } = useI18n()
   const switchLocalePath = useSwitchLocalePath()
 

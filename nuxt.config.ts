@@ -20,6 +20,9 @@ export default defineNuxtConfig({
     public: {
       env: '',
       filesHost: '/api/files',
+      transliterate: '',
+      useUtc: '',
+      domain: '',
     },
   },
 
