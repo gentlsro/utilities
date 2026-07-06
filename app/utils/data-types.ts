@@ -2,9 +2,6 @@ import { uniq } from 'lodash-es'
 import type { ExtendedDataType } from '$dataType'
 import utilsConfig from '$utilsConfig'
 
-export type Datetime = Dayjs | number | string | Date | null | undefined
-export type DatetimeStrict = Dayjs | number | string | Date
-
 const DEFAULT_DATE_TIME_DATA_TYPES: ExtendedDataType[] = [
   'date',
   'datetime',

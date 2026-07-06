@@ -14,6 +14,9 @@ import quarterOfYear from 'dayjs/esm/plugin/quarterOfYear'
 import 'dayjs/esm/locale/en-gb'
 import 'dayjs/esm/locale/cs'
 
+// Types
+import type { Datetime } from '../types/datetime.type'
+
 dayjs.extend(duration)
 dayjs.extend(customParseFormat)
 dayjs.extend(isBetween)

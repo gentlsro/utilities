@@ -7,7 +7,7 @@ import type { IItem } from '../../shared/types/item.type'
 
 // Models
 import type { FilterItem } from '../models/filter-item.model'
-import { getDateTypes } from '../types/datetime.type'
+import { getDateTypes } from '../utils/data-types'
 
 // Functions
 import { useText } from './useText'

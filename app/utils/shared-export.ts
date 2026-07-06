@@ -1,3 +1,5 @@
+/* eslint-disable perfectionist/sort-exports */
+
 // Constants
 export * from '../constants/ark-validators'
 export * from '../constants/comparators-by-category.const'
@@ -49,7 +51,6 @@ export * from '../types/class.type'
 export * from '../types/component-map.type'
 export * from '../types/date-format-preset.type'
 export * from '../types/date-options.type'
-export * from '../types/datetime.type'
 export * from '../types/dictionary.type'
 export * from '../types/file.type'
 export * from '../types/format-value-options.type'
