@@ -42,7 +42,12 @@ export default defineNuxtConfig({
         { name: 'isEqual', from: 'lodash-es' },
       ],
     },
+  },
 
+  eslint: {
+    config: {
+      standalone: false,
+    },
   },
 
   i18n: {
