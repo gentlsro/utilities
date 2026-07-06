@@ -1,5 +1,5 @@
 import { type } from 'arktype'
-import { arkError } from '../utils/translate-ark-error'
+import { arkError } from '../../shared/utils/translate-ark-error'
 
 function parseDate(date: Datetime) {
   return $date(date)
