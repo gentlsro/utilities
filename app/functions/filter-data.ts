@@ -7,7 +7,7 @@ import type { IItem } from '../../shared/types/item.type'
 import type { ObjectKey } from '../../shared/types/object-key.type'
 
 // Functions
-import { $date } from '../utils/$date'
+import { $date } from '../../shared/utils/$date'
 import { transliterate } from '../utils/transliterate'
 
 export type IFilterDataItem<T extends IItem = IItem> = {
