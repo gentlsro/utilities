@@ -1,4 +1,4 @@
-import dayjs from 'dayjs/esm'
+import { dayjs } from './$date'
 
 export function isValidDate(value: any) {
   if (value instanceof Date || dayjs.isDayjs(value)) {
