@@ -1,3 +1,5 @@
+import { prepareLocalNuxtLayers } from './prepare-layers'
+
 export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
@@ -46,6 +48,10 @@ export default defineNuxtConfig({
       ],
     },
 
+  },
+
+  hooks: {
+    ready: prepareLocalNuxtLayers,
   },
 
   i18n: {
