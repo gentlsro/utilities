@@ -3,9 +3,9 @@ import type { ExtendedDataType } from '$dataType'
 import type { PredictDataTypeOptions } from '../types/predict-data-type-options.type'
 
 // Functions
-import { isNumeric } from './is-numeric'
-import { isValidDate } from './is-valid-date'
-import { isBooleanish } from './is-booleanish'
+import { isNumeric } from '../../shared/utils/is-numeric'
+import { isValidDate } from '../../shared/utils/is-valid-date'
+import { isBooleanish } from '../../shared/utils/is-booleanish'
 
 export function predictDataType(
   options: PredictDataTypeOptions,
