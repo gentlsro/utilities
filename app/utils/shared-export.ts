@@ -26,7 +26,7 @@ export * from '../functions/replace-non-alphanumeric'
 export * from '../functions/safely-evaluate'
 export * from '../functions/translate-nested-key'
 export * from '../functions/translate-zod-issue'
-export * from '../functions/traverse-children'
+export * from '../../shared/utils/traverse-children'
 
 // Models
 export * from '../models/day.model'
