@@ -2,7 +2,6 @@
 import Fuse from 'fuse.js'
 import type { FuseResult } from 'fuse.js'
 import { klona } from 'klona/full'
-import utilsConfig from '$utilsConfig'
 
 // Types
 import type { IItem } from '../../shared/types/item.type'
@@ -25,6 +24,7 @@ export function removeCommas(str: string) {
 }
 
 export function useSearching() {
+  const rC = useRuntimeConfig()
   const { normalizeText } = useText()
 
   const searchDataCore = async <T extends IItem>(payload: {
@@ -155,7 +155,7 @@ export function useSearching() {
       search,
       rows,
       columns,
-      transliterate: utilsConfig.general.transliterate,
+      transliterate: rC.public.transliterate === 'true',
       ...options,
     })
   }

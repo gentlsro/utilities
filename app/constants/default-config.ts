@@ -4,17 +4,7 @@ import type { ComparatorEnum as MergedComparatorEnum } from '$comparatorEnum'
 // Types
 import type { IUtilitiesConfig } from '../types/utilities-config.type'
 
-const environment = (import.meta as any).env.NUXT_PUBLIC_ENV
-
 export const defaultUtilitiesConfig = {
-  general: {
-    locale: 'en-US',
-    transliterate: false,
-    domain: undefined,
-    useUtc: false,
-    environment,
-  },
-
   // Data types
   /**
    * We can extend the data types for the application with our own, and map

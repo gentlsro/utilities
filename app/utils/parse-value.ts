@@ -14,7 +14,6 @@ function handleParseValue(payload: {
     useUtc?: boolean
   }
 }) {
-  // eslint-disable-next-line prefer-const
   let { value, dataType, options } = payload
   const { dateFormat, predictDataType: _predictDataType, timezone, useUtc } = options || {}
 
@@ -78,9 +77,11 @@ export function parseValue(
     }) => any>>
   },
 ) {
+  const rC = useRuntimeConfig()
+
   options ??= {}
   options.parseFncByDataType ??= utilsConfig.dataTypeExtend.parseFncByDataType
-  options.useUtc ??= utilsConfig.general.useUtc
+  options.useUtc ??= rC.public.useUtc === 'true'
 
   if (isNil(value)) {
     return value

@@ -30,7 +30,7 @@ No. Worker code is commented out. Runs in-process.
 
 ## How does string normalization work in search and filter?
 
-`useSearching()` and `useFiltering()` use `normalizeText()` or `transliterate()` based on `utilsConfig.general.transliterate`.
+`useSearching()` and `useFiltering()` use `normalizeText()` or `transliterate()` based on `runtimeConfig.public.transliterate`.
 
 ## How does date equality work in filters?
 
