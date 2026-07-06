@@ -45,12 +45,6 @@ export default defineNuxtConfig({
 
   },
 
-  eslint: {
-    config: {
-      standalone: false,
-    },
-  },
-
   i18n: {
     autoDeclare: false,
     langDir: '../i18n',
