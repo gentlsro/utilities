@@ -81,7 +81,7 @@ export function parseValue(
 
   options ??= {}
   options.parseFncByDataType ??= utilsConfig.dataTypeExtend.parseFncByDataType
-  options.useUtc ??= rC.public.useUtc === 'true'
+  options.useUtc ??= rC.public.useUtc
 
   if (isNil(value)) {
     return value

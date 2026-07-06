@@ -109,7 +109,7 @@ export function formatValue(
 ): any {
   const rC = useRuntimeConfig()
   options.formatFncByDataType ??= utilsConfig.dataTypeExtend.formatFncByDataType
-  options.useUtc ??= rC.public.useUtc === 'true'
+  options.useUtc ??= rC.public.useUtc
 
   const {
     dateFormat,

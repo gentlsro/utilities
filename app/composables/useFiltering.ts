@@ -230,8 +230,8 @@ export function useFiltering() {
 
     return filterDataCoreFn(data, filters, rowKey, {
       ...options,
-      transliterate: rC.public.transliterate === 'true',
-      useUtc: rC.public.useUtc === 'true',
+      transliterate: rC.public.transliterate,
+      useUtc: rC.public.useUtc,
       dateTypes,
     })
   }
@@ -245,8 +245,8 @@ export function useFiltering() {
 
     return handleFilter(comparator, rowValue, value, dataType, {
       ...options,
-      transliterate: rC.public.transliterate === 'true',
-      useUtc: rC.public.useUtc === 'true',
+      transliterate: rC.public.transliterate,
+      useUtc: rC.public.useUtc,
       dateTypes,
     })
   }

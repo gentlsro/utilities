@@ -155,7 +155,7 @@ export function useSearching() {
       search,
       rows,
       columns,
-      transliterate: rC.public.transliterate === 'true',
+      transliterate: rC.public.transliterate,
       ...options,
     })
   }
