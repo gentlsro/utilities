@@ -1,5 +1,6 @@
 export * from '../../shared/utils/$date'
 export * from '../../shared/utils/$t'
+export * from '../../shared/utils/generate-uuid'
 export * from '../../shared/utils/is-booleanish'
 export * from '../../shared/utils/is-dev'
 export * from '../../shared/utils/is-numeric'
