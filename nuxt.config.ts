@@ -1,4 +1,7 @@
+import { createResolver } from 'nuxt/kit'
 import { prepareLocalNuxtLayers } from './prepare-layers'
+
+const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
   modules: [
@@ -15,6 +18,14 @@ export default defineNuxtConfig({
   imports: {
     imports: [
       { name: 'z', from: 'zod' },
+    ],
+    dirs: [
+      resolve('./app/constants'),
+      resolve('./app/enums'),
+      resolve('./app/functions'),
+      resolve('./app/models'),
+      resolve('./app/regex'),
+      resolve('./app/types'),
     ],
   },
 
@@ -34,8 +45,20 @@ export default defineNuxtConfig({
 
   nitro: {
     imports: {
+      dirsScanOptions: { fileFilter: () => false },
+
       imports: [
+        // Types
+        { name: 'Datetime', from: resolve('./shared/types/datetime'), type: true },
+        { name: 'IItem', from: resolve('./shared/types/item'), type: true },
+        { name: 'ObjectKey', from: resolve('./shared/types/object-key'), type: true },
+
+        // Utils
         { name: 'z', from: 'zod' },
+        { name: '$date', from: resolve('./shared/utils/$date') },
+        { name: '$t', from: resolve('./shared/utils/$t') },
+        { name: 'generateUuid', from: resolve('./shared/utils/generate-uuid') },
+        { name: 'isDev', from: resolve('./shared/utils/is-dev') },
 
         // Lodash
         { name: 'get', from: 'lodash-es' },
