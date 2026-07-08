@@ -1,5 +1,5 @@
 // Regex
-import { stringToFloat } from '../regex/string-to-float.regex'
+import { stringToFloat } from '../../shared/regex/string-to-float.regex'
 
 // Enums
 import { SummaryEnum } from '../enums/summary.enum'

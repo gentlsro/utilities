@@ -24,8 +24,10 @@ export default defineNuxtConfig({
       resolve('./app/enums'),
       resolve('./app/functions'),
       resolve('./app/models'),
-      resolve('./app/regex'),
       resolve('./app/types'),
+
+      // Shared
+      resolve('./shared/regex'),
     ],
   },
 
