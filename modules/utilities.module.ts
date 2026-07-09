@@ -46,18 +46,25 @@ const DATA_TYPE = '#build/data-type.type.ts'
 function setAliasPaths(
   nuxt: Nuxt,
   alias: string,
-  tsClientPath: string,
+  options: {
+    path: string
+    server?: boolean
+  },
 ) {
   nuxt.options.typescript.tsConfig ??= {}
   nuxt.options.typescript.tsConfig.compilerOptions ??= {}
   nuxt.options.typescript.tsConfig.compilerOptions.paths ??= {}
-  nuxt.options.typescript.tsConfig.compilerOptions.paths[alias] = [tsClientPath]
+  nuxt.options.typescript.tsConfig.compilerOptions.paths[alias] = [options.path]
+
+  if (options.server === false) {
+    return
+  }
 
   nuxt.options.nitro.typescript ??= {}
   nuxt.options.nitro.typescript.tsConfig ??= {}
   nuxt.options.nitro.typescript.tsConfig.compilerOptions ??= {}
   nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths ??= {}
-  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths[alias] = [tsClientPath]
+  nuxt.options.nitro.typescript.tsConfig.compilerOptions.paths[alias] = [options.path]
 }
 
 function generateUtilityConfigCode(configPaths: { path: string, isBase: boolean, cwd: string }[]) {
@@ -111,7 +118,10 @@ export default defineNuxtModule({
       getContents: () => configCode,
     })
 
-    setAliasPaths(nuxt, '$utilsConfig', './client-utilsConfig.ts')
+    setAliasPaths(nuxt, '$utilsConfig', {
+      path: './client-utilsConfig.ts',
+      server: false,
+    })
 
     // Merge the ComparatorEnum
     const configContents = configPaths
@@ -134,12 +144,15 @@ export default defineNuxtModule({
       getContents: () => configContents,
     })
 
-    setAliasPaths(nuxt, '$comparatorEnum', './comparator-enum.ts')
+    setAliasPaths(nuxt, '$comparatorEnum', {
+      path: './comparator-enum.ts',
+    })
 
     // Merge the data types
     let dataTypes = configPaths
       .map(({ path }) => {
         const fileContents = readFileSync(`${path}.ts`, 'utf-8')
+
         return extractTypeContent(fileContents, 'DataType')
       })
       .filter(Boolean) // Remove null or undefined results
@@ -163,7 +176,9 @@ export type ExtendedDataType = DataType | SimpleDataType`
       getContents: () => dataTypes,
     })
 
-    setAliasPaths(nuxt, '$dataType', './data-type.type.ts')
+    setAliasPaths(nuxt, '$dataType', {
+      path: './data-type.type.ts',
+    })
 
     nuxt.hook('prepare:types', ({ sharedTsConfig }) => {
       sharedTsConfig.compilerOptions ??= {}
