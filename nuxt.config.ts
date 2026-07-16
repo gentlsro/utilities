@@ -33,11 +33,11 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      env: undefined as string | undefined,
+      env: '',
       filesHost: '/api/files',
       transliterate: true,
       useUtc: false,
-      domain: undefined as string | undefined,
+      domain: '',
     },
   },
 

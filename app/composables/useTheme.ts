@@ -3,7 +3,7 @@ export function useTheme() {
   const prefersDark = usePreferredDark()
   const themeCookie = useCookie('theme', {
     default: getColor,
-    domain: rC.public.domain ?? undefined,
+    domain: rC.public.domain || undefined,
   })
 
   const isDark = computed(() => {
