@@ -88,7 +88,63 @@ function createDurationUtils(payload: { localeIso?: string }) {
     }
   }
 
+  function getDurationHumanParts(
+    value?: number | string | null,
+    options: IDurationOptions = {},
+  ) {
+    if (isNil(value) || value === '') {
+      return []
+    }
+
+    let amount = typeof value === 'number' ? value : parseNumber(value)
+    if (!Number.isFinite(amount) || amount === 0) {
+      return []
+    }
+
+    const sign = amount < 0 ? '-' : ''
+    amount = Math.abs(amount)
+
+    const ms = options.unit
+      ? $duration(amount, options.unit).as('ms')
+      : amount
+
+    const units: DurationUnit[] = ['day', 'hour', 'minute', 'second']
+    const parts: string[] = []
+    let remaining = ms
+
+    for (const unit of units) {
+      const unitMs = MODIFIER_BY_UNIT[unit]
+      const count = Math.floor(remaining / unitMs)
+      if (count <= 0) {
+        continue
+      }
+
+      parts.push(`${padStart(String(count), 2, '0')} ${$t(`general.unit.${unit}Short`, count - 1)}`)
+      remaining -= count * unitMs
+    }
+
+    if (!parts.length) {
+      const count = Math.round(ms)
+      parts.push(`${count} ${$t('general.millisecond', count)}`)
+    }
+
+    if (sign && parts[0]) {
+      parts[0] = `${sign}${parts[0]}`
+    }
+
+    return parts
+  }
+
+  function formatDurationHuman(
+    value?: number | string | null,
+    options: IDurationOptions = {},
+  ) {
+    return getDurationHumanParts(value, options).join(' ')
+  }
+
   return {
+    formatDurationHuman,
+    getDurationHumanParts,
     formatDuration,
     getDuration,
   }
