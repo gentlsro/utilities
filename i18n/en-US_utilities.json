@@ -54,6 +54,17 @@
       "asc": "Ascending",
       "desc": "Descending"
     },
+    "unit": {
+      "self": "Unit | Units | Units",
+      "monthShort": "m",
+      "weekShort": "w",
+      "yearShort": "y",
+      "dayShort": "d",
+      "hourShort": "hr",
+      "minuteShort": "min",
+      "secondShort": "s",
+      "millisecondShort": "ms"
+    },
     "empty": "Empty",
     "apply": "Apply",
     "selected": "Selected",
