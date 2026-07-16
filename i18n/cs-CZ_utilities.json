@@ -53,6 +53,17 @@
       "desc": "Sestupně",
       "self": "Řazení"
     },
+    "unit": {
+      "self": "Jednotka | Jednotky | Jednotek",
+      "monthShort": "m",
+      "weekShort": "t",
+      "yearShort": "r",
+      "dayShort": "d",
+      "hourShort": "hod",
+      "minuteShort": "min",
+      "secondShort": "s",
+      "millisecondShort": "ms"
+    },
     "outOf": "z",
     "row": "Řádek | Řádky | Řádků",
     "option": "Možnost | Možnosti | Možností",
