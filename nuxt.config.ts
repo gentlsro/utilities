@@ -18,6 +18,9 @@ export default defineNuxtConfig({
   imports: {
     imports: [
       { name: 'z', from: 'zod' },
+      // Shared `utils/$t` also scans into the Vue app; higher priority keeps the real i18n `$t`.
+      // Nitro still uses shared `$t` via `nitro.imports` below.
+      { name: '$t', from: resolve('./app/utils/$t'), priority: 100 },
     ],
     dirs: [
       resolve('./app/constants'),
