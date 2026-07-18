@@ -142,7 +142,8 @@
     "detail": "Detail | Detaily",
     "basic": "Základní",
     "example": "Příklad",
-    "configuration": "Konfigurace"
+    "configuration": "Konfigurace",
+    "discard": "Zahodit"
   },
   "zod": {
     "errors": {
