@@ -142,7 +142,8 @@
     "detail": "Detail | Details",
     "basic": "Basic",
     "example": "Example",
-    "configuration": "Configuration"
+    "configuration": "Configuration",
+    "discard": "Discard"
   },
   "zod": {
     "errors": {
