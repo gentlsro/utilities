@@ -72,6 +72,9 @@ export function transformTypescriptForEval(input: string): string {
   output = output.replace(/(\bfunction\s+[A-Z_$][\w$]*\s*)<[^>]*>(\s*\()/gi, '$1$2')
   output = output.replace(/(\basync\s+function\s+[A-Z_$][\w$]*\s*)<[^>]*>(\s*\()/gi, '$1$2')
 
+  // Remove type arguments from calls: query<Row>(...) => query(...)
+  output = stripCallTypeArguments(output)
+
   // Remove TypeScript assertions and operators commonly used in inline code
   // `as Type`, `satisfies Type`, and non-null `!` on identifiers
   output = output.replace(/\s+as\s+[^,;)\n]+/g, '')
@@ -93,6 +96,108 @@ export function transformTypescriptForEval(input: string): string {
   })
 
   return output
+}
+
+function stripCallTypeArguments(input: string): string {
+  let output = ''
+  let index = 0
+
+  while (index < input.length) {
+    const character = input[index]!
+
+    if (character === '\'' || character === '"' || character === '`') {
+      const end = findQuotedValueEnd(input, index, character)
+      output += input.slice(index, end)
+      index = end
+
+      continue
+    }
+
+    if (character === '/' && (input[index + 1] === '/' || input[index + 1] === '*')) {
+      const end = findCommentEnd(input, index)
+      output += input.slice(index, end)
+      index = end
+
+      continue
+    }
+
+    if (character === '<' && isCallTargetCharacter(input[index - 1])) {
+      const typeArgumentsEnd = findTypeArgumentsEnd(input, index)
+
+      if (typeArgumentsEnd !== null) {
+        let callStart = typeArgumentsEnd + 1
+
+        while (/\s/.test(input[callStart] ?? '')) {
+          callStart += 1
+        }
+
+        if (input[callStart] === '(') {
+          index = typeArgumentsEnd + 1
+
+          continue
+        }
+      }
+    }
+
+    output += character
+    index += 1
+  }
+
+  return output
+}
+
+function findTypeArgumentsEnd(input: string, start: number): number | null {
+  let depth = 0
+
+  for (let index = start; index < input.length; index += 1) {
+    const character = input[index]!
+
+    if (character === '\'' || character === '"' || character === '`') {
+      index = findQuotedValueEnd(input, index, character) - 1
+
+      continue
+    }
+
+    if (character === '<') {
+      depth += 1
+    } else if (character === '>' && input[index - 1] !== '=') {
+      depth -= 1
+
+      if (depth === 0) {
+        return index
+      }
+    }
+  }
+
+  return null
+}
+
+function findQuotedValueEnd(input: string, start: number, quote: string): number {
+  for (let index = start + 1; index < input.length; index += 1) {
+    if (input[index] === '\\') {
+      index += 1
+    } else if (input[index] === quote) {
+      return index + 1
+    }
+  }
+
+  return input.length
+}
+
+function findCommentEnd(input: string, start: number): number {
+  if (input[start + 1] === '/') {
+    const lineEnd = input.indexOf('\n', start + 2)
+
+    return lineEnd === -1 ? input.length : lineEnd
+  }
+
+  const blockEnd = input.indexOf('*/', start + 2)
+
+  return blockEnd === -1 ? input.length : blockEnd + 2
+}
+
+function isCallTargetCharacter(character: string | undefined): boolean {
+  return !!character && /[\w$\])]/.test(character)
 }
 
 function stripArrowParamTypes(input: string): string {
