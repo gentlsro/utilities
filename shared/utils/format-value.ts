@@ -70,7 +70,7 @@ function handleDefaultFormat(payload: {
 
     case 'fullDateTime':
     case 'fullDateTimeSimple':
-      return formatDate(value, 'longWithSeconds')
+      return formatDate(value, 'shortLongWithSeconds')
 
     case 'timestamp':
     case 'timestampSimple':
