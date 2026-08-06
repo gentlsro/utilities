@@ -2,18 +2,17 @@
 import { SummaryEnum } from '../enums/summary.enum'
 import type { SummaryItem } from '../models/summary-item.model'
 
-type IInputItem = IGroupedItem<IItem> | IGroupRow
 type IResultItem = {
   id: string
   field: string
   label?: string | ((value: number) => string)
   value: number
-  row: IGroupedItem<IItem> | IGroupRow
+  row: IGroupRow
 }
 
 export function useSummaries() {
-  const createSummaries = <T = IItem>(
-    groupedArrayRef: MaybeRefOrGetter<IInputItem[]>,
+  const createSummaries = <T extends IItem = IItem>(
+    groupedArrayRef: MaybeRefOrGetter<Array<T | IGroupRow>>,
     summariesRef: MaybeRefOrGetter<SummaryItem<T>[]>,
     options?: {
       /**
@@ -29,32 +28,41 @@ export function useSummaries() {
     const result: IResultItem[] = []
 
     groupedArray.forEach(row => {
-      if ('isGroup' in row) {
-        summaries.forEach(summary => {
-          const value = Math.round(calculateSummary(summary, row.dataObj) * 100) / 100
-
-          if (mutateGroupedArray) {
-            row.summary = {
-              ...row.summary,
-              [summary.field]: {
-                label: summary.label,
-                value,
-              },
-            }
-          }
-
-          result.push({
-            id: row.id,
-            field: summary.field,
-            label: summary.label ?? row.label,
-            value,
-            row,
-          })
-        })
+      if (!isGroupRow(row)) {
+        return
       }
+
+      summaries.forEach(summary => {
+        const value = Math.round(calculateSummary(summary, row.dataObj) * 100) / 100
+
+        if (mutateGroupedArray) {
+          row.summary = {
+            ...row.summary,
+            [summary.field]: {
+              label: summary.label,
+              value,
+            },
+          }
+        }
+
+        result.push({
+          id: row.id,
+          field: summary.field,
+          label: summary.label ?? row.label,
+          value,
+          row,
+        })
+      })
     })
 
     return result
+  }
+
+  function isGroupRow(row: unknown): row is IGroupRow {
+    return !!row
+      && typeof row === 'object'
+      && 'isGroup' in row
+      && (row as IGroupRow).isGroup === true
   }
 
   function getRowValue<T = IItem>(row: T, summaryItem: SummaryItem): number {
