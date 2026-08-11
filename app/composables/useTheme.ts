@@ -1,4 +1,4 @@
-export function useTheme() {
+function useThemeState() {
   const rC = useRuntimeConfig()
   const prefersDark = usePreferredDark()
   const themeCookie = useCookie('theme', {
@@ -44,9 +44,15 @@ export function useTheme() {
     post(themeCookie)
   })
 
-  watch(data, themeCookie => {
-    toggleDark(themeCookie === 'dark')
+  watch(data, theme => {
+    if (theme === themeCookie.value) {
+      return
+    }
+
+    toggleDark(theme === 'dark')
   })
 
   return { color: themeCookie, isDark, toggleDark, reset }
 }
+
+export const useTheme = createSharedComposable(useThemeState)
