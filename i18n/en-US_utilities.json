@@ -428,7 +428,9 @@
     "time": "Time",
     "duration": "Duration",
     "link": "Link",
-    "task": "Task"
+    "task": "Task",
+    "yearMonth": "Period",
+    "currency": "Currency"
   },
   "theme": {
     "self": "Theme",

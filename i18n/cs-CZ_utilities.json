@@ -109,7 +109,7 @@
     "date": "Datum",
     "time": "Čas",
     "notFilled": "Neuvedeno",
-    "additionalConfiguration": "Přizpůsobení",
+    "additionalConfiguration": "Další konfigurace",
     "use": "Použijte",
     "recent": "Nedávné",
     "rename": "Přejmenovat",
@@ -423,7 +423,9 @@
     "time": "Čas",
     "duration": "Doba trvání",
     "link": "Odkaz",
-    "task": "Úkol"
+    "task": "Úkol",
+    "yearMonth": "Období",
+    "currency": "Měna"
   },
   "theme": {
     "self": "Téma",
