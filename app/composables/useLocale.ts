@@ -1,6 +1,6 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
 
-export function useLocale() {
+function useLocaleState() {
   const rC = useRuntimeConfig()
   const localeCookie = useCookie('lang', { domain: rC.public.domain || undefined })
   const { locale, locales, defaultLocale, loadLocaleMessages, setLocale } = useI18n()
@@ -38,8 +38,12 @@ export function useLocale() {
     post(locale)
   })
 
-  watch(data, locale => {
-    const foundLocale = localesByCode.value[locale]
+  watch(data, localeCode => {
+    if (localeCode === locale.value) {
+      return
+    }
+
+    const foundLocale = localesByCode.value[localeCode]
 
     if (!foundLocale) {
       return
@@ -59,6 +63,12 @@ export function useLocale() {
     silent?: boolean
   }) {
     const { callback, silent = true } = payload ?? {}
+
+    if (_locale.code === locale.value) {
+      callback?.()
+
+      return
+    }
 
     if (silent) {
       await loadLocaleMessages(_locale.code)
@@ -85,3 +95,5 @@ export function useLocale() {
     getCurrentLocaleDateFormat,
   }
 }
+
+export const useLocale = createSharedComposable(useLocaleState)
