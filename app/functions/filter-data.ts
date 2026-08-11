@@ -100,7 +100,7 @@ function handleFilterData(
     dataType,
     textFnc,
     useUtc,
-    dateTypes = getDateTypes()
+    dateTypes = getDateTypes(),
   } = payload
 
   let valid = true
