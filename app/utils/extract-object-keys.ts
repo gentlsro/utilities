@@ -58,6 +58,14 @@ export function extractObjectKeys(
     keepObjectKeys?: boolean
 
     /**
+     * Maximum object depth to inspect. Runtime objects can contain framework-owned
+     * graphs that are much deeper than useful data-field paths.
+     *
+     * @default 20
+     */
+    maxDepth?: number
+
+    /**
      * When provided, the process will omit the keys that are present in the array
      *
      * For example, if the omitKeys is ["obj.nestedKey"], the function will return:
@@ -70,44 +78,71 @@ export function extractObjectKeys(
     omitKeys?: string[]
   } = {},
 ): string[] {
-  const { prefix = '', keepObjectKeys = false, omitKeys = [] } = options
+  const { prefix = '', keepObjectKeys = false, maxDepth = 20, omitKeys = [] } = options
 
-  if (Array.isArray(obj)) {
-    // Only process the first item, if present
-    return obj.length > 0
-      ? extractObjectKeys(
-          obj[0],
-          { prefix: prefix ? `${prefix}.[n]` : '[n]', keepObjectKeys, omitKeys },
-        )
-      : []
-  }
+  return extractKeys(obj, prefix, new WeakSet<object>(), 0)
 
-  if (obj && typeof obj === 'object') {
-    const results: string[] = []
-
-    // If keepObjectKeys is true, add the current object key to results
-    if (keepObjectKeys && prefix) {
-      const isOmitted = omitKeys.some(key => prefix.endsWith(key))
-
-      if (!isOmitted) {
-        results.push(prefix)
-      }
+  function extractKeys(
+    value: unknown,
+    currentPrefix: string,
+    ancestors: WeakSet<object>,
+    depth: number,
+  ): string[] {
+    if (depth > maxDepth) {
+      return []
     }
 
-    // Process nested keys
-    const nestedKeys = Object.entries(obj as IItem).flatMap(
-      ([key, value]) => {
-        return extractObjectKeys(
-          value,
-          { prefix: prefix ? `${prefix}.${key}` : key, keepObjectKeys, omitKeys },
+    if (currentPrefix && omitKeys.some(key => currentPrefix.endsWith(key))) {
+      return []
+    }
+
+    if (value && typeof value === 'object') {
+      if (ancestors.has(value)) {
+        return []
+      }
+
+      ancestors.add(value)
+    }
+
+    if (Array.isArray(value)) {
+      // Only process the first item, if present
+      const result = value.length > 0
+        ? extractKeys(
+            value[0],
+            currentPrefix ? `${currentPrefix}.[n]` : '[n]',
+            ancestors,
+            depth + 1,
+          )
+        : []
+
+      ancestors.delete(value)
+
+      return result
+    }
+
+    if (value && typeof value === 'object') {
+      const results: string[] = []
+
+      // If keepObjectKeys is true, add the current object key to results
+      if (keepObjectKeys && currentPrefix) {
+        results.push(currentPrefix)
+      }
+
+      // Process nested keys
+      const nestedKeys = Object.entries(value as IItem).flatMap(([key, nestedValue]) => {
+        return extractKeys(
+          nestedValue,
+          currentPrefix ? `${currentPrefix}.${key}` : key,
+          ancestors,
+          depth + 1,
         )
-      },
-    )
-    return results.concat(nestedKeys)
+      })
+      ancestors.delete(value)
+
+      return results.concat(nestedKeys)
+    }
+
+    // Primitive value
+    return currentPrefix ? [currentPrefix] : []
   }
-
-  // Primitive value
-  const isOmitted = omitKeys.some(key => prefix.endsWith(key))
-
-  return prefix && !isOmitted ? [prefix] : []
 }
