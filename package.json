@@ -33,7 +33,6 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
     "@nuxt/eslint": "catalog:",
-    "@nuxt/hints": "catalog:",
     "@nuxt/scripts": "catalog:",
     "@nuxt/test-utils": "catalog:",
     "@nuxtjs/i18n": "catalog:",
