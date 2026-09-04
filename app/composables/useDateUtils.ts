@@ -29,10 +29,10 @@ export type IExtendedPeriodOptionsApp = {
   dateRef?: MaybeRefOrGetter<Datetime>
 }
 
-function createDateUtils(localeIso: string) {
+function createDateUtils(getLocaleIso: () => string) {
   const localeUses24HourTime = () => {
     return (
-      new Intl.DateTimeFormat(localeIso, { hour: 'numeric' })
+      new Intl.DateTimeFormat(getLocaleIso(), { hour: 'numeric' })
         .formatToParts(new Date(2020, 0, 1, 13))
         .find(part => part.type === 'hour')
         ?.value
@@ -61,7 +61,7 @@ function createDateUtils(localeIso: string) {
       const isPredefinedFormat = datetimeFormats[options]
 
       if (isPredefinedFormat) {
-        return Intl.DateTimeFormat(localeIso, datetimeFormats[options])
+        return new Intl.DateTimeFormat(getLocaleIso(), datetimeFormats[options])
           .format(parsedDate.valueOf())
           .replace(/(\d{2})\.\s(\d{2})\.\s(\d{4})/g, '$1.$2.$3')
       } else {
@@ -74,7 +74,7 @@ function createDateUtils(localeIso: string) {
     // Otherwise we use the Intl API
     else {
       const { outputIntlOptions } = options
-      const usedLocaleIso = options?.localeIso ?? localeIso
+      const usedLocaleIso = options?.localeIso ?? getLocaleIso()
       const parsedDate = parseDate(date, options)
 
       if (!parsedDate.isValid()) {
@@ -86,7 +86,7 @@ function createDateUtils(localeIso: string) {
         typeof outputIntlOptions === 'string'
         && datetimeFormats[outputIntlOptions]
       ) {
-        const formattedDate = Intl.DateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
+        const formattedDate = new Intl.DateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
           .format(parsedDate.valueOf())
 
         return options?.removeSpaces
@@ -99,7 +99,7 @@ function createDateUtils(localeIso: string) {
         return parsedDate.format(outputIntlOptions)
       }
 
-      const formattedDate = Intl.DateTimeFormat(usedLocaleIso, outputIntlOptions)
+      const formattedDate = new Intl.DateTimeFormat(usedLocaleIso, outputIntlOptions)
         .format(parsedDate.valueOf())
 
       return options?.removeSpaces
@@ -255,11 +255,11 @@ export function useDateUtils(options?: { localeIso?: string }) {
   const { localeIso: providedLocaleIso } = options ?? {}
 
   if (providedLocaleIso) {
-    return createDateUtils(providedLocaleIso)
+    return createDateUtils(() => providedLocaleIso)
   }
 
   const { currentLocale, getLocaleDateFormat } = useLocale()
-  const dateUtils = createDateUtils(currentLocale.value.code)
+  const dateUtils = createDateUtils(() => currentLocale.value.code)
 
   function parseDate(
     dateRef: MaybeRefOrGetter<Datetime>,
