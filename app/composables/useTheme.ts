@@ -1,9 +1,8 @@
 function useThemeState() {
-  const rC = useRuntimeConfig()
   const prefersDark = usePreferredDark()
   const themeCookie = useCookie('theme', {
     default: getColor,
-    domain: rC.public.domain || undefined,
+    domain: usePreferenceCookieDomain(),
   })
 
   const isDark = computed(() => {
