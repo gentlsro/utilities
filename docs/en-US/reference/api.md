@@ -246,7 +246,7 @@ Returns: `files`, `allFiles`, `injectedFiles`, `clearFiles()`
 
 ### Zod
 
-`useZod()`, `useZodOld()`, `buildZodFromJson()`, `translateZodIssue`, `ZOD_VALIDATORS`. `useZod` requires `libs/UI`.
+`useZod()`, `buildZodFromJson()`, `translateZodIssue`, `ZOD_VALIDATORS`. `useZod` requires `libs/UI`.
 
 ### ArkType
 

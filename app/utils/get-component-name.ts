@@ -1,9 +1,7 @@
-import type { ComponentInternalInstance } from 'vue'
-
 /**
  * Will return the name of the current component
  */
-export function getComponentName(component?: ComponentInternalInstance | null) {
+export function getComponentName(component?: { type: { name?: string, __name?: string } } | null) {
   if (!component) {
     return
   }

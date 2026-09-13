@@ -1,83 +1,45 @@
 import type { ComponentInternalInstance } from 'vue'
-import { camelCase } from 'change-case'
+import { initLegacyRef } from './init-ref-legacy'
 
-/**
- * Initialize a reactive reference based on the props passed to the component
- *
- * Basically, if an actual prop is passed to the component, it creates a `model`
- * and will emit the update events as expected
- *
- * If no prop is passed, it will create its own `ref` and will be maintained internally
- *
- * This is very similar idea to the Vue's `defineModel`, but can be also used in stores
- *
- * Use-case:
- * - In stores, where we initialize the state with provided props
- */
-export function initRef<T extends IItem, K extends keyof T>(payload: {
-  defaultValue?: T[K]
+type InitRefContext<T, K extends keyof T> = {
   props?: T
   propName: K
+  /** @deprecated Omit this property to use the renderer-independent model. */
   instance?: ComponentInternalInstance | null
+}
 
+type InitRefOptions<T, K extends keyof T> = InitRefContext<T, K> & {
+  defaultValue?: T[K]
   initWith?: {
-    condition: (payload: {
-      instance?: ComponentInternalInstance | null
-      props?: T
-      propName: K
-    }) => boolean
-
-    fnc: (payload: {
-      instance?: ComponentInternalInstance | null
-      props?: T
-      propName: K
-    }) => T[K]
+    condition: (context: InitRefContext<T, K>) => boolean
+    fnc: (context: InitRefContext<T, K>) => T[K]
   }
-}) {
-  const { propName, instance, props, defaultValue, initWith } = payload
+}
 
-  if (!instance || !props) {
-    return ref(defaultValue) as Ref<T[K]>
+/**
+ * Create during the owner's setup when props are supplied; otherwise own a local ref.
+ * defaultValue is a read fallback for undefined, never an implicit parent update.
+ * initWith writes through the model and therefore emits for a controlled binding.
+ * Explicit instance (including null/undefined) retains the old VDOM contract.
+ */
+export function initRef<T extends IItem, K extends keyof T & string>(payload: InitRefOptions<T, K>): Ref<T[K]> {
+  if ('instance' in payload) {
+    return initLegacyRef(payload)
   }
 
-  // @ts-expect-error Vue doesn't type this
-  const dynamicProps = (instance.vnode?.dynamicProps ?? [])
-    .map((propName: string) => camelCase(propName)) as Array<keyof T>
+  const { props, propName, defaultValue, initWith } = payload
+  const fallback = ref(defaultValue && typeof defaultValue === 'object'
+    ? cloneDeep(defaultValue)
+    : defaultValue)
+  const result = props
+    ? useModel(props, propName, {
+        get: value => value === undefined ? fallback.value : value,
+      })
+    : fallback
 
-  // const providedProps = Object.keys(instance.vnode?.props ?? {})
-  //   .map(propName => camelCase(propName)) as Array<keyof T>
-
-  let _defaultValue = defaultValue
-
-  if (props?.[propName] !== undefined) {
-    _defaultValue = props?.[propName]
-  }
-
-  let isFirstAccess = true
-
-  const result = dynamicProps.includes(propName)
-  // When the prop is dynamic => the prop was passed to the component (even if it's `undefined`)
-    ? computed({
-      get: () => {
-        return isFirstAccess ? (props?.[propName] ?? _defaultValue) : props?.[propName]
-      },
-      set(value) {
-        instance.emit(`update:${propName.toString()}`, value)
-      },
-    }) as Ref<T[K]>
-
-    // When the prop is not dynamic => the prop was not passed to the component at all
-    : ref(_defaultValue) as Ref<T[K]>
-
-  // Set the initial value if needed
   if (initWith?.condition(payload)) {
-    const initialValue = initWith.fnc(payload)
-    result.value = initialValue
+    result.value = initWith.fnc(payload)
   }
 
-  nextTick(() => {
-    isFirstAccess = false
-  })
-
-  return result
+  return result as Ref<T[K]>
 }

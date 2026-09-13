@@ -4,8 +4,9 @@ import { FileModel } from '../models/file.model'
 // Provide/Inject
 export const filesKey = Symbol('__files')
 
+/** An explicit name is a registry key; omit it for a unique per-call bucket. */
 export function useFiles(name?: string) {
-  const componentName = name ?? (getComponentName(getCurrentInstance()) || generateUUID())
+  const componentName = name ?? `files_${generateUUID()}`
   const localFiles = ref<Array<FileModel | IFile>>([])
   const injectedFiles = inject(
     filesKey,

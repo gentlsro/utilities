@@ -1,6 +1,4 @@
-import type { MaybeElementRef } from '@vueuse/core'
-
-function getScrollbarWidth() {
+export function getScrollbarWidth() {
   if (!import.meta.client) {
     return 0
   }
@@ -30,54 +28,88 @@ function getScrollbarWidth() {
 export type IOverflowOptions = {
   direction?: 'any' | 'horizontal' | 'vertical'
   returnDiff?: boolean
+  threshold?: MaybeRefOrGetter<number>
 }
 
 export function useOverflow() {
-  const previousOverflowState = ref<any>()
   const scrollbarWidth = getScrollbarWidth()
 
   const isOverflown = (
     { clientWidth, clientHeight, scrollWidth, scrollHeight }: Element,
     options?: IOverflowOptions,
   ) => {
-    const { direction = 'any', returnDiff } = options || {}
+    const { direction = 'any', returnDiff, threshold = 0 } = options || {}
     const xDiff = scrollWidth - clientWidth
     const yDiff = scrollHeight - clientHeight
 
+    const _threshold = toValue(threshold)
+
     switch (direction) {
       case 'any':
-        return returnDiff ? { xDiff, yDiff } : xDiff > 0 || yDiff > 0
+        return returnDiff ? { xDiff, yDiff } : xDiff > _threshold || yDiff > _threshold
       case 'horizontal':
-        return returnDiff ? { xDiff } : xDiff > 0
+        return returnDiff ? { xDiff } : xDiff > _threshold
       case 'vertical':
-        return returnDiff ? { yDiff } : yDiff > 0
+        return returnDiff ? { yDiff } : yDiff > _threshold
     }
   }
 
   const onOverflow = (
-    elRef: MaybeElementRef,
-    handler: (
-      isOverflown: boolean | { xDiff?: number, yDiff?: number },
-    ) => void,
+    elRef: MaybeRefOrGetter<Element | null | undefined>,
+    handler: (value: boolean | { xDiff?: number, yDiff?: number }) => void,
     options?: IOverflowOptions,
   ) => {
-    useResizeObserver(elRef, entries => {
-      const entry = entries[0] as ResizeObserverEntry
-      const _isOverflown = isOverflown(entry.target, options)
+    // Each registration owns its cache; equal results on separate elements
+    // must still notify both handlers.
+    let previousState: ReturnType<typeof isOverflown> | undefined
+    let disposed = false
 
-      // We don't need to update the state (and process the change) if it's the same
-      if (isEqual(_isOverflown, previousOverflowState.value)) {
+    watch(() => import.meta.client ? toValue(elRef) : null, (element, _, onCleanup) => {
+      previousState = undefined
+
+      if (!import.meta.client || !element) {
         return
       }
 
-      handler(_isOverflown)
-      previousOverflowState.value = _isOverflown
+      const observer = new ResizeObserver(() => {
+        if (disposed || !element.isConnected || toValue(elRef) !== element) {
+          return
+        }
+
+        const value = isOverflown(element, options)
+
+        if (!isEqual(value, previousState)) {
+          previousState = value
+          handler(value)
+        }
+      })
+
+      observer.observe(element)
+      onCleanup(() => observer.disconnect())
+    }, { immediate: true, flush: 'post' })
+
+    onScopeDispose(() => {
+      disposed = true
     })
 
-    return () => {
-      const el = unrefElement(elRef)
+    // Explicit refresh always notifies, even if the overflow state is unchanged.
+    // Resolve the target after DOM updates, not when the refresh was requested.
+    return async () => {
+      await nextTick()
 
-      nextTick(() => handler(isOverflown(el!, options)))
+      if (!import.meta.client || disposed) {
+        return
+      }
+
+      const element = toValue(elRef)
+
+      if (!element?.isConnected) {
+        return
+      }
+
+      const value = isOverflown(element, options)
+      previousState = value
+      handler(value)
     }
   }
 

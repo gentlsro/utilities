@@ -3,20 +3,18 @@ import { klona } from 'klona/full'
 
 // Types
 import type { NonUndefined } from 'utility-types'
-import type { UnwrapRef, MaybeRefOrGetter } from 'vue'
+import type { MaybeRefOrGetter, UnwrapRef } from 'vue'
 
 type IOptions<T, Transformed = T> = {
   /**
    * When true, watch `initialValue` and run `syncFromOrigin` on deep changes.
    */
   autoSyncFromOrigin?: MaybeRefOrGetter<boolean>
+  /** @deprecated Use `autoSyncFromOrigin`. */
   autoSyncFromParent?: MaybeRefOrGetter<boolean>
-  emitName?: string
+  /** Called after synchronizing the origin; use it to emit an update explicitly. */
+  onSyncToOrigin?: (value: T) => void
   modifyFnc?: (value: T, currentValue?: Transformed) => NonUndefined<Transformed>
-
-  /**
-   * @deprecated Use `autoSyncFromOrigin`
-   */
 }
 
 export function useRefReset<T, Transformed = T>(
@@ -27,9 +25,8 @@ export function useRefReset<T, Transformed = T>(
   const autoSyncFromOrigin = computed(() =>
     toValue(opts.autoSyncFromOrigin) ?? toValue(opts.autoSyncFromParent) ?? false,
   )
-  const { emitName, modifyFnc } = opts
+  const { onSyncToOrigin, modifyFnc } = opts
 
-  const instance = getCurrentInstance()
   let _initialValue = toValue(initialValue)
   const originalValue = ref(klona(_initialValue))
 
@@ -52,10 +49,7 @@ export function useRefReset<T, Transformed = T>(
       (initialValue as Ref<any>).value = modelArg
     }
 
-    // In some cases, we also need to emit the event for Vue to see the changes
-    if (emitName) {
-      instance?.emit(emitName, toValue(initialValue))
-    }
+    onSyncToOrigin?.(toValue(initialValue))
 
     // When syncing to origin, we don't necessarily want to also overwrite the original value
     // to eventually be able to reset the model to the actual original value
