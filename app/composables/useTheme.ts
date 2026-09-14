@@ -1,47 +1,49 @@
 function useThemeState() {
   const prefersDark = usePreferredDark()
-  const themeCookie = useCookie('theme', {
-    default: getColor,
+  const themeCookie = useCookie<'dark' | 'light' | undefined>('theme', {
     domain: usePreferenceCookieDomain(),
   })
+  const color = computed(() => themeCookie.value ?? getPreferredColor())
 
   const isDark = computed(() => {
-    return themeCookie.value === 'dark'
+    return color.value === 'dark'
   })
 
   // Utils
-  function getColor() {
+  function getPreferredColor(): 'dark' | 'light' {
     return prefersDark.value ? 'dark' : 'light'
   }
 
+  function applyColor(theme: 'dark' | 'light') {
+    if (!import.meta.client) {
+      return
+    }
+
+    document.documentElement.classList.remove('dark', 'light')
+    document.documentElement.classList.add(theme)
+  }
+
   function toggleDark(val?: boolean) {
-    let theme: 'dark' | 'light'
-
-    if (val !== undefined) {
-      theme = val ? 'dark' : 'light'
-    } else {
-      theme = themeCookie.value === 'dark' ? 'light' : 'dark'
-    }
-
-    if (typeof window !== 'undefined') {
-      document.documentElement.classList.remove('dark')
-      document.documentElement.classList.remove('light')
-      document.documentElement.classList.add(theme)
-    }
+    const theme = val === undefined
+      ? color.value === 'dark' ? 'light' : 'dark'
+      : val ? 'dark' : 'light'
 
     themeCookie.value = theme
   }
 
   function reset() {
-    themeCookie.value = getColor()
+    themeCookie.value = getPreferredColor()
   }
 
   // Communication across tabs
   const { data, post } = useBroadcastChannel<string, string>({ name: 'theme' })
 
-  watch(themeCookie, themeCookie => {
-    post(themeCookie)
-  })
+  watch(themeCookie, theme => {
+    if (theme) {
+      applyColor(theme)
+      post(theme)
+    }
+  }, { flush: 'sync' })
 
   watch(data, theme => {
     if (theme === themeCookie.value) {
@@ -51,7 +53,15 @@ function useThemeState() {
     toggleDark(theme === 'dark')
   })
 
-  return { color: themeCookie, isDark, toggleDark, reset }
+  onMounted(() => {
+    if (!themeCookie.value) {
+      themeCookie.value = getPreferredColor()
+    } else {
+      applyColor(themeCookie.value)
+    }
+  })
+
+  return { color, isDark, toggleDark, reset }
 }
 
 export const useTheme = createSharedComposable(useThemeState)
