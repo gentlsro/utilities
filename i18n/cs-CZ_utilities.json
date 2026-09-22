@@ -145,7 +145,8 @@
     "example": "Příklad",
     "configuration": "Konfigurace",
     "discard": "Zahodit",
-    "newF": "Nová"
+    "newF": "Nová",
+    "send": "Odeslat"
   },
   "zod": {
     "errors": {
