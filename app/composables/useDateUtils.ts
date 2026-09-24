@@ -9,6 +9,7 @@ import { DayEnum } from '../enums/day.enum'
 
 // Functions
 import { removeDatetimeSpaces } from '../functions/remove-datetime-spaces'
+import { getDateTimeFormat } from '../functions/intl-formatters'
 
 // Constants
 import { datetimeFormats } from '../i18n'
@@ -40,7 +41,7 @@ export type IExtendedPeriodOptionsApp = {
 function createDateUtils(getLocaleIso: () => string) {
   const localeUses24HourTime = () => {
     return (
-      new Intl.DateTimeFormat(getLocaleIso(), { hour: 'numeric' })
+      getDateTimeFormat(getLocaleIso(), { hour: 'numeric' })
         .formatToParts(new Date(2020, 0, 1, 13))
         .find(part => part.type === 'hour')
         ?.value
@@ -69,7 +70,7 @@ function createDateUtils(getLocaleIso: () => string) {
       const isPredefinedFormat = datetimeFormats[options]
 
       if (isPredefinedFormat) {
-        return new Intl.DateTimeFormat(getLocaleIso(), datetimeFormats[options])
+        return getDateTimeFormat(getLocaleIso(), datetimeFormats[options])
           .format(parsedDate.valueOf())
           .replace(/(\d{2})\.\s(\d{2})\.\s(\d{4})/g, '$1.$2.$3')
       } else {
@@ -94,7 +95,7 @@ function createDateUtils(getLocaleIso: () => string) {
         typeof outputIntlOptions === 'string'
         && datetimeFormats[outputIntlOptions]
       ) {
-        const formattedDate = new Intl.DateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
+        const formattedDate = getDateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
           .format(parsedDate.valueOf())
 
         return options?.removeSpaces
@@ -107,7 +108,7 @@ function createDateUtils(getLocaleIso: () => string) {
         return parsedDate.format(outputIntlOptions)
       }
 
-      const formattedDate = new Intl.DateTimeFormat(usedLocaleIso, outputIntlOptions)
+      const formattedDate = getDateTimeFormat(usedLocaleIso, outputIntlOptions)
         .format(parsedDate.valueOf())
 
       return options?.removeSpaces
