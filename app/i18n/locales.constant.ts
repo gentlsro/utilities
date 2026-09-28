@@ -1,13 +1,6 @@
-// Locales
-import csCz from '../../i18n/cs-CZ_utilities.json'
-import enUs from '../../i18n/en-US_utilities.json'
-
-export const messagesByLocale = {
-  'cs-CZ': csCz,
-  'en-US': enUs,
-} as const
-
-export const availableLocales = Object.keys(messagesByLocale)
+// The dictionaries are served by the i18n module; importing them here would
+// bundle both languages into every page.
+export const availableLocales = ['cs-CZ', 'en-US'] as const
 
 export const LOCALE_DEFAULT = 'cs-CZ' as const
 export const CURRENCY_DEFAULT = 'CZK'

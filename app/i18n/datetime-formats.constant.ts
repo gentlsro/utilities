@@ -102,7 +102,7 @@ export const datetimeFormats: Record<string, Intl.DateTimeFormatOptions> = {
     timeZone: 'UTC',
   },
   utcMonth: {
-    month: '2-digit',
+    month: 'long',
     timeZone: 'UTC',
   },
   utcMonthShort: {

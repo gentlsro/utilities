@@ -1,10 +1,7 @@
-// Types
-import type { IItem } from '../../shared/types/item.type'
-
 /**
  * Extracts all "leaf" keys present in an object
  *
- * Will traverse the object and return all "leaf" keys present in the sturcture
+ * Will traverse the object and return all "leaf" keys present in the structure
  * "Leaf" keys are the keys that hold a primitive value
  *
  * For example, for the following object:
@@ -58,7 +55,15 @@ export function extractObjectKeys(
     keepObjectKeys?: boolean
 
     /**
-     * When provided, the process will omit the keys that are present in the array
+     * Optional traversal limit; the root is depth 0 and each property or array
+     * element adds one level. Deeper paths are omitted. Unlimited by default
+     * so callers inspecting data do not silently lose deeply nested fields.
+     */
+    maxDepth?: number
+
+    /**
+     * Omits paths ending with one of these keys. Descendants are still inspected;
+     * omitting an object path does not omit its entire subtree.
      *
      * For example, if the omitKeys is ["obj.nestedKey"], the function will return:
      * @example
@@ -70,44 +75,59 @@ export function extractObjectKeys(
     omitKeys?: string[]
   } = {},
 ): string[] {
-  const { prefix = '', keepObjectKeys = false, omitKeys = [] } = options
-
-  if (Array.isArray(obj)) {
-    // Only process the first item, if present
-    return obj.length > 0
-      ? extractObjectKeys(
-          obj[0],
-          { prefix: prefix ? `${prefix}.[n]` : '[n]', keepObjectKeys, omitKeys },
-        )
-      : []
+  const { prefix = '', keepObjectKeys = false, maxDepth = Number.POSITIVE_INFINITY, omitKeys = [] } = options
+  if (maxDepth !== Number.POSITIVE_INFINITY && (!Number.isInteger(maxDepth) || maxDepth < 0)) {
+    throw new RangeError('maxDepth must be a non-negative integer or Infinity')
   }
 
-  if (obj && typeof obj === 'object') {
-    const results: string[] = []
+  type Frame = { value: unknown, prefix: string, depth: number, leaving?: boolean }
+  const stack: Frame[] = [{ value: obj, prefix, depth: 0 }]
+  const ancestors = new WeakSet<object>()
+  const results: string[] = []
 
-    // If keepObjectKeys is true, add the current object key to results
-    if (keepObjectKeys && prefix) {
-      const isOmitted = omitKeys.some(key => prefix.endsWith(key))
-
-      if (!isOmitted) {
-        results.push(prefix)
-      }
+  // Explicit entry/exit frames avoid call-stack overflow while tracking only
+  // ancestors, so a shared object still contributes paths under every parent.
+  while (stack.length) {
+    const { value, prefix: currentPrefix, depth, leaving } = stack.pop()!
+    if (leaving) {
+      ancestors.delete(value as object)
+      continue
+    }
+    if (depth > maxDepth) {
+      continue
     }
 
-    // Process nested keys
-    const nestedKeys = Object.entries(obj as IItem).flatMap(
-      ([key, value]) => {
-        return extractObjectKeys(
-          value,
-          { prefix: prefix ? `${prefix}.${key}` : key, keepObjectKeys, omitKeys },
-        )
-      },
-    )
-    return results.concat(nestedKeys)
+    if (value && typeof value === 'object') {
+      if (ancestors.has(value)) {
+        continue
+      }
+      ancestors.add(value)
+      stack.push({ value, prefix: currentPrefix, depth, leaving: true })
+
+      if (Array.isArray(value)) {
+        // Arrays retain their existing first-item sampling and [n] notation.
+        if (value.length && depth < maxDepth) {
+          stack.push({ value: value[0], prefix: currentPrefix ? `${currentPrefix}.[n]` : '[n]', depth: depth + 1 })
+        }
+        continue
+      }
+
+      if (keepObjectKeys && currentPrefix && !omitKeys.some(key => currentPrefix.endsWith(key))) {
+        results.push(currentPrefix)
+      }
+      if (depth === maxDepth) {
+        continue
+      }
+      const entries = Object.entries(value)
+      // Reverse the stack insertion to retain Object.entries traversal order.
+      for (let index = entries.length - 1; index >= 0; index--) {
+        const [key, nestedValue] = entries[index]!
+        stack.push({ value: nestedValue, prefix: currentPrefix ? `${currentPrefix}.${key}` : key, depth: depth + 1 })
+      }
+    } else if (currentPrefix && !omitKeys.some(key => currentPrefix.endsWith(key))) {
+      results.push(currentPrefix)
+    }
   }
 
-  // Primitive value
-  const isOmitted = omitKeys.some(key => prefix.endsWith(key))
-
-  return prefix && !isOmitted ? [prefix] : []
+  return results
 }

@@ -145,7 +145,8 @@
     "example": "Example",
     "configuration": "Configuration",
     "discard": "Discard",
-    "newF": "New"
+    "newF": "New",
+    "send": "Send"
   },
   "zod": {
     "errors": {

@@ -9,6 +9,7 @@ import { DayEnum } from '../enums/day.enum'
 
 // Functions
 import { removeDatetimeSpaces } from '../functions/remove-datetime-spaces'
+import { getDateTimeFormat } from '../functions/intl-formatters'
 
 // Constants
 import { datetimeFormats } from '../i18n'
@@ -19,6 +20,13 @@ export type IExtendedPeriodOptions = {
   minCountOfWeeks?: number
   period?: Period
   date?: Datetime
+
+  /**
+   * When true, the period is built from UTC calendar dates instead of the
+   * local ones. Calendars that store date-only values as UTC midnight must
+   * pass this so their periods and days stay on the same calendar date.
+   */
+  utc?: boolean
 }
 
 export type IExtendedPeriodOptionsApp = {
@@ -27,12 +35,13 @@ export type IExtendedPeriodOptionsApp = {
   minCountOfWeeks?: number
   periodRef?: MaybeRefOrGetter<Period>
   dateRef?: MaybeRefOrGetter<Datetime>
+  utc?: boolean
 }
 
 function createDateUtils(getLocaleIso: () => string) {
   const localeUses24HourTime = () => {
     return (
-      new Intl.DateTimeFormat(getLocaleIso(), { hour: 'numeric' })
+      getDateTimeFormat(getLocaleIso(), { hour: 'numeric' })
         .formatToParts(new Date(2020, 0, 1, 13))
         .find(part => part.type === 'hour')
         ?.value
@@ -61,7 +70,7 @@ function createDateUtils(getLocaleIso: () => string) {
       const isPredefinedFormat = datetimeFormats[options]
 
       if (isPredefinedFormat) {
-        return new Intl.DateTimeFormat(getLocaleIso(), datetimeFormats[options])
+        return getDateTimeFormat(getLocaleIso(), datetimeFormats[options])
           .format(parsedDate.valueOf())
           .replace(/(\d{2})\.\s(\d{2})\.\s(\d{4})/g, '$1.$2.$3')
       } else {
@@ -86,7 +95,7 @@ function createDateUtils(getLocaleIso: () => string) {
         typeof outputIntlOptions === 'string'
         && datetimeFormats[outputIntlOptions]
       ) {
-        const formattedDate = new Intl.DateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
+        const formattedDate = getDateTimeFormat(usedLocaleIso, datetimeFormats[outputIntlOptions])
           .format(parsedDate.valueOf())
 
         return options?.removeSpaces
@@ -99,7 +108,7 @@ function createDateUtils(getLocaleIso: () => string) {
         return parsedDate.format(outputIntlOptions)
       }
 
-      const formattedDate = new Intl.DateTimeFormat(usedLocaleIso, outputIntlOptions)
+      const formattedDate = getDateTimeFormat(usedLocaleIso, outputIntlOptions)
         .format(parsedDate.valueOf())
 
       return options?.removeSpaces
@@ -140,10 +149,11 @@ function createDateUtils(getLocaleIso: () => string) {
       period = undefined,
       firstDayOfWeek = DayEnum.MONDAY,
       unit = 'isoWeek' as ManipulateType,
+      utc = false,
     } = payload
 
     const periodStart = period?.periodStart || date
-    let periodStartObj = $date(periodStart)?.startOf(unit)
+    let periodStartObj = $date(periodStart, { utc })?.startOf(unit)
 
     if (unit === 'isoWeek' || unit.startsWith('w')) {
       const firstDayOfWeekIdx = periodStartObj.day() < firstDayOfWeek
@@ -166,13 +176,14 @@ function createDateUtils(getLocaleIso: () => string) {
       firstDayOfWeek = DayEnum.MONDAY,
       unit = 'isoWeek' as ManipulateType,
       minCountOfWeeks: minCountOfWeeksArg = 6,
+      utc = false,
     } = payload
 
     const periodStart = period?.periodStart || date
     const periodEnd = period?.periodEnd || date
 
-    const periodStartObj = $date(periodStart)?.startOf(unit)
-    const periodEndObj = $date(periodEnd)?.endOf(unit)
+    const periodStartObj = $date(periodStart, { utc })?.startOf(unit)
+    const periodEndObj = $date(periodEnd, { utc })?.endOf(unit)
 
     const periodStartExtendedDayIdx
       = periodStartObj.day() < firstDayOfWeek ? firstDayOfWeek - 7 : firstDayOfWeek
@@ -199,7 +210,7 @@ function createDateUtils(getLocaleIso: () => string) {
     let current = period.periodStart
 
     while (current.isSameOrBefore(period.periodEnd)) {
-      const day = new Day(current, currentPeriod || period, { useUtc: utc })
+      const day = new Day(current, currentPeriod || period, { useUtc: !!utc })
 
       if (!excludedDays?.includes(day.dayOfWeek)) {
         days.push(day)
@@ -209,6 +220,19 @@ function createDateUtils(getLocaleIso: () => string) {
     }
 
     return days
+  }
+
+  /**
+   * A calendar date as a value of the same shape the pickers store: local
+   * midnight by default, UTC midnight of that same calendar date in UTC mode.
+   */
+  const getCalendarDateValue = (
+    dateRef?: MaybeRefOrGetter<Datetime>,
+    options: { utc?: boolean } = {},
+  ) => {
+    const dateString = $date(toValue(dateRef)).format('YYYY-MM-DD')
+
+    return options.utc ? $date(dateString, { utc: true }) : $date(dateString)
   }
 
   /**
@@ -235,6 +259,7 @@ function createDateUtils(getLocaleIso: () => string) {
     getExtendedPeriod,
     getDaysInPeriod,
     getPeriod,
+    getCalendarDateValue,
     formatDate,
     formatTime,
     parseDate,
@@ -286,12 +311,13 @@ export function useDateUtils(options?: { localeIso?: string }) {
       periodRef = undefined,
       firstDayOfWeek = DayEnum.MONDAY,
       unit = 'isoWeek',
+      utc = false,
     } = payload ?? {}
 
     const date = toValue(dateRef)
     const period = toValue(periodRef)
 
-    return dateUtils.getPeriod({ date, period, firstDayOfWeek, unit })
+    return dateUtils.getPeriod({ date, period, firstDayOfWeek, unit, utc })
   }
 
   function getExtendedPeriod(payload: IExtendedPeriodOptionsApp) {
@@ -301,6 +327,7 @@ export function useDateUtils(options?: { localeIso?: string }) {
       firstDayOfWeek = DayEnum.MONDAY,
       minCountOfWeeks = 0,
       unit = 'isoWeek',
+      utc = false,
     } = payload
 
     const date = toValue(dateRef)
@@ -312,6 +339,7 @@ export function useDateUtils(options?: { localeIso?: string }) {
       firstDayOfWeek,
       minCountOfWeeks,
       unit,
+      utc,
     })
   }
 

@@ -1,6 +1,9 @@
 // Regex
 import { stringToFloat } from '../../shared/regex/string-to-float.regex'
 
+// Functions
+import { getNumberFormat } from '../functions/intl-formatters'
+
 // Enums
 import { SummaryEnum } from '../enums/summary.enum'
 
@@ -21,17 +24,25 @@ const defaultIntlOptions: Intl.NumberFormatOptions = {
   useGrouping: true,
 }
 
+// Every `useNumber` call resolves the separators, so they are kept per locale
+const separatorsByLocale = new Map<string, { thousandSeparator: string, decimalSeparator: string }>()
+
 function getSeparators(localeRef?: MaybeRefOrGetter<string>) {
   const locale = toValue(localeRef)
+  let separators = separatorsByLocale.get(locale ?? '')
 
-  const helperVal = Intl.NumberFormat(locale).formatToParts(1111.1)
-  const thousandSeparator = helperVal[1]!.value
-  const decimalSeparator = helperVal[3]!.value
+  if (!separators) {
+    const helperVal = getNumberFormat(locale).formatToParts(1111.1)
 
-  return {
-    thousandSeparator,
-    decimalSeparator,
+    separators = {
+      thousandSeparator: helperVal[1]!.value,
+      decimalSeparator: helperVal[3]!.value,
+    }
+
+    separatorsByLocale.set(locale ?? '', separators)
   }
+
+  return separators
 }
 
 function createNumberUtils(payload: {
@@ -83,10 +94,10 @@ function createNumberUtils(payload: {
     const usedIntlOptions = options.intlOptions || defaultIntlOptions
 
     if (typeof value === 'string') {
-      return Intl.NumberFormat(usedLocale, usedIntlOptions).format(parseNumber(value))
+      return getNumberFormat(usedLocale, usedIntlOptions).format(parseNumber(value))
     }
 
-    return Intl.NumberFormat(usedLocale, usedIntlOptions).format(+value)
+    return getNumberFormat(usedLocale, usedIntlOptions).format(+value)
   }
 
   /**

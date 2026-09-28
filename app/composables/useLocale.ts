@@ -1,8 +1,8 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
 
 function useLocaleState() {
-  const rC = useRuntimeConfig()
-  const localeCookie = useCookie('lang', { domain: rC.public.domain || undefined })
+  // Host-only, like the cookie the i18n module writes under the same name; one value per host, never two.
+  const localeCookie = useCookie('lang')
   const { locale, locales, defaultLocale, loadLocaleMessages, setLocale } = useI18n()
   const switchLocalePath = useSwitchLocalePath()
 

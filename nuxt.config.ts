@@ -85,6 +85,8 @@ export default defineNuxtConfig({
   i18n: {
     autoDeclare: false,
     langDir: '../i18n',
+    // Like `langDir`, relative to the module's `i18n/` directory; the file is at the layer's root
+    vueI18n: '../i18n.config.ts',
     defaultLocale: 'en-US',
     compilation: {
       strictMessage: false,

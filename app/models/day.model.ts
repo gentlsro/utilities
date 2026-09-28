@@ -13,13 +13,12 @@ export class Day {
   [key: string]: unknown
 
   get isToday() {
-    const now = $date(undefined, { utc: this.useUtc })
-    const nowTime = now.year() * 31556926 + now.month() * 2629743 + now.date() * 86400
-    const dateTime = this.dateObj.year() * 31556926
-      + this.dateObj.month() * 2629743
-      + this.dateObj.date() * 86400
-
-    return nowTime === dateTime
+    /**
+     * Compared as calendar dates: `dateString` is the date this day represents
+     * (`utc` days represent UTC dates), while "today" is always the day the
+     * user is living in ~ UTC "now" is a different day for part of every day.
+     */
+    return this.dateString === $date().format('YYYY-MM-DD')
   }
 
   get dateValue() {
