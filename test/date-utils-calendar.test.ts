@@ -14,11 +14,16 @@ process.env.TZ = 'Europe/Prague'
 
 afterAll(() => {
   process.env.TZ = ORIGINAL_TZ
+  vi.useRealTimers()
 })
 
 // Nuxt auto-imports in application code (`$date()` is "now" without arguments)
 const NOW = '2026-09-14 01:30:00'
 const NOW_INSTANT = $date(NOW).valueOf()
+
+// Also pin the clock: a Nuxt test environment compiles the auto-import into a
+// real import, which the global stub below cannot replace
+vi.useFakeTimers({ toFake: ['Date'], now: NOW_INSTANT })
 
 vi.stubGlobal('toValue', toValue)
 vi.stubGlobal('$date', (date?: Datetime, options?: { utc?: boolean }, strict?: boolean) => {
