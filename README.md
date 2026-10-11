@@ -7,7 +7,7 @@ Add it to `extends` in `nuxt.config.ts`.
 ## Extending config
 
 Create `app/utilities-config.ts` and export a default via `extendUtilitiesConfig`.
-Layer configs are *merged* at build time.
+Layer configs are _merged_ at build time.
 
 ```ts
 export default extendUtilitiesConfig({

@@ -1,5 +1,8 @@
-import { addImports, defineNuxtModule } from 'nuxt/kit'
+import { addImports, createResolver, defineNuxtModule } from 'nuxt/kit'
 import * as lodash from 'lodash-es'
+
+const { resolve } = createResolver(import.meta.url)
+const lodashImportSource = resolve('./runtime/lodash')
 
 const EXCLUDED_KEYS = [
   'wrapperValue',
@@ -35,7 +38,7 @@ export default defineNuxtModule({
         continue
       }
 
-      addImports({ name, as: name, from: 'lodash-es' })
+      addImports({ name, as: name, from: lodashImportSource })
     }
   },
 })
