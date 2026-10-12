@@ -94,8 +94,8 @@ export function useFn(options?: IUseFnOptions) {
   const { loadingInitialState } = options ?? {}
 
   // State
-  const error = ref<any>()
   const isLoading = ref(loadingInitialState ?? false)
+  let activeRequests = 0
   const abortController = ref<AbortController>()
   const source = options?.source
 
@@ -120,13 +120,13 @@ export function useFn(options?: IUseFnOptions) {
 
     let response: any
     let result: any
+    let failed = false
+    let error: unknown
+
+    activeRequests++
+    isLoading.value = true
 
     try {
-      // Initialize
-      error.value = undefined
-      response = undefined
-      result = undefined
-
       // Validate
       if (validation) {
         const { isValid, errors } = validation.validate()
@@ -137,8 +137,6 @@ export function useFn(options?: IUseFnOptions) {
           throw new Error($t('general.errorOccured'))
         }
       }
-
-      isLoading.value = true
 
       // Handle memoized fns
       response = await executeFn({ fnc, fnId, createAbortController, source })
@@ -152,24 +150,26 @@ export function useFn(options?: IUseFnOptions) {
       validation?.reset()
 
       return result as T
-    } catch (_error: any) {
-      error.value = _error
+    } catch (_error: unknown) {
+      failed = true
+      error = _error
 
-      return new Promise((_resolve, reject) => reject(error))
+      throw _error
     } finally {
-      isLoading.value = false
+      try {
+        if (failed && onError) {
+          await onError({ error, response, fnPayload: options ?? {} })
+        } else if (!failed && onComplete) {
+          await onComplete({ response, result, fnPayload: options ?? {} })
+        }
+      } finally {
+        if (fnId) {
+          memoizedFns.delete(fnId)
+        }
 
-      if (error.value && onError) {
-        await onError({ error: error.value, response, fnPayload: options ?? {} })
-      } else if (onComplete) {
-        onComplete({ response, result, fnPayload: options ?? {} })
+        activeRequests--
+        isLoading.value = activeRequests > 0
       }
-
-      if (fnId) {
-        memoizedFns.delete(fnId)
-      }
-
-      isLoading.value = false
     }
   }
 
