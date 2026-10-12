@@ -1,7 +1,7 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
 import { utilsConfig } from '$utilsConfig'
 
-export function useLocale() {
+function useLocaleState() {
   const localeCookie = useCookie('lang', { domain: utilsConfig.general.domain ?? undefined })
   const { locale, locales, defaultLocale, loadLocaleMessages, setLocale } = useI18n()
   const switchLocalePath = useSwitchLocalePath()
@@ -38,8 +38,12 @@ export function useLocale() {
     post(locale)
   })
 
-  watch(data, locale => {
-    const foundLocale = localesByCode.value[locale]
+  watch(data, localeCode => {
+    if (localeCode === locale.value) {
+      return
+    }
+
+    const foundLocale = localesByCode.value[localeCode]
 
     if (!foundLocale) {
       return
@@ -59,6 +63,12 @@ export function useLocale() {
     silent?: boolean
   }) {
     const { callback, silent = true } = payload ?? {}
+
+    if (_locale.code === locale.value) {
+      callback?.()
+
+      return
+    }
 
     if (silent) {
       await loadLocaleMessages(_locale.code)
@@ -85,3 +95,6 @@ export function useLocale() {
     getCurrentLocaleDateFormat,
   }
 }
+
+// VueUse 13 shares on the server too; keep locale state scoped to each SSR request.
+export const useLocale = import.meta.client ? createSharedComposable(useLocaleState) : useLocaleState
