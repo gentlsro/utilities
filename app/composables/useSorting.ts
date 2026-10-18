@@ -15,6 +15,29 @@ type WorkerValue = {
 
 const SORT_MAP = { asc: 1, desc: -1 }
 
+// A plain number in a string ('188', '-3.5'): PostgreSQL sends numeric and bigint columns this way
+const NUMERIC_STRING = /^\s*[-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?\s*$/i
+
+function compareValues(aValue: any, bValue: any) {
+  if (typeof aValue === 'string' && typeof bValue === 'string') {
+    if (NUMERIC_STRING.test(aValue) && NUMERIC_STRING.test(bValue)) {
+      return Math.sign(Number(aValue) - Number(bValue))
+    }
+
+    return aValue.localeCompare(bValue)
+  }
+
+  if (aValue > bValue) {
+    return 1
+  }
+
+  if (aValue < bValue) {
+    return -1
+  }
+
+  return 0
+}
+
 export function useSorting() {
   const sortDataCore = async <T = IItem>(
     rows: T[],
@@ -63,45 +86,19 @@ export function useSorting() {
     values.sort((a, b) => {
       for (let idx = 0; idx < groups.length; idx++) {
         const g = groups[idx] as GroupItem<T>
-        const aValue = a.valueByGroupName[g.name]
-        const bValue = b.valueByGroupName[g.name]
+        const compared = compareValues(a.valueByGroupName[g.name], b.valueByGroupName[g.name])
 
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          const stringCompare = aValue.localeCompare(bValue)
-
-          if (stringCompare) {
-            return stringCompare * SORT_MAP[g.sort || 'asc']
-          }
-        } else {
-          if (aValue > bValue) {
-            return SORT_MAP[g.sort || 'asc'] * 1
-          }
-
-          if (aValue < bValue) {
-            return SORT_MAP[g.sort || 'asc'] * -1
-          }
+        if (compared) {
+          return compared * SORT_MAP[g.sort || 'asc']
         }
       }
 
       for (let idx = 0; idx < sortCols.length; idx++) {
         const s = sortCols[idx] as SortItem<T>
-        const aValue = a.valueByColumnName[s.name as string]
-        const bValue = b.valueByColumnName[s.name as string]
+        const compared = compareValues(a.valueByColumnName[s.name as string], b.valueByColumnName[s.name as string])
 
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          const stringCompare = aValue.localeCompare(bValue)
-
-          if (stringCompare) {
-            return stringCompare * SORT_MAP[s.sort || 'asc']
-          }
-        } else {
-          if (aValue > bValue) {
-            return SORT_MAP[s.sort || 'asc'] * 1
-          }
-
-          if (aValue < bValue) {
-            return SORT_MAP[s.sort || 'asc'] * -1
-          }
+        if (compared) {
+          return compared * SORT_MAP[s.sort || 'asc']
         }
       }
 
