@@ -155,7 +155,7 @@ export function useFn(options?: IUseFnOptions) {
     } catch (_error: any) {
       error.value = _error
 
-      return new Promise((_resolve, reject) => reject(error))
+      return new Promise((_resolve, reject) => reject(_error))
     } finally {
       isLoading.value = false
 
