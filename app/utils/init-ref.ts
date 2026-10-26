@@ -1,6 +1,20 @@
 import type { ComponentInternalInstance } from 'vue'
 import { camelCase } from 'change-case'
 
+// (a store initializes dozens of refs from one component's props: each converted the same prop names again)
+const camelCaseByName = new Map<string, string>()
+
+function toCamelCase(name: string) {
+  let converted = camelCaseByName.get(name)
+
+  if (converted === undefined) {
+    converted = camelCase(name)
+    camelCaseByName.set(name, converted)
+  }
+
+  return converted
+}
+
 /**
  * Initialize a reactive reference based on the props passed to the component
  *
@@ -42,7 +56,7 @@ export function initRef<T extends IItem, K extends keyof T>(payload: {
 
   // @ts-expect-error Vue doesn't type this
   const dynamicProps = (instance.vnode?.dynamicProps ?? [])
-    .map((propName: string) => camelCase(propName)) as Array<keyof T>
+    .map((propName: string) => toCamelCase(propName)) as Array<keyof T>
 
   // const providedProps = Object.keys(instance.vnode?.props ?? {})
   //   .map(propName => camelCase(propName)) as Array<keyof T>
