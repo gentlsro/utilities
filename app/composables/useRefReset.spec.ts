@@ -17,6 +17,19 @@ afterEach(() => {
 })
 
 describe('useRefReset without a component instance', () => {
+  it.each([0, false, ''])('preserves a falsy transformed value (%j) through reset and origin sync', value => {
+    const origin = ref('source')
+    const state = createReset(() => useRefReset(origin, { modifyFnc: () => value }))
+    expect(state.model.value).toBe(value)
+    state.model.value = value === 0 ? 1 : value === false ? true : 'draft'
+    state.reset()
+    expect(state.model.value).toBe(value)
+    origin.value = 'replacement'
+    state.syncFromOrigin()
+    expect(state.model.value).toBe(value)
+    expect(state.isModified.value).toBe(false)
+  })
+
   it('commits a primitive before calling the explicit callback and retains the saved baseline', () => {
     const origin = ref(1)
     const seen: number[] = []

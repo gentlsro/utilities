@@ -26,6 +26,9 @@ type OpenOptions = {
 }
 
 export type NavigateToOptions = {
+  /** Native anchor options used by UI link consumers. */
+  target?: string
+  rel?: string | null
   replace?: boolean
   redirectCode?: number
   external?: boolean

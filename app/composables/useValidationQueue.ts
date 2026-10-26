@@ -11,7 +11,6 @@ export type ValidationProcessByField = Record<
 // Provide/Inject
 const validationQueueKey = Symbol('__validationQueue')
 
-// FIXME: This will break when child components are unmounted
 /**
  * In some cases, the validation fields are hidden (for example when they are
  * on a non-visible tab). In our `ValidationDrawer` component, we let users click
@@ -38,17 +37,24 @@ export function useValidationQueue(
     ref<ValidationProcessByField>({}),
   )
 
-  Object.entries(_validationProcessByField).forEach(([key, value]) => {
-    if (validationProcessByField.value[key]) {
-      if (Array.isArray(value)) {
-        validationProcessByField.value[key].push(value)
-      } else {
-        validationProcessByField.value[key].push([value])
+  const registrations = Object.entries(_validationProcessByField).map(([key, value]) => {
+    const process: [() => void, timeoutMs?: number] = Array.isArray(value) ? value : [value]
+    validationProcessByField.value[key] ??= []
+    validationProcessByField.value[key].push(process)
+
+    return { key, process }
+  })
+
+  onScopeDispose(() => {
+    for (const { key, process } of registrations) {
+      const current = validationProcessByField.value[key]
+      const index = current?.indexOf(process) ?? -1
+      if (index >= 0) {
+        current!.splice(index, 1)
       }
-    } else if (Array.isArray(value)) {
-      validationProcessByField.value[key] = [value]
-    } else {
-      validationProcessByField.value[key] = [[value]]
+      if (current?.length === 0) {
+        delete validationProcessByField.value[key]
+      }
     }
   })
 

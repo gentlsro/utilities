@@ -31,7 +31,7 @@ export function useRefReset<T, Transformed = T>(
   const originalValue = ref(klona(_initialValue))
 
   const model = ref(
-    klona(toValue(modifyFnc?.(_initialValue) || _initialValue)),
+    klona(toValue(modifyFnc?.(_initialValue) ?? _initialValue)),
   ) as Ref<NonUndefined<Transformed>>
 
   function runSyncToOrigin(modelArg: any, syncOriginalValue = true) {
@@ -60,7 +60,7 @@ export function useRefReset<T, Transformed = T>(
 
   function runSyncFromOrigin() {
     _initialValue = toValue(initialValue)
-    originalValue.value = klona(toValue(modifyFnc?.(_initialValue, extendedModel.value) || _initialValue) as UnwrapRef<T>)
+    originalValue.value = klona(toValue(modifyFnc?.(_initialValue, extendedModel.value) ?? _initialValue) as UnwrapRef<T>)
 
     reset()
   }
@@ -95,7 +95,7 @@ export function useRefReset<T, Transformed = T>(
   })
 
   const originalValueModified = computed(() => {
-    return modifyFnc?.(originalValue.value as T, extendedModel.value) || originalValue.value
+    return modifyFnc?.(originalValue.value as T, extendedModel.value) ?? originalValue.value
   })
 
   /**

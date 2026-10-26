@@ -16,7 +16,7 @@ type WorkerValue = {
 const SORT_MAP = { asc: 1, desc: -1 }
 
 // A plain number in a string ('188', '-3.5'): PostgreSQL sends numeric and bigint columns this way
-const NUMERIC_STRING = /^\s*[-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?\s*$/i
+const NUMERIC_STRING = /^\s*[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?\s*$/i
 
 function compareValues(aValue: any, bValue: any) {
   if (typeof aValue === 'string' && typeof bValue === 'string') {
@@ -39,12 +39,11 @@ function compareValues(aValue: any, bValue: any) {
 }
 
 export function useSorting() {
-  const sortDataCore = async <T = IItem>(
+  const sortDataCore = <T = IItem>(
     rows: T[],
     cols: Array<SortItem<T> | IOrderBy<T>>,
     groups: GroupItem<T>[] = [],
-    useWorker?: boolean,
-  ): Promise<Array<T>> => {
+  ): Array<T> => {
     const sortCols = cols
       .filter(col => 'direction' in col || col.sort)
       .map(col => {
@@ -108,18 +107,27 @@ export function useSorting() {
     return values.map(({ idx }) => rows[idx]) as T[]
   }
 
+  const sortDataSync = <T = IItem>(payload: {
+    rowsRef: MaybeRefOrGetter<Array<T>>
+    columnsRef: MaybeRefOrGetter<Array<SortItem<T> | IOrderBy<T>>>
+    groupsRef?: MaybeRefOrGetter<Array<GroupItem<T>>>
+  }): Array<T> => {
+    const rows = [...toValue(payload.rowsRef)]
+    const cols = toValue(payload.columnsRef)
+    const groups = toValue(payload.groupsRef ?? [])
+
+    return sortDataCore(rows, cols, groups)
+  }
+
+  // Preserve the asynchronous public API for existing consumers.
   const sortData = async <T = IItem>(
     rowsRef: MaybeRefOrGetter<Array<T>>,
     columnsRef: MaybeRefOrGetter<Array<SortItem<T> | IOrderBy<T>>>,
     groupsRef: MaybeRefOrGetter<Array<GroupItem<T>>> = [],
-    useWorker?: boolean,
+    _useWorker?: boolean,
   ): Promise<Array<T>> => {
-    const rows = [...toValue(rowsRef)]
-    const cols = toValue(columnsRef)
-    const groups = toValue(groupsRef)
-
-    return sortDataCore(rows, cols, groups, useWorker)
+    return sortDataSync({ rowsRef, columnsRef, groupsRef })
   }
 
-  return { sortData }
+  return { sortData, sortDataSync }
 }

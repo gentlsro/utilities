@@ -27,7 +27,7 @@ export function useSearching() {
   const rC = useRuntimeConfig()
   const { normalizeText } = useText()
 
-  const searchDataCore = async <T extends IItem>(payload: {
+  const searchDataCore = <T extends IItem>(payload: {
     search?: string
     rows: T[]
     columns?: IItem[]
@@ -37,7 +37,7 @@ export function useSearching() {
     transliterate?: boolean
     fuseSearchToken?: "'" | '=' | '!' | '^' | '!^' | '$' | '!$'
     _extra?: { hasExactMatch?: boolean }
-  }): Promise<FuseResult<T>[]> => {
+  }): FuseResult<T>[] => {
     const {
       search: searchString = '',
       rows,
@@ -129,7 +129,7 @@ export function useSearching() {
     return fuse.search(pattern, options)
   }
 
-  const searchData = async <T extends IItem>(payload: {
+  const searchDataSync = <T extends IItem>(payload: {
     searchRef?: MaybeRefOrGetter<string>
     rowsRef: MaybeRefOrGetter<Array<T>>
     columnsRef?: MaybeRefOrGetter<Array<IItem>>
@@ -138,7 +138,7 @@ export function useSearching() {
     normalizeFnc?: (val: string) => string
     fuseSearchToken?: "'" | '=' | '!' | '^' | '!^' | '$' | '!$'
     _extra?: { hasExactMatch?: boolean }
-  }): Promise<FuseResult<T>[]> => {
+  }): FuseResult<T>[] => {
     const {
       searchRef,
       rowsRef,
@@ -160,7 +160,13 @@ export function useSearching() {
     })
   }
 
+  // Preserve the asynchronous public API for existing consumers.
+  const searchData = async <T extends IItem>(
+    payload: Parameters<typeof searchDataSync<T>>[0],
+  ): Promise<FuseResult<T>[]> => searchDataSync(payload)
+
   return {
     searchData,
+    searchDataSync,
   }
 }

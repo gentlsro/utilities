@@ -63,6 +63,17 @@ export function useOverflow() {
     // must still notify both handlers.
     let previousState: ReturnType<typeof isOverflown> | undefined
     let disposed = false
+    const measurementTask = useRafTask((element: Element) => {
+      if (disposed || !element.isConnected || toValue(elRef) !== element) {
+        return
+      }
+
+      const value = isOverflown(element, options)
+      if (!isEqual(value, previousState)) {
+        previousState = value
+        handler(value)
+      }
+    })
 
     watch(() => import.meta.client ? toValue(elRef) : null, (element, _, onCleanup) => {
       previousState = undefined
@@ -76,16 +87,16 @@ export function useOverflow() {
           return
         }
 
-        const value = isOverflown(element, options)
-
-        if (!isEqual(value, previousState)) {
-          previousState = value
-          handler(value)
-        }
+        // The handler can resize this element or an ancestor. Deliver after
+        // the observer loop, and discard work when its registration changes.
+        measurementTask.schedule(element)
       })
 
       observer.observe(element)
-      onCleanup(() => observer.disconnect())
+      onCleanup(() => {
+        observer.disconnect()
+        measurementTask.cancel()
+      })
     }, { immediate: true, flush: 'post' })
 
     onScopeDispose(() => {

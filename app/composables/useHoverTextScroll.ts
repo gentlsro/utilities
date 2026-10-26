@@ -1,5 +1,3 @@
-// NOTE: VIBE coded
-
 export type UseHoverTextScrollOptions = {
   /** 'pingpong' loops back and forth; 'once' scrolls to end then stops */
   mode?: 'pingpong' | 'once'
@@ -33,20 +31,8 @@ function injectScrollbarHideStyle() {
   styleInjected = true
 }
 
-let sharedReducedMotion: Ref<boolean> | null = null
-function getSharedReducedMotion(): Ref<boolean> {
-  if (sharedReducedMotion) {
-    return sharedReducedMotion
-  }
-
-  const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
-  sharedReducedMotion = ref(mql.matches)
-  mql.addEventListener('change', e => {
-    sharedReducedMotion!.value = e.matches
-  })
-
-  return sharedReducedMotion
-}
+// One query serves the active text controls and stops with its last owner.
+const getSharedReducedMotion = createSharedComposable(() => useMediaQuery('(prefers-reduced-motion: reduce)'))
 
 // -- Composable ---------------------------------------------------------------
 
@@ -85,6 +71,7 @@ export function useHoverTextScroll(
   let pauseTimer: ReturnType<typeof setTimeout> | null = null
   let resizeObs: ResizeObserver | null = null
   let mutationObs: MutationObserver | null = null
+  let activeElement: HTMLElement | null = null
 
   function getEl(): HTMLElement | null {
     return toValue(elRef) as HTMLElement | null
@@ -139,6 +126,15 @@ export function useHoverTextScroll(
     el.removeAttribute(SCROLLBAR_HIDE_ATTR)
   }
 
+  function releaseTarget(el: HTMLElement | null) {
+    cancelAnimation()
+    detachHoverObservers()
+    if (el) {
+      el.scrollLeft = 0
+      removeScrollStyles(el)
+    }
+  }
+
   // -- Animation helpers ------------------------------------------------------
 
   function cancelAnimation() {
@@ -168,6 +164,7 @@ export function useHoverTextScroll(
 
     let direction: 1 | -1 = 1
     let prevTimestamp: number | null = null
+    let position = el.scrollLeft
 
     function step(timestamp: number) {
       if (prevTimestamp === null) {
@@ -178,10 +175,12 @@ export function useHoverTextScroll(
       prevTimestamp = timestamp
 
       const delta = speedPxPerSec * dt * direction
-      el.scrollLeft = Math.max(0, Math.min(maxScroll, el.scrollLeft + delta))
+      // WebKit rounds DOM scroll offsets; retain fractional movement locally.
+      position = Math.max(0, Math.min(maxScroll, position + delta))
+      el.scrollLeft = position
 
-      const atEnd = direction === 1 && el.scrollLeft >= maxScroll
-      const atStart = direction === -1 && el.scrollLeft <= 0
+      const atEnd = direction === 1 && position >= maxScroll
+      const atStart = direction === -1 && position <= 0
 
       if (atEnd || atStart) {
         if (mode === 'once' && atEnd) {
@@ -208,13 +207,15 @@ export function useHoverTextScroll(
   }
 
   function animateScrollBack(el: HTMLElement, onDone?: () => void) {
-    if (el.scrollLeft <= 0) {
+    if (el.scrollLeft <= 0 || prefersReducedMotion.value) {
+      el.scrollLeft = 0
       onDone?.()
 
       return
     }
 
     let prevTimestamp: number | null = null
+    let position = el.scrollLeft
 
     function step(timestamp: number) {
       if (prevTimestamp === null) {
@@ -224,9 +225,10 @@ export function useHoverTextScroll(
       const dt = (timestamp - prevTimestamp) / 1000
       prevTimestamp = timestamp
 
-      el.scrollLeft = Math.max(0, el.scrollLeft - returnSpeedPxPerSec * dt)
+      position = Math.max(0, position - returnSpeedPxPerSec * dt)
+      el.scrollLeft = position
 
-      if (el.scrollLeft <= 0) {
+      if (position <= 0) {
         rafId = null
         onDone?.()
 
@@ -244,9 +246,13 @@ export function useHoverTextScroll(
   function onHoverChange(hovered: boolean) {
     const el = getEl()
     if (!el) {
+      releaseTarget(activeElement)
+      activeElement = null
+
       return
     }
 
+    activeElement = el
     cancelAnimation()
 
     if (hovered) {
@@ -272,16 +278,18 @@ export function useHoverTextScroll(
   const isHovered = useElementHover(computed(() => getEl()))
 
   watch(isHovered, onHoverChange)
+  watch(getEl, (element, previous) => {
+    if (previous && previous !== element) {
+      releaseTarget(previous)
+      isOverflowing.value = false
+      isHovered.value = false
+    }
+    activeElement = element
+  }, { flush: 'post' })
 
   tryOnScopeDispose(() => {
-    cancelAnimation()
-    detachHoverObservers()
-
-    const el = getEl()
-    if (el) {
-      el.scrollLeft = 0
-      removeScrollStyles(el)
-    }
+    releaseTarget(activeElement ?? getEl())
+    activeElement = null
   })
 
   return { isOverflowing: readonly(isOverflowing) }

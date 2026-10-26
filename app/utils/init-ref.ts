@@ -31,15 +31,15 @@ export function initRef<T extends IItem, K extends keyof T & string>(payload: In
   const fallback = ref(defaultValue && typeof defaultValue === 'object'
     ? cloneDeep(defaultValue)
     : defaultValue)
-  const result = props
+  const result = (props
     ? useModel(props, propName, {
         get: value => value === undefined ? fallback.value : value,
       })
-    : fallback
+    : fallback) as Ref<T[K]>
 
   if (initWith?.condition(payload)) {
     result.value = initWith.fnc(payload)
   }
 
-  return result as Ref<T[K]>
+  return result
 }
