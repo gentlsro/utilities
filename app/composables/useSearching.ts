@@ -48,9 +48,11 @@ export function useSearching() {
       _extra,
     } = payload
 
-    const normalizeFnc = shouldTransliterate
-      ? transliterate
-      : normalizeText
+    // (transliterated, Cyrillic becomes latin and the letters it does not map keep their base letter: í is i, not
+    // dropped, so "tlaci" finds "Tlačítko")
+    const normalizeFnc = payload.normalizeFnc ?? (shouldTransliterate
+      ? (text: string) => normalizeText(transliterate(text, { returnUnmatched: true }))
+      : normalizeText)
 
     const search = normalizeFnc(searchString)
     const optionsClone = klona(fuseOptions)
