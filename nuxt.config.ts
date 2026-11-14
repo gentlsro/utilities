@@ -1,5 +1,5 @@
 import { createResolver } from 'nuxt/kit'
-import { prepareLocalNuxtLayers } from './prepare-layers'
+import { prepareLocalNuxtLayers } from './prepare-layers.ts'
 
 const { resolve } = createResolver(import.meta.url)
 
