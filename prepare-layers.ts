@@ -77,7 +77,7 @@ export async function prepareLocalNuxtLayers(nuxt: Nuxt) {
   const layerDirs = Array.from(new Set(
     nuxt.options._layers
       .filter(layer => layer.cwd !== rootDir && (
-        layer.config.$meta?.name === 'ui' || layer.config.$meta?.name === 'utilities' || isLocalLibLayer(rootDir, layer.cwd)
+        layer.meta?.name === 'ui' || layer.meta?.name === 'utilities' || isLocalLibLayer(rootDir, layer.cwd)
       ))
       .map(layer => layer.cwd)
       .filter(layerDir => existsSync(join(layerDir, 'package.json')))
