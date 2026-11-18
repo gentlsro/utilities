@@ -1,9 +1,7 @@
-import axios from 'axios'
-
 // Models
 import type { FileModel } from '../models/file.model'
 
-export function uploadFile(payload: {
+export async function uploadFile(payload: {
   file: FileModel
   additionalData?: IItem
   headers?: IItem
@@ -18,6 +16,9 @@ export function uploadFile(payload: {
   // Create form data
   const formData = new FormData()
   formData.append('files', payload.file.file)
+
+  // (axios loads with the first upload, not with every page)
+  const { default: axios } = await import('axios')
 
   return axios.post(filesHost, formData, {
     headers,

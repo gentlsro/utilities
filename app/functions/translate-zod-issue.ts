@@ -1,4 +1,5 @@
 import type { z } from 'zod'
+import { tryUseNuxtApp } from '#app/nuxt'
 
 export const translateZodIssue: z.core.$ZodErrorMap<z.core.$ZodIssue> = issue => {
   const { $i18n } = tryUseNuxtApp() ?? {}
