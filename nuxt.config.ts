@@ -43,10 +43,12 @@ export default defineNuxtConfig({
       domain: '',
     },
   },
-
   future: {
     compatibilityVersion: 5,
   },
+
+  // These layers and Nuxt Image use Nitro's server autoimports under compatibility version 5.
+  experimental: { nitroAutoImports: true },
 
   nitro: {
     imports: {

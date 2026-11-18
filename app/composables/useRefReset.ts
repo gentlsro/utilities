@@ -3,7 +3,7 @@ import { klona } from 'klona/full'
 
 // Types
 import type { NonUndefined } from 'utility-types'
-import type { MaybeRefOrGetter, UnwrapRef } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
 
 type IOptions<T, Transformed = T> = {
   /**
@@ -12,7 +12,9 @@ type IOptions<T, Transformed = T> = {
   autoSyncFromOrigin?: MaybeRefOrGetter<boolean>
   /** @deprecated Use `autoSyncFromOrigin`. */
   autoSyncFromParent?: MaybeRefOrGetter<boolean>
-  /** Called after synchronizing the origin; use it to emit an update explicitly. */
+  /** @deprecated For VDOM consumers. Prefer onSyncToOrigin. */
+  emitName?: string
+  /** Called after synchronizing the origin. */
   onSyncToOrigin?: (value: T) => void
   modifyFnc?: (value: T, currentValue?: Transformed) => NonUndefined<Transformed>
 }
@@ -27,122 +29,56 @@ export function useRefReset<T, Transformed = T>(
   )
   const { onSyncToOrigin, modifyFnc } = opts
 
-  let _initialValue = toValue(initialValue)
-  const originalValue = ref(klona(_initialValue))
+  const legacyOwner = opts.emitName ? getCurrentInstance() : null
+  const source = toValue(initialValue)
+  const baseline = shallowRef(klona(modifyFnc?.(source) ?? source))
+  const model = ref(klona(baseline.value)) as Ref<NonUndefined<Transformed>>
 
-  const model = ref(
-    klona(toValue(modifyFnc?.(_initialValue) ?? _initialValue)),
-  ) as Ref<NonUndefined<Transformed>>
-
-  function runSyncToOrigin(modelArg: any, syncOriginalValue = true) {
-    const isModelArray = Array.isArray(toValue(initialValue))
-
-    if (typeof _initialValue === 'object' && !isModelArray) {
-      Object.assign(toValue(initialValue) as IItem, modelArg)
-    } else if (isModelArray) {
-      ; (toValue(initialValue) as any[]).splice(
-        0,
-        (toValue(initialValue) as any[]).length,
-        ...(modelArg || []),
-      )
-    } else if (isRef(initialValue)) {
-      (initialValue as Ref<any>).value = modelArg
-    }
-
-    onSyncToOrigin?.(toValue(initialValue))
-
-    // When syncing to origin, we don't necessarily want to also overwrite the original value
-    // to eventually be able to reset the model to the actual original value
-    if (syncOriginalValue) {
-      originalValue.value = klona(toValue(initialValue) as any)
-    }
-  }
-
-  function runSyncFromOrigin() {
-    _initialValue = toValue(initialValue)
-    originalValue.value = klona(toValue(modifyFnc?.(_initialValue, extendedModel.value) ?? _initialValue) as UnwrapRef<T>)
-
-    reset()
-  }
-
-  const extendedModel = extendRef(model, {
-    /**
-     * Sync the value to the origin (`initialValue` source: ref, getter, or plain value).
-     */
-    syncToOrigin: runSyncToOrigin,
-
-    /**
-     * @deprecated Use `syncToOrigin`.
-     */
-    syncToParent: runSyncToOrigin,
-
-    /**
-     * Sync the value from the origin (`initialValue`).
-     */
-    syncFromOrigin: runSyncFromOrigin,
-
-    /**
-     * @deprecated Use `syncFromOrigin`.
-     */
-    syncFromParent: runSyncFromOrigin,
-
-    /**
-     * Reset the value to the original value
-     */
-    reset: () => {
-      model.value = klona(originalValueModified.value) as NonUndefined<Transformed>
-    },
-  })
-
-  const originalValueModified = computed(() => {
-    return modifyFnc?.(originalValue.value as T, extendedModel.value) ?? originalValue.value
-  })
-
-  /**
-   * Check if the model has been modified
-   */
-  const isModified = computed(() => {
-    return !isEqual(originalValueModified.value, model.value)
-  })
-
-  // Exposed functions
   function reset() {
-    extendedModel.reset()
+    model.value = klona(baseline.value) as NonUndefined<Transformed>
+  }
+
+  function setModel(value: T) {
+    baseline.value = klona(modifyFnc?.(value, model.value) ?? value)
+    reset()
   }
 
   function syncFromOrigin() {
-    extendedModel.syncFromOrigin()
+    setModel(toValue(initialValue))
   }
 
-  /**
-   * @deprecated Use `syncFromOrigin`.
-   */
-  function syncFromParent() {
-    syncFromOrigin()
+  function syncToOrigin(value: unknown = model.value, syncOriginalValue = true) {
+    const origin = toValue(initialValue)
+    const saved = klona(value)
+    if (Array.isArray(origin) && Array.isArray(saved)) {
+      origin.splice(0, origin.length, ...saved)
+    } else if (isPlainObject(origin) && isPlainObject(saved)) {
+      Object.assign(origin as object, saved)
+    } else if (isRef(initialValue) && !isReadonly(initialValue)) {
+      const writable = initialValue as Ref<T>
+      writable.value = saved as T
+    }
+
+    const committed = toValue(initialValue)
+    if (opts.emitName) {
+      legacyOwner?.emit(opts.emitName, committed)
+    }
+    onSyncToOrigin?.(committed)
+    if (syncOriginalValue) {
+      baseline.value = klona(modifyFnc?.(committed, model.value) ?? committed)
+    }
   }
 
-  function syncToOrigin(_model?: any, syncOriginalValue?: boolean) {
-    extendedModel.syncToOrigin(_model ?? model.value, syncOriginalValue)
-  }
-
-  /**
-   * @deprecated Use `syncToOrigin`.
-   */
-  function syncToParent(_model?: any, syncOriginalValue?: boolean) {
-    syncToOrigin(_model, syncOriginalValue)
-  }
-
-  /**
-   * Similar to `syncFromOrigin`, but instead of syncing from `initialValue`,
-   * it sets the value to the given value
-   */
-  function setModel(value: T) {
-    _initialValue = value
-    originalValue.value = klona(value)
-    extendedModel.value = klona(toValue(modifyFnc?.(value))) as NonUndefined<Transformed>
-
-    reset()
-  }
+  const extendedModel = extendRef(model, {
+    reset,
+    syncFromOrigin,
+    syncToOrigin,
+    /** @deprecated Use syncFromOrigin. */
+    syncFromParent: syncFromOrigin,
+    /** @deprecated Use syncToOrigin. */
+    syncToParent: syncToOrigin,
+  })
+  const isModified = computed(() => !isEqual(baseline.value, model.value))
 
   watch(
     () => toValue(initialValue),
@@ -163,8 +99,8 @@ export function useRefReset<T, Transformed = T>(
     syncFromOrigin,
     syncToOrigin,
     /** @deprecated Use `syncFromOrigin`. */
-    syncFromParent,
+    syncFromParent: syncFromOrigin,
     /** @deprecated Use `syncToOrigin`. */
-    syncToParent,
+    syncToParent: syncToOrigin,
   }
 }

@@ -61,6 +61,8 @@ describe('useRefReset without a component instance', () => {
     objectState.model.value.nested.value = 3
     objectState.syncToOrigin()
     expect(object.nested.value).toBe(3)
+    objectState.model.value.nested.value = 4
+    expect(object.nested.value).toBe(3)
 
     const array = reactive([{ value: 1 }])
     const onSyncToOrigin = vi.fn()
@@ -72,9 +74,28 @@ describe('useRefReset without a component instance', () => {
     arrayState.reset()
     expect(arrayState.model.value).toEqual([{ value: 1 }])
     expect(array).toHaveLength(2)
+    arrayState.model.value[0]!.value = 99
+    expect(array[0]!.value).toBe(1)
     arrayState.syncFromParent()
     expect(arrayState.model.value).toEqual(array)
     expect(onSyncToOrigin).toHaveBeenCalledTimes(1)
+  })
+
+  it('commits a nullable origin and applies a transform once per refresh', () => {
+    const nullable = ref<{ id: number } | null>(null)
+    const draft = createReset(() => useRefReset(nullable))
+    draft.syncToOrigin({ id: 4 })
+    expect(nullable.value).toEqual({ id: 4 })
+    draft.syncToOrigin(null)
+    expect(nullable.value).toBeNull()
+
+    const origin = ref(1)
+    const state = createReset(() => useRefReset(origin, { modifyFnc: n => n + 1 }))
+    origin.value = 4
+    state.syncFromOrigin()
+    expect(state.model.value).toBe(5)
+    state.reset()
+    expect(state.model.value).toBe(5)
   })
 
   it('preserves transformations, setModel and reactive auto-sync without emitting on reads or resets', async () => {
