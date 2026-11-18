@@ -76,17 +76,17 @@ export async function prepareLocalNuxtLayers(nuxt: Nuxt) {
   const rootDir = nuxt.options.rootDir
   const layerDirs = Array.from(new Set(
     nuxt.options._layers
+      .filter(layer => layer.cwd !== rootDir && (
+        layer.config.$meta?.name === 'ui' || layer.config.$meta?.name === 'utilities' || isLocalLibLayer(rootDir, layer.cwd)
+      ))
       .map(layer => layer.cwd)
-      .filter(layerDir => isLocalLibLayer(rootDir, layerDir))
       .filter(layerDir => existsSync(join(layerDir, 'package.json')))
-      .filter(layerDir => !existsSync(join(layerDir, '.nuxt'))),
+      .filter(layerDir => !existsSync(join(layerDir, '.nuxt/tsconfig.app.json'))),
   ))
 
   if (!layerDirs.length) {
     return
   }
-
-  processEnv[PREPARING_LAYERS_ENV] = 'true'
 
   for (const layerDir of layerDirs) {
     console.log(`Preparing Nuxt layer ${layerDir}`)
