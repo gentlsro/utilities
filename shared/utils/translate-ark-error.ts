@@ -55,15 +55,26 @@ export function translateArkError(
     return $t('ark.errors.email')
   }
 
+  // ArkType reports a list's length with the codes a string's has (`minLength`, `maxLength`)
+  const isList = Array.isArray(err.data)
+
   switch (code) {
     // Length constraints
     case 'minLength':
+      if (isList) {
+        return $t('ark.errors.array.atLeastLength', { min: err.rule, actual: err.actual })
+      }
+
       return $t('ark.errors.minLength', {
         min: err.rule,
         actual: err.actual,
       })
 
     case 'maxLength':
+      if (isList) {
+        return $t('ark.errors.array.atMostLength', { max: err.rule, actual: err.actual })
+      }
+
       return $t('ark.errors.maxLength', {
         max: err.rule,
         actual: err.actual,
@@ -183,6 +194,7 @@ export function translateArkError(
       if (err.expected) {
         return err.expected
       }
+
       return $t('ark.errors.invalid')
     }
 
