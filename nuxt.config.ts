@@ -98,7 +98,9 @@ export default defineNuxtConfig({
         file: 'en-US_utilities.json',
         dateFormat: 'MM/DD/YYYY',
         currency: 'USD',
-        language: 'English',
+        // (the browser language it matches, as the i18n module detects it; `name` is what a switcher shows)
+        language: 'en-US',
+        name: 'English',
         icon: 'i-emojione:flag-for-united-kingdom',
       },
       {
@@ -106,7 +108,8 @@ export default defineNuxtConfig({
         file: 'cs-CZ_utilities.json',
         dateFormat: 'DD.MM.YYYY',
         currency: 'CZK',
-        language: 'Česky',
+        language: 'cs-CZ',
+        name: 'Česky',
         icon: 'i-emojione:flag-for-czechia',
       },
     ],
