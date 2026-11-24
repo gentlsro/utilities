@@ -63,7 +63,6 @@ export default defineNuxtConfig({
         { name: '$date', from: resolve('./shared/utils/$date') },
         { name: '$t', from: resolve('./shared/utils/$t') },
         { name: 'generateUUID', from: resolve('./shared/utils/generate-uuid') },
-        { name: 'isDev', from: resolve('./shared/utils/is-dev') },
 
         // Lodash
         { name: 'get', from: 'lodash-es' },
