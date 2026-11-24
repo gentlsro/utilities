@@ -1,3 +1,4 @@
+import { useRuntimeConfig } from 'nitropack/runtime'
 import { isNil } from 'lodash-es'
 import type { ExtendedDataType } from '$dataType'
 
